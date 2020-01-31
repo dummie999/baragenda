@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Mensa extends Model
+class Baragenda extends Model
 {
     //
 }
