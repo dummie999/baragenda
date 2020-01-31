@@ -16,7 +16,6 @@ class CreateUsersInfoTable extends Migration
         Schema::create('users_info', function (Blueprint $table) {
             $table->bigIncrements('id');
 			$table->integer('user_id'); //internal id 
-			$table->string('username'); //login name
 			$table->string('objectGUID')->nullable(); //ldap GUID
 			$table->string('lidnummer')->nullable(); //12-345
 			$table->string('relatienummer')->nullable();//300000111231241
