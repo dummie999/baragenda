@@ -15,12 +15,13 @@ class CreateUsersInfoTable extends Migration
     {
         Schema::create('users_info', function (Blueprint $table) {
             $table->bigIncrements('id');
-			$table->integer('user_id');
-			$table->string('username');
-			$table->string('lidnummer');
-			$table->string('relatienummer');
-            $table->string('name');
-			$table->json('groups'); //=memberOf
+			$table->integer('user_id'); //internal id 
+			$table->string('username'); //login name
+			$table->string('objectGUID')->nullable(); //ldap GUID
+			$table->string('lidnummer')->nullable(); //12-345
+			$table->string('relatienummer')->nullable();//300000111231241
+            $table->string('name'); //First Lastname
+			$table->json('groups')->nullable(); //=memberOf
             #$table->string('mail'); //security issue?
             $table->timestamps();
 			

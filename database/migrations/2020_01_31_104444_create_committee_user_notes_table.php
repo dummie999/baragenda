@@ -18,8 +18,8 @@ class CreateCommitteeUserNotesTable extends Migration
 			$table->integer('user_id'); //about user x
 			$table->integer('committee_id'); //related to committee y
 			$table->integer('updated_by'); //last updated by (from committee y)
-			$table->text('note'); //note 65,535 characters (64kb)
-			$table->integer('private'); //visible for user
+			$table->text('note')-->nullable(); //note 65,535 characters (64kb)
+			$table->boolean('private')->default(true); //visible for user
   
             $table->timestamps();
 			

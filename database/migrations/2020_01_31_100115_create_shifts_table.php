@@ -19,7 +19,7 @@ class CreateShiftsTable extends Migration
             $table->string('title'); //uitzit donderdag (dixo)
             $table->datetime('start'); //begint om donderdag 22:00
             $table->integer('length'); //8*60*60=28800 (8u) --> 6:00
-            $table->string('description'); //hippe beschrijving, wat is er te doen.
+            $table->string('description')->nullable(); //hippe beschrijving, wat is er te doen.
             $table->integer('updated_by'); //naam barcolid
 			$table->timestamps();
 			

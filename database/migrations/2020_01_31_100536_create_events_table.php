@@ -15,6 +15,12 @@ class CreateEventsTable extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->integer('reservation_id'); //internal event
+            $table->integer('google_calendar_id'); //external calendar 
+            $table->integer('google_event_id'); //external event
+			
+			#foreign references
+			$table->foreign('reservation_id')->references('id')->on('reservations');
             $table->timestamps();
         });
     }

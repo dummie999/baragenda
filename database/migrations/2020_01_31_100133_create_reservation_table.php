@@ -15,20 +15,20 @@ class CreateReservationTable extends Migration
     {
         Schema::create('reservation', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->integer('event_id');
-            $table->integer('shift_id'); //either shift or reservations 			
+            $table->integer('event_id')->nullable();
+            $table->integer('shift_id')->nullable(); //either shift or reservations 			
             $table->string('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->dateTime('datetime_start');
             $table->dateTime('datetime_end');
             $table->dateTime('recurring_start');
             $table->dateTime('recurring_end'); 
-			$table->string('rrule');
-            $table->integer('all_day');
+			$table->string('rrule')->nullable();
+            $table->boolean('all_day')->default('false');
             $table->integer('location_id');
             $table->integer('committee_id');
-			$table->string('attendees');
-			$table->string('status'); //draft published 
+			$table->json('attendees');
+			$table->set('status',['draft','published','deleted']); //draft published or deleted
             $table->integer('updated_by');
             $table->timestamps();
 			
