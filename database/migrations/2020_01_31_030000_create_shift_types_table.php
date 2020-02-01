@@ -14,12 +14,11 @@ class CreateShiftTypesTable extends Migration
     public function up()
     {
         Schema::create('shift_types', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('committee_id'); //barco
+            $table->increments('id');
+            $table->integer('committee_id')->unsigned(); //barco
             $table->string('title'); //uitzit
             $table->string('description'); //bardienst van 22:00-laat
-            $table->string('updated_by'); //lid barco
-            $table->string('updated_at'); //willekeurig tijdstip
+            $table->integer('updated_by')->unsigned(); //lid barco
             $table->timestamps();
 			
 			#foreign references

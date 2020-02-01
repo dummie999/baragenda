@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateReservationTable extends Migration
+class CreateReservationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateReservationTable extends Migration
      */
     public function up()
     {
-        Schema::create('reservation', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('event_id')->nullable();
-            $table->integer('shift_id')->nullable(); //either shift or reservations 			
+        Schema::create('reservations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('shift_id')->unsigned()->nullable(); //either shift or reservations 			
             $table->string('title');
             $table->text('description')->nullable();
             $table->dateTime('datetime_start');
@@ -24,16 +23,17 @@ class CreateReservationTable extends Migration
             $table->dateTime('recurring_start');
             $table->dateTime('recurring_end'); 
 			$table->string('rrule')->nullable();
-            $table->boolean('all_day')->default('false');
-            $table->integer('location_id');
-            $table->integer('committee_id');
+            $table->boolean('all_day')->default(false);
+            $table->integer('location_id')->unsigned();
+            $table->integer('committee_id')->unsigned();
 			$table->json('attendees');
 			$table->set('status',['draft','published','deleted']); //draft published or deleted
-            $table->integer('updated_by');
+            $table->integer('google_calendar_id'); //external calendar 
+            $table->integer('google_event_id'); //external event
+            $table->integer('updated_by')->unsigned();
             $table->timestamps();
 			
-			#foreign references
-			$table->foreign('event_id')->references('id')->on('events');			
+			#foreign references		
 			$table->foreign('shift_id')->references('id')->on('shifts');			
 			$table->foreign('location_id')->references('id')->on('locations');			
 			$table->foreign('committee_id')->references('id')->on('committees');						
@@ -48,6 +48,6 @@ class CreateReservationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reservation');
+        Schema::dropIfExists('reservations');
     }
 }

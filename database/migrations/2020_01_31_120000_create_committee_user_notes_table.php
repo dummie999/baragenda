@@ -14,11 +14,11 @@ class CreateCommitteeUserNotesTable extends Migration
     public function up()
     {
         Schema::create('committee_user_notes', function (Blueprint $table) {
-			$table->bigIncrements('id');
-			$table->integer('user_id'); //about user x
-			$table->integer('committee_id'); //related to committee y
-			$table->integer('updated_by'); //last updated by (from committee y)
-			$table->text('note')-->nullable(); //note 65,535 characters (64kb)
+			$table->increments('id');
+			$table->integer('user_id')->unsigned(); //about user x
+			$table->integer('committee_id')->unsigned(); //related to committee y
+			$table->integer('updated_by')->unsigned(); //last updated by (from committee y)
+			$table->text('note'); //note 65,535 characters (64kb)
 			$table->boolean('private')->default(true); //visible for user
   
             $table->timestamps();
@@ -26,7 +26,7 @@ class CreateCommitteeUserNotesTable extends Migration
 			#foreign references
 			$table->foreign('user_id')->references('id')->on('users');
 			$table->foreign('updated_by')->references('id')->on('users');
-			$table->foreign('committee_id')->references('id')->on('committee');
+			$table->foreign('committee_id')->references('id')->on('committees');
         });
     }
 

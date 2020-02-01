@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersInfoTable extends Migration
+class CreateUsersInfosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateUsersInfoTable extends Migration
      */
     public function up()
     {
-        Schema::create('users_info', function (Blueprint $table) {
-            $table->bigIncrements('id');
-			$table->integer('user_id'); //internal id 
+        Schema::create('users_infos', function (Blueprint $table) {
+            $table->increments('id');
+			$table->integer('user_id')->unsigned(); //internal id 
 			$table->string('objectGUID')->nullable(); //ldap GUID
 			$table->string('lidnummer')->nullable(); //12-345
 			$table->string('relatienummer')->nullable();//300000111231241
@@ -36,6 +36,6 @@ class CreateUsersInfoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users_info');
+        Schema::dropIfExists('users_infos');
     }
 }

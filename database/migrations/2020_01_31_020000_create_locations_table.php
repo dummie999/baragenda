@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCommitteeTable extends Migration
+class CreateLocationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateCommitteeTable extends Migration
      */
     public function up()
     {
-        Schema::create('committee', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('objectGUID');
+        Schema::create('locations', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('resource_id'); //external resource reference in Gsuite 
             $table->string('name');
-			$table->json('members')->nullable(); //users 
             $table->timestamps();
         });
     }
@@ -29,6 +28,6 @@ class CreateCommitteeTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('committee');
+        Schema::dropIfExists('locations');
     }
 }
