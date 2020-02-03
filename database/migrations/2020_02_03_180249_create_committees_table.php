@@ -17,7 +17,7 @@ class CreateCommitteesTable extends Migration
             $table->increments('id');
             $table->string('objectGUID');
             $table->string('name');
-			$table->json('members')->nullable(); //users 
+			$table->json('members')->nullable(); //users
             $table->timestamps();
         });
     }

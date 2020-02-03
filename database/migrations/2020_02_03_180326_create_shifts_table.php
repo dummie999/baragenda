@@ -22,13 +22,13 @@ class CreateShiftsTable extends Migration
             $table->string('description')->nullable(); //hippe beschrijving, wat is er te doen.
             $table->integer('updated_by')->unsigned(); //naam barcolid
 			$table->timestamps();
-			
+
 			#foreign references
 			$table->foreign('shift_types_id')->references('id')->on('shift_types');
-			$table->foreign('updated_by')->references('id')->on('users');			
-			
-			
-           
+			$table->foreign('updated_by')->references('id')->on('users');
+
+
+
         });
     }
 
