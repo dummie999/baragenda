@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class committee_note_user extends Model
+class ShiftType extends Model
 {
     //
 }
