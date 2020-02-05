@@ -12,5 +12,11 @@
 */
 
 Route::get('/', 'HomeController@index')->name('home');
+
+//login
+Route::get('login/{token}', 'LoginController@loginByToken');
 Route::match(['get', 'post'], '/login', 'LoginController@login')->name('login');
 Route::post('/logout', 'LoginController@logout')->name('logout');
+
+//user settings
+Route::match(['get', 'post'], 'settings', 'UserSettingsController@changeSettings')->name('user.settings');
