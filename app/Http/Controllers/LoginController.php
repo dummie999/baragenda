@@ -14,7 +14,7 @@ class LoginController extends Controller
             return view('login');
 
         if(App::environment('local', 'dev')){
-            Auth::login(User::find('DEMO'), true);
+            Auth::login(User::find('1'), true);
             return redirect(route('home'));
         }
 
@@ -25,4 +25,5 @@ class LoginController extends Controller
         Auth::logout();
         return redirect(route('home'));
     }
+
 }

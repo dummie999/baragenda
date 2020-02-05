@@ -18,18 +18,16 @@ class UserSettingsController extends Controller
         }
 
         if($request->isMethod('get')){
-            return view('options');
+            return view('profile');
         }
 
         $request->validate([
-            'allergies' => 'max:191',
             'extra_info' => 'max:191',
         ]);
 
         $user = Auth::user();
-        $user->allergies = $request->get('allergies');
+        $user->available = $request->get('available');
         $user->extra_info = $request->get('extra_info');
-        $user->vegetarian = $request->has('vegetarian');
         $user->save();
         return redirect(route('home'))->with('info', 'Instellingen aangepast!');
     }
