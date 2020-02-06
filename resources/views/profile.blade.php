@@ -10,7 +10,7 @@
                     <div class="panel-body">
                         <form class="form-horizontal col-md-6 col-xs-12" method="POST">
                             {{ csrf_field() }}
-
+							jouw info: {{ data }}
                             <div class="form-group">
                                 <label for="available">Open voor diensten</label>
                               <input id="available" class="" name="available" type="checkbox" data-toggle="toggle" data-on="Ja" data-off="Nee"  data-onstyle="primary" checked>
