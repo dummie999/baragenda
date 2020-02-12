@@ -13,4 +13,5 @@ yarn-error.log
 _ide_helper.php
 service-account-credentials.json
 *.bak
+.idea/
 New folder

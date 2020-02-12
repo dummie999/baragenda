@@ -1,12 +1,12 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class InfoUser extends Model
+class Info extends Model
 {
-    public $table = "users_infos";
+    public $table = "infos";
     /**
      * Get the user that belongs to userinfo.
      */

@@ -5,19 +5,27 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Instellingen aanpassen</div>
+                    <div class="panel-heading">Profielinstellingen</div>
 
                     <div class="panel-body">
                         <form class="form-horizontal col-md-6 col-xs-12" method="POST">
                             {{ csrf_field() }}
-							jouw info: {{ data }}
-                            <div class="form-group">
+							 <div class="form-group">
+
+							<b>Wie ben ik?</b> <br>
+							Naam: {{ $info->name ?? '' }} <br>
+							Lidnummer: {{ $info->lidnummer ?? '' }} <br>
+							Relatienummer: {{ $info->relatienummer ?? '' }} <br>
+							Sinds: {{ $info->created_at ?? '' }} <br>
+							Laatste wijziging: {{ $info->updated_at ?? '' }} <br>
+							<br>
+							<b>Voorkeuren</b><br>
                                 <label for="available">Open voor diensten</label>
-                              <input id="available" class="" name="available" type="checkbox" data-toggle="toggle" data-on="Ja" data-off="Nee"  data-onstyle="primary" checked>
+                              <input id="available" name="available[]" type="checkbox" data-toggle="toggle" data-on="Ja" data-off="Nee"  data-onstyle="primary"   {{ $info->available == 1 ? 'checked' : '' }}  >
 
                             <div class="form-group">
                                 <label for="extra_info">Extra informatie</label>
-                                <input id="extra_info" class="form-control" name="extra_info" value="{{ old('extra_info', Auth::user()->extra_info) }}">
+                                <input id="extra_info" class="form-control" name="extra_info" value="{{ $info->extra_info }}">
                             </div>
 
 

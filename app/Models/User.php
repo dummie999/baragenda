@@ -29,7 +29,7 @@ class User extends Authenticatable
 
 	public function info()
     {
-        return $this->hasOne('App\Models\InfoUser');
+        return $this->hasOne('App\Models\Info');
     }
 
 }
