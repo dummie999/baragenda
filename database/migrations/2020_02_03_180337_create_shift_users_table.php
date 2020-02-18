@@ -13,17 +13,14 @@ class CreateShiftUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('shift_users', function (Blueprint $table) {
+        Schema::create('shift_user', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('shift_id')->unsigned(); //bardienst van 22:00-laat (uitzit)
             $table->integer('user_id')->unsigned(); //persoon X
-            $table->integer('updated_by')->unsigned(); //naam barcolid
-            $table->timestamps();
 
 			#foreign references
 			$table->foreign('shift_id')->references('id')->on('shifts');
 			$table->foreign('user_id')->references('id')->on('users');
-			$table->foreign('updated_by')->references('id')->on('users');
 
         });
     }

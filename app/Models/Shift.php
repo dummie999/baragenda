@@ -1,15 +1,22 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 class Shift extends Model
 {
-	public function getShiftType(){
-		return $this->hasMany('App\Models\ShiftType');
+
+	public $table = "shifts";
+
+    public function updated_by(){
+		return $this->belongsTo('App\Models\User','updated_by');
     }
-	public function getUser(){
-		return $this->hasMany('App\Models\ShiftUser');
+
+    public function shifttype(){
+		return $this->belongsTo('App\Models\ShiftType','shift_type_id');
+    }
+	public function shiftuser(){
+		return $this->belongsToMany('App\Models\User')->using('App\Models\ShiftUser');
     }
 }
