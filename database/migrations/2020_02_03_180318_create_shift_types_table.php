@@ -16,9 +16,9 @@ class CreateShiftTypesTable extends Migration
         Schema::create('shift_type', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('common')->default(false); //barco
-            $table->integer('committee_id')->unsigned(); //barco
-            $table->string('title'); //uitzit
-            $table->string('description'); //bardienst van 22:00-laat
+            $table->integer('committee_id')->unsigned()->nullable(); //barco
+            $table->string('title')->nullable(); //uitzit
+            $table->string('description')->nullable(); //bardienst van 22:00-laat
 
 			#foreign references
 			$table->foreign('committee_id')->references('id')->on('committees');

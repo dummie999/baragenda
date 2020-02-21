@@ -20,7 +20,9 @@ Route::post('/logout', 'LoginController@logout')->name('logout');
 
 //user settings
 Route::match(['get', 'post'], '/settings', 'UserSettingsController@changeSettings')->name('user.settings');
-Route::match(['get', 'post'], '/management', 'ManagementController@changeSettings')->name('management');
+//management settings
+Route::match(['get','post'], '/management', 'ManagementController@changeSettings')->name('management');
+Route::match(['post'], '/new', 'ManagementController@newRow')->name('new_row');
 
 //shifts
 Route::match(['get'], '/shifts', 'ShiftController@index')->name('shifts');

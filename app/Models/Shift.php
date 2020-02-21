@@ -24,7 +24,4 @@ class Shift extends Model
         #INNER JOIN infos ON infos.user_id=users.id;
 		return $this->belongsToMany(User::class,'shift_user');
     }
-	public function shiftuserBAK(){
-		return $this->belongsToMany(User::class,'shift_user');
-    }
 }
