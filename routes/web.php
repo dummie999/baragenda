@@ -20,8 +20,10 @@ Route::post('/logout', 'LoginController@logout')->name('logout');
 
 //user settings
 Route::match(['get', 'post'], '/settings', 'UserSettingsController@changeSettings')->name('user.settings');
+Route::match(['get', 'post'], '/management', 'ManagementController@changeSettings')->name('management');
 
-//shifts 
+//shifts
 Route::match(['get'], '/shifts', 'ShiftController@index')->name('shifts');
 Route::match(['post'], '/shifts', 'ShiftController@UpdateShifts')->name('shifts');
-Route::get('/page/{page}', 'ShiftController@index')->name('shifts.page');
+Route::get('/shifts/page/{page}', 'ShiftController@index')->name('shifts.page');
+Route::get('/shifts/{date}', 'ShiftController@openDate')->name('shifts.date');

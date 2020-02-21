@@ -17,13 +17,13 @@
                         $page == 1 ?
                             route('shifts') :
                             route('shifts.page', ['page' => (isset($page) ? $page-1 : -1)])
-                    }}" class="pull-left">&lt;&lt;</a>
+                    }}" class="pull-left btn">Previous</a>
 
                         <a href="{{
                         $page == -1 ?
                             route('shifts') :
                             route('shifts.page', ['page' => (isset($page) ? $page+1 : 1)])
-                    }}" class="pull-right">&gt;&gt;</a>
+                    }}" class="pull-right btn">Next</a>
                         <br class="clearfix"/>
 					</div>
                     <div class="card-block">
@@ -46,11 +46,20 @@
 							<tbody>
 						@foreach($shifts as $i => $shift)
                                <tr>
-                               <td><a href="#">{{ $shift['carbon']->format('l d F') }}</a></td>
+                               <td><a href="{{ route('shifts.date', ['date' => $i]) }}">{{ $shift['carbon']->format('l d F') }}</a></td>
 								@foreach($shifttypes as $j => $type)
 
 									<td>
-                                    {{ $shift[$type->title]->title ?? '' }}
+                                    <i>{{ $shift[$type->title]->title ?? '' }}</i>
+                                @if (array_key_exists($type->title,$shift))
+
+                                @foreach( $shift[$type->title]->shiftuser as $k =>$u )
+                                        {{$u->info->name}}
+                                @if ((count($shift[$type->title]->shiftuser)-1) > $k)
+                                        <br>
+                                @endif
+                                @endforeach
+                                @endif
 
 
 									</td>
@@ -80,13 +89,13 @@
                         $page == 1 ?
                             route('shifts') :
                             route('shifts.page', ['page' => (isset($page) ? $page-1 : -1)])
-                    }}" class="pull-left">&lt;&lt;</a>
+                    }}" class="pull-left btn">Previous</a>
 
                         <a href="{{
                         $page == -1 ?
                             route('shifts') :
                             route('shifts.page', ['page' => (isset($page) ? $page+1 : 1)])
-                    }}" class="pull-right">&gt;&gt;</a>
+                    }}" class="pull-right btn">Next</a>
                         <br class="clearfix"/>
                     </div>
                 </div>

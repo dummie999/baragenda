@@ -38,7 +38,8 @@
                     <ul class="navbar-nav mr-auto">
 						<li class="nav-item"><a class="nav-link" href="#">Baragenda</a></li>
 						<li class="nav-item"><a class="nav-link" href=" {{ route('shifts') }} ">Diensten</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Management</a></li>
+						<li class="nav-item"><a class="nav-link" href="#">Ledenadministratie</a></li>
+						<li class="nav-item"><a class="nav-link" href=" {{route('management') }} ">Beheer</a></li>
 
                     </ul>
                     @endguest

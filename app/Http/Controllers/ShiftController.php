@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Shift;
 use App\Models\ShiftType;
-use App\Models\ShiftUser;
-use App\Models\User;
+
+
+
 use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -38,18 +40,18 @@ class ShiftController extends Controller
                 $shifttypes=ShiftType::all()->where('common', '1');
 
                 //show requested date & events
-                $shifts = Shift::whereBetween('datetime',array($now_r_start,$now_r2_end))->with('shifttype','shiftuser')->get();
-				
+                $shifts = Shift::whereBetween('datetime',array($now_r_start,$now_r2_end))->with('shifttype','shiftuser.info')->get();
+                //echo('<pre>');print_r($shifts);
 				//create array of dates -> arr[2020-02-14][carbon]=CarbonObj
 				$arr=array();
 				foreach($dates as $d){
-					$data[$d->format('Y-m-d')]=array('carbon'=>$d);
+					$data[$d->format('Ymd')]=array('carbon'=>$d);
 				}
 				//create / fill from object to multidimensional arr
 			    foreach($shifts as $s){
-					$data[Carbon::parse($s->datetime)->format('Y-m-d')][$s->shifttype->title]=$s;
+					$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=$s;
 			    }
-			
+
 				//prepare view
 				return view('shifts', compact('shifttypes', 'page'),array(
 				'shifttypes'=>$shifttypes,
@@ -89,10 +91,38 @@ class ShiftController extends Controller
 	}
 
 
+	private function validateDate($date, $format = 'Ymd')
+	{
+		$d = DateTime::createFromFormat($format, $date);
+		// The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
+		return $d && $d->format($format) === $date;
+	}
 
+	public function openDate(Request $request,$date = 0)
+    {
+	if (!$this->validateDate($date)){
+		return redirect(route('shifts'));
+        }
+		//get
+		$cdate = Carbon::parse($date)->startOfDay();
+        $cdateyd = Carbon::parse($date)->startOfDay()->subDay(1);
+		$cdate24=Carbon::parse($date)->addHours(24);
+		if($request->isMethod('get')){
+			 $shift = Shift::whereBetween('datetime',array($cdate,$cdate24))
+             ->orderBy('datetime', 'ASC')
+             ->with('shifttype','shiftuser.info')
+             ->get();
+			 #echo("<pre>");print_r($shift);die;
+		//prepare view
+			return view('shiftdate', compact('shift'),array(
+			'shift'=>$shift,
+            'prev'=>$cdateyd->format('Ymd'),
+            'today'=>$cdate->format('l d F'),
+            'next'=>$cdate24->format('Ymd')
+			));
 
-
-
+		}
+	}
 
     /**
      * Show the form for creating a new resource.
