@@ -9,7 +9,7 @@ class ShiftType extends Model
     protected $fillable = [
         'common', 'committee_id', 'title','description','updated_by'
     ];
-    public $table = "shift_type";
+    public $table = "shift_types";
 	public function shift()
     {
         return $this->hasMany(Shift::class);

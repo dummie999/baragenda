@@ -14,14 +14,12 @@ class ManagementController extends Controller
     public function __construct() {
         $this->middleware('auth');
     }
-/*     public function newRow(Request $request){
-        $shifttypes=ShiftType::with('committee','user.info')->get();
-        $committees=Committee::get();
-        $new = new ShiftType;
-        $shifttypes->push($new);
-        print_r($shifttypes);die;
-        return view('management', compact('shifttypes','committees'));
-    } */
+     public function newRow(Request $request){
+        $st = new ShiftType;
+        $st->save();
+        #changeSettings();
+        #return view('management', compact('shifttypes','committees'));
+    }
     public function changeSettings(Request $request){
         if($request->isMethod('get')){
             $shifttypes=ShiftType::with('committee','user.info')->get();

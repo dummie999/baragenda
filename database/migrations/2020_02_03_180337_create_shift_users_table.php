@@ -14,7 +14,6 @@ class CreateShiftUsersTable extends Migration
     public function up()
     {
         Schema::create('shift_user', function (Blueprint $table) {
-            $table->increments('id');
             $table->integer('shift_id')->unsigned(); //bardienst van 22:00-laat (uitzit)
             $table->integer('user_id')->unsigned(); //persoon X
 

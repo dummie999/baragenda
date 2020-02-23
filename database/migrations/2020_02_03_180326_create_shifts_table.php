@@ -24,7 +24,7 @@ class CreateShiftsTable extends Migration
 			$table->timestamps();
 
 			#foreign references
-			$table->foreign('shift_types_id')->references('id')->on('shift_types');
+			$table->foreign('shift_type_id')->references('id')->on('shift_types');
 			$table->foreign('updated_by')->references('id')->on('users');
 
 

@@ -62,7 +62,7 @@
                                         Aanpassen
                                     </button>
                                     <form method="POST">
-                                        <button class="btn btn-primary" type="submit" href="{{ route('new_row') }}">Extra rij</button>
+                                        <button class="btn btn-primary" type="submit" href="{{ route('management.newRow') }}">Extra rij</button>
                                     </form>
                                 </div>
                             </form>
