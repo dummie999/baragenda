@@ -20,9 +20,11 @@ Route::post('/logout', 'LoginController@logout')->name('logout');
 
 //user settings
 Route::match(['get', 'post'], '/settings', 'UserSettingsController@changeSettings')->name('user.settings');
+
 //management settings
-Route::match(['get','post'], '/management', 'ManagementController@changeSettings')->name('management');
-Route::post( '/new', 'ManagementController@newRow')->name('management.newRow');
+Route::match(['get','post'], '/management', 'ManagementController@changeSettings')->name('management.settings');
+Route::post( '/management/newRow/', 'ManagementController@newRow')->name('management.newRow');
+Route::match(['get','post'],'/management/delRow/{shifttype}/', 'ManagementController@delRow')->name('management.delRow');
 
 //shifts
 Route::match(['get'], '/shifts', 'ShiftController@index')->name('shifts');

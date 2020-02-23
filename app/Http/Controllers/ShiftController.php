@@ -37,7 +37,8 @@ class ShiftController extends Controller
 			try {
 
                 //shifttypes (only common)
-                $shifttypes=ShiftType::all()->where('common', '1');
+                $whereMatch=['common' => '1','enabled'=> '1'];
+                $shifttypes=ShiftType::Where($whereMatch)->get();
 
                 //show requested date & events
                 $shifts = Shift::whereBetween('datetime',array($now_r_start,$now_r2_end))->with('shifttype','shiftuser.info')->get();

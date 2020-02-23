@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ShiftType extends Model
 {
     protected $fillable = [
-        'common', 'committee_id', 'title','description','updated_by'
+        'enabled','common', 'committee_id', 'title','description','updated_by'
     ];
     public $table = "shift_types";
 	public function shift()

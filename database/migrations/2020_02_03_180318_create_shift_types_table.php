@@ -15,7 +15,8 @@ class CreateShiftTypesTable extends Migration
     {
         Schema::create('shift_types', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('common')->default(false); //barco
+            $table->integer('enabled')->default(false); //meteen ingeschakeld?
+            $table->integer('common')->default(false); //komt deze dagelijks voor?
             $table->integer('committee_id')->unsigned()->nullable(); //barco
             $table->string('title')->nullable(); //uitzit
             $table->string('description')->nullable(); //bardienst van 22:00-laat
