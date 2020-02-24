@@ -47,29 +47,43 @@
 						@foreach($shifts as $i => $shift)
                                <tr>
                                <td><a href="{{ route('shifts.date', ['date' => $i]) }}">{{ $shift['carbon']->format('l d F') }}</a></td>
-								@foreach($shifttypes as $j => $type)
+						@foreach($shifttypes as $j => $type)
 
 									<td>
                                     <i>{{ $shift[$type->title]->title ?? '' }}</i>
                                 @if (array_key_exists($type->title,$shift))
 
-                                @foreach( $shift[$type->title]->shiftuser as $k =>$u )
+						@foreach( $shift[$type->title]->shiftuser as $k =>$u )
                                         {{$u->info->name}}
                                 @if ((count($shift[$type->title]->shiftuser)-1) > $k)
                                         <br>
                                 @endif
-                                @endforeach
+						@endforeach
                                 @endif
 
 
 									</td>
 
-								@endforeach
+						@endforeach
 									<td>
-										<div class="btn-group-vertical">
-											<a href="#" class="btn btn-primary">Aanmelden</a>
-										</div>
-									</td>
+                                <button id="showEnlistment" type="button" data-date={{$i}} onClick="showEnlistment(this)" class="btn btn-primary">
+                                  Aanmelden
+                                </button>
+								@isset($shift)
+								<form id="enlist-form"  method='POST' >
+								<div id="E_{{$i}}" style="display:none;">
+								<select class="form-control">
+						@foreach($shift as $s)
+								@isset($s->shifttype)
+								<option value="{{$s->id}}">{{$s->shifttype->title}}</value>
+								@endisset
+						@endforeach
+								</select>
+								<input type="submit" class="btn btn-warning form-control" value="Verzenden">
+								</div>
+								</form>
+								@endisset
+                                    </td>
 								</tr>
 							@if(array_keys($shifts)[6]==$i)
 								<tr>
