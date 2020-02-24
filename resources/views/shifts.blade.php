@@ -70,7 +70,7 @@
                                   Aanmelden
                                 </button>
 								@isset($shift)
-								<form id="enlist-form"  method='POST' >
+								<form id="enlist-form_{{$i}}"  method='POST' >
 								<div id="E_{{$i}}" style="display:none;">
 								<select class="form-control">
 						@foreach($shift as $s)
