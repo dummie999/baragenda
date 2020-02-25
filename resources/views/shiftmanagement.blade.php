@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                         @if(!isset($page) || $page == 0)
-                            Diensten in de komende 2 weken
+                            Diensten in de komende week
                         @else
                             Diensten tussen {{ reset($shifts)['carbon']->format('l d F') }} en {{ end($shifts)['carbon']->format('l d F') }}
                         @endif
@@ -33,6 +33,44 @@
 						</div>
                         @endif
 						<br>
+						
+						<form action="" type='POST'>
+						@foreach($shifttypes as $j => $type)
+									<input id="shift_id{{$i}}{{$j}}" name="[{{$i}}][{{$j}}][]" type="checkbox" data-toggle="toggle" data-on="" data-off=""  data-onstyle="primary"   @isset($shift[$i][$j]) checked @endisset }}  >
+						@endforeach						
+						<input id="customDate1" type="text">
+
+						<div class="form-group">
+							<div class='input-group date' id='datetimepicker3_1'>
+								<input type='text' class="form-control" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-time"></span>
+								</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class='input-group date' id='datetimepicker3_2'>
+								<input type='text' class="form-control" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-time"></span>
+								</span>
+							</div>
+						</div>					 
+					<script type="text/javascript">
+						$(function () {
+							$('#datetimepicker3_1').datetimepicker({
+								format: 'LT'
+							});
+							$('#datetimepicker3_2').datetimepicker({
+								format: 'LT'
+							});
+						});
+					</script>
+
+						<input type="submit" value="Aanmaken">
+						</form>
+						
+						<form action="" type='POST'>
 						<table class="table table-responsive diensten">
 							<thead>
 								<tr>
@@ -50,50 +88,14 @@
 						@foreach($shifttypes as $j => $type)
 
 									<td>
-                                    <i>{{ $shift[$type->title]->title ?? '' }}</i>
-                                @if (array_key_exists($type->title,$shift))
-
-						@foreach( $shift[$type->title]->shiftuser as $k =>$u )
-                                        {{$u->info->name}}
-                                @if ((count($shift[$type->title]->shiftuser)-1) > $k)
-                                        <br>
-                                @endif
-						@endforeach
-                                @endif
-
-
+									<input id="shift_id{{$i}}{{$j}}" name="[{{$i}}][{{$j}}][]" type="checkbox" data-toggle="toggle" data-on="" data-off=""  data-onstyle="primary"   @isset($shift[$i][$j]) checked @endisset }}  >
 									</td>
 
 						@endforeach
 									<td>
-                                <button id="showEnlistment" type="button" data-date={{$i}} onClick="showEnlistment(this)" class="btn btn-primary">
-                                  Aanmelden
-                                </button>
-								@isset($shift)
-								<form id="enlist-form_{{$i}}"  method='POST' >
-								<div id="E_{{$i}}" style="display:none;">
-								<select class="form-control">
-						@foreach($shift as $s)
-								@isset($s->shifttype)
-								<option value="{{$s->id}}">{{$s->shifttype->title}}</value>
-								@endisset
-						@endforeach
-								</select>
-								<input type="submit" class="btn btn-warning form-control" value="Verzenden">
-								</div>
-								</form>
-								@endisset
+
                                     </td>
 								</tr>
-							@if(array_keys($shifts)[6]==$i)
-								<tr>
-									<td>&nbsp;</td>
-									<td></td>
-									<td></td>
-									<td></td>
-									<td></td>
-								</tr>
-							@endif
 						@endforeach
 							</tbody>
 						</table>
@@ -110,7 +112,11 @@
                             route('shifts') :
                             route('shifts.page', ['page' => (isset($page) ? $page+1 : 1)])
                     }}" class="pull-right btn">Next</a>
+					<input type="submit" class="btn btn-primary float-right" value="Toepassen">
                         <br class="clearfix"/>
+						
+						
+						</form>
                     </div>
                 </div>
             </div>

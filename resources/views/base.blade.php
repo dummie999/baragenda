@@ -10,6 +10,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     {{-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script> --}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
     <script src="{{ asset('js/bootstrap-toggle.min.js') }}" defer></script>
     <script src="{{ asset('js/functions.js') }}" defer></script>
 	<!-- Fonts -->
@@ -40,7 +41,7 @@
                     <ul class="navbar-nav mr-auto">
 						<li class="nav-item"><a class="nav-link" href="#">Baragenda</a></li>
 						<li class="nav-item"><a class="nav-link" href=" {{ route('shifts') }} ">Diensten</a></li>
-						<li class="nav-item"><a class="nav-link" href="#">Ledenadministratie</a></li>
+						<li class="nav-item"><a class="nav-link" href="{{ route('shifts.admin')}}">Dienstenbeheer</a></li>
 						<li class="nav-item"><a class="nav-link" href=" {{route('management.settings') }} ">Beheer</a></li>
 
                     </ul>
