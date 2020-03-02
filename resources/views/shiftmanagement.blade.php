@@ -33,43 +33,56 @@
 						</div>
                         @endif
 						<br>
-						
-						<form action="" type='POST'>
-						@foreach($shifttypes as $j => $type)
-									<input id="shift_id{{$i}}{{$j}}" name="[{{$i}}][{{$j}}][]" type="checkbox" data-toggle="toggle" data-on="" data-off=""  data-onstyle="primary"   @isset($shift[$i][$j]) checked @endisset }}  >
-						@endforeach						
-						<input id="customDate1" type="text">
 
-						<div class="form-group">
-							<div class='input-group date' id='datetimepicker3_1'>
-								<input type='text' class="form-control" />
-								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-time"></span>
-								</span>
+						<form action="" type='POST'>
+
+
+						@foreach($shifttypes as $j => $type)
+						{{$type->title}}
+									<input id="shift_type{{$j}}" name="shifttype_input[{{$j}}][]" type="checkbox"   @isset($shifttypes) checked @endisset }}  > <br>
+						@endforeach
+						<div class="container">
+							<div class="row">
+								<div class="col-sm-4">
+									<div class="form-group">
+										<div class="input-group date" id="datetimepicker4a" data-target-input="nearest">
+											<input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4a"/>
+											<div class="input-group-append" data-target="#datetimepicker4a" data-toggle="datetimepicker">
+												<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+											</div>
+										</div>
+									</div>
+								</div>
+                                <div class="col-sm-4">
+                                <div class="form-group">
+                                    <div class="input-group date" id="datetimepicker4b" data-target-input="nearest">
+                                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4b"/>
+                                        <div class="input-group-append" data-target="#datetimepicker4b" data-toggle="datetimepicker">
+                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+								<script type="text/javascript">
+									$(function () {
+										$('#datetimepicker4a').datetimepicker({
+											format : 'YYYY-MM-DD',
+                                            allowInputToggle: true,
+                                            defaultDate : moment(),
+										});
+										$('#datetimepicker4b').datetimepicker({
+											format : 'YYYY-MM-DD',
+                                            allowInputToggle: true,
+                                            defaultDate : moment(),
+										});
+									});
+								</script>
 							</div>
 						</div>
-						<div class="form-group">
-							<div class='input-group date' id='datetimepicker3_2'>
-								<input type='text' class="form-control" />
-								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-time"></span>
-								</span>
-							</div>
-						</div>					 
-					<script type="text/javascript">
-						$(function () {
-							$('#datetimepicker3_1').datetimepicker({
-								format: 'LT'
-							});
-							$('#datetimepicker3_2').datetimepicker({
-								format: 'LT'
-							});
-						});
-					</script>
 
 						<input type="submit" value="Aanmaken">
 						</form>
-						
+
 						<form action="" type='POST'>
 						<table class="table table-responsive diensten">
 							<thead>
@@ -114,8 +127,8 @@
                     }}" class="pull-right btn">Next</a>
 					<input type="submit" class="btn btn-primary float-right" value="Toepassen">
                         <br class="clearfix"/>
-						
-						
+
+
 						</form>
                     </div>
                 </div>
