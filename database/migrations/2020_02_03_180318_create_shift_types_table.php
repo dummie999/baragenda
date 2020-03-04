@@ -20,6 +20,8 @@ class CreateShiftTypesTable extends Migration
             $table->integer('committee_id')->unsigned()->nullable(); //barco
             $table->string('title')->nullable(); //uitzit
             $table->string('description')->nullable(); //bardienst van 22:00-laat
+            $table->datetime('default_datetime')->nullable(); // 22:00
+            $table->datetime('default_datetime_end')->nullable(); // laat
 			$table->integer('updated_by')->unsigned();
 			$table->timestamps();
 

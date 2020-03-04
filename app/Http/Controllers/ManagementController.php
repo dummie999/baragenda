@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ShiftType as ShiftType;
 use App\Models\Committee as Committee;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,6 +47,8 @@ class ManagementController extends Controller
             'committee_id' => $request->input('committee_id')[$k],
             'title' => $request->input('title')[$k],
             'description' => $request->input('description')[$k],
+            'default_datetime' => Carbon::now()->toDateString() . " " . $request->input('default_datetime')[$k],
+            'default_datetime_end' => Carbon::now()->toDateString() . " " . $request->input('default_datetime_end')[$k],
             'updated_by' => $user->id
             ]);
         }

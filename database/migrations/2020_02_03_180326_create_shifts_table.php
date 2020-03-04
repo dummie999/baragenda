@@ -16,9 +16,9 @@ class CreateShiftsTable extends Migration
         Schema::create('shifts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('shift_type_id')->unsigned(); //bardienst van 22:00-laat (uitzit)
-            $table->string('title'); //uitzit donderdag (dixo)
+            $table->string('title')->nullable() //uitzit donderdag (dixo)
             $table->datetime('datetime'); //begint om donderdag 22:00
-            $table->integer('length'); //8*60*60=28800 (8u) --> 6:00
+            $table->datetime('datetime_end'); //begint om donderdag 22:00
             $table->string('description')->nullable(); //hippe beschrijving, wat is er te doen.
             $table->integer('updated_by')->unsigned(); //naam barcolid
 			$table->timestamps();

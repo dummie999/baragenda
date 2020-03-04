@@ -15,7 +15,7 @@
 						</div>
                         @endif
                         <br>
-                        <form class="form-horizontal col-md-12 col-xs-12" method="POST">
+                        <form class="form-horizontal col-md-12 col-xs-12" action="" method='POST'>
                             {{ csrf_field() }}
                             <div class="form-group">
                                 <table class="table responsive-table management">
@@ -26,6 +26,7 @@
                                             <th>Commissie</th>
                                             <th>Naam</th>
                                             <th>Omschrijving</th>
+                                            <th>Default start-/eindtijd</th>
                                             <th>Update</th>
                                             <th>Create</th>
                                             <th>Acties</th>
@@ -57,6 +58,27 @@
                                             <td>
                                                 <textarea name="description[{{$s->id}}]" class="form-control" rows="1" >{{$s->description}}</textarea>
                                             </td>
+											<td>
+												 
+												
+														<div class="col-sm-8">
+															<input type="text" class="form-control datetimepicker-input" name="default_datetime[{{$s->id}}]" id="datetimepicker5a_{{$s->id}}" data-toggle="datetimepicker" data-target="#datetimepicker5a_{{$s->id}}"/>
+														</div>
+														<div class="col-sm-8">
+															<input type="text" class="form-control datetimepicker-input" name="default_datetime_end[{{$s->id}}]" id="datetimepicker5b_{{$s->id}}" data-toggle="datetimepicker" data-target="#datetimepicker5b_{{$s->id}}"/>
+														</div>
+														<script type="text/javascript">
+															$(function () {
+																$('#datetimepicker5a_{{$s->id}}').datetimepicker({
+																	defaultDate: moment({ hour: 14, minute: 00 }), format: 'HH:mm'																	
+																	});
+																$('#datetimepicker5b_{{$s->id}}').datetimepicker({
+																	defaultDate: moment({ hour: 21, minute: 00 }), format: 'HH:mm'
+																});							
+															});
+														</script>
+												                                          
+											</td>                                            
                                             <td>{{$s->updated_at}} <br>({{$s->user->info->name}})</td>
                                             <td>{{$s->created_at}}</td>
                                         <td>

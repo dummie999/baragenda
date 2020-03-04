@@ -10,6 +10,7 @@ use App\Models\ShiftType;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ShiftController extends Controller
@@ -127,6 +128,7 @@ class ShiftController extends Controller
 
     public function admin(Request $request,$page = 0)
     {
+		
         if(!is_numeric($page)) {
             return redirect(route('home'));
         }
@@ -169,6 +171,28 @@ class ShiftController extends Controller
 				return redirect(route('home'))->with('error', 'Dienst niet gevonden!');
 			}
 		}
+		$shifttypes=ShiftType::all();
+		$user = Auth::user();
+		$range=$this->generateDateRange(Carbon::parse($request->dt1), Carbon::parse($request->dt2),true);
+		foreach($range as $d){
+			$date=$d->format('Y-m-d');
+			foreach($request->input_shifttype as $k=>$v){
+			$st = $shifttypes->find($k);
+			$st_default= Carbon::parse($st->default_datetime)->format('H:m:s');
+			$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:m:s');
+			$obj = new Shift;
+			$obj->shift_type_id=$k;
+			$obj->title=$st->title;
+			$obj->datetime=Carbon::parse("$date $st_default");
+			$obj->datetime_end=Carbon::parse("$date $st_default_end");
+			$obj->updated_by=$user->id;
+			$obj->save();
+			}
+		}
+		return redirect(route('shiftmanagement'))->with('info', 'Shifts aangepast!');
+		
+
+		
 	}
     /**
      * Show the form for creating a new resource.

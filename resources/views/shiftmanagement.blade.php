@@ -15,14 +15,14 @@
 
 						<a href="{{
                         $page == 1 ?
-                            route('shifts') :
-                            route('shifts.page', ['page' => (isset($page) ? $page-1 : -1)])
+                            route('shifts.admin') :
+                            route('shifts.admin.page', ['page' => (isset($page) ? $page-1 : -1)])
                     }}" class="pull-left btn">Previous</a>
 
                         <a href="{{
                         $page == -1 ?
-                            route('shifts') :
-                            route('shifts.page', ['page' => (isset($page) ? $page+1 : 1)])
+                            route('shifts.admin') :
+                            route('shifts.admin.page', ['page' => (isset($page) ? $page+1 : 1)])
                     }}" class="pull-right btn">Next</a>
                         <br class="clearfix"/>
 					</div>
@@ -33,20 +33,26 @@
 						</div>
                         @endif
 						<br>
-
-						<form action="" type='POST'>
-
-
+						ANGULAR? AJAX?
+						<form action="" method='POST'>
+						 {{ csrf_field() }}
+						<div style="display:flex;">
 						@foreach($shifttypes as $j => $type)
-						{{$type->title}}
-									<input id="shift_type{{$j}}" name="shifttype_input[{{$j}}][]" type="checkbox"   @isset($shifttypes) checked @endisset }}  > <br>
+						<div style="padding:5px;">
+							<input id="shift_type{{$j}}" name="input_shifttype[{{$type->id}}][]" type="checkbox"   @isset($shifttypes) checked @endisset }} data-toggle="toggle" data-on="{{$type->title}}" data-off="{{$type->title}}"  data-onstyle="primary">
+						</div>
+						
 						@endforeach
+						</div>
+						<div style="padding:5px;">
+							<input id="excludeWeekend" name="excludeWeekend[]" type="checkbox" data-toggle="toggle" data-on="Weekdays" data-off="Full Week"  data-onstyle="primary" checked>
+						</div>
 						<div class="container">
 							<div class="row">
 								<div class="col-sm-4">
 									<div class="form-group">
 										<div class="input-group date" id="datetimepicker4a" data-target-input="nearest">
-											<input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4a"/>
+											<input name="dt1" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4a"/>
 											<div class="input-group-append" data-target="#datetimepicker4a" data-toggle="datetimepicker">
 												<div class="input-group-text"><i class="fa fa-calendar"></i></div>
 											</div>
@@ -56,7 +62,7 @@
                                 <div class="col-sm-4">
                                 <div class="form-group">
                                     <div class="input-group date" id="datetimepicker4b" data-target-input="nearest">
-                                        <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4b"/>
+                                        <input name="dt2" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4b"/>
                                         <div class="input-group-append" data-target="#datetimepicker4b" data-toggle="datetimepicker">
                                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                         </div>
@@ -83,7 +89,7 @@
 						<input type="submit" value="Aanmaken">
 						</form>
 
-						<form action="" type='POST'>
+						{{-- <form action="" type='POST'>
 						<table class="table table-responsive diensten">
 							<thead>
 								<tr>
@@ -129,7 +135,7 @@
                         <br class="clearfix"/>
 
 
-						</form>
+						</form> --}}
                     </div>
                 </div>
             </div>
