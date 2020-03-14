@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Shift;
 use App\Models\ShiftType;
+use App\Models\ShiftUser;
 
 
 
@@ -182,7 +183,7 @@ class ShiftController extends Controller
 			$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:m:s');
 			$obj = new Shift;
 			$obj->shift_type_id=$k;
-			$obj->title=$st->title;
+			$obj->title=null;
 			$obj->datetime=Carbon::parse("$date $st_default");
 			$obj->datetime_end=Carbon::parse("$date $st_default_end");
 			$obj->updated_by=$user->id;
@@ -204,6 +205,27 @@ class ShiftController extends Controller
         //
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function enlist(Request $request)
+    {
+		$user = Auth::user();
+		foreach($request->shiftDate as $k=>$v){
+			$ds=Carbon::createFromFormat("Ymd", $k)->startOfDay();
+			$de=Carbon::createFromFormat("Ymd", $k)->endOfDay();
+			$shift=Shift::where('shift_type_id',$v)->whereDate('datetime',array($ds,$de))->get()->first();
+			$su = new ShiftUser;
+			$su->shift_id = $shift->id;
+			$su->user_id = $user->id;
+			$su->save();
+		}
+		return redirect(route('shifts'))->with('info', 'Aangemeld!');
+
+    }
     /**
      * Store a newly created resource in storage.
      *

@@ -18,7 +18,7 @@
                         <form class="form-horizontal col-md-12 col-xs-12" action="" method='POST'>
                             {{ csrf_field() }}
                             <div class="form-group">
-                                <table class="table responsive-table management">
+                                <table class="table table-responsive management">
                                     <thead>
                                         <tr>
                                             <th>Geactiveerd</th>

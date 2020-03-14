@@ -70,12 +70,13 @@
                                   Aanmelden
                                 </button>
 								@isset($shift)
-								<form id="enlist-form_{{$i}}"  method='POST' >
-								<div id="E_{{$i}}" style="display:none;">
-								<select class="form-control">
+								<form  action="{{ route('shifts.enlist') }}" method='POST' >
+										 {{ csrf_field() }}
+								<div id="E_{{$i}}" name="E_{{$i}}" style="display:none;">
+								<select name="shiftDate[{{$i}}]" id="S_{{$i}}" class="form-control">
 						@foreach($shift as $s)
 								@isset($s->shifttype)
-								<option value="{{$s->id}}">{{$s->shifttype->title}}</value>
+								<option name="O_{{$s->shift_type_id}}" value="{{$s->shift_type_id}}">{{$s->shifttype->title}}</value>
 								@endisset
 						@endforeach
 								</select>

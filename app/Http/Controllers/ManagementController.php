@@ -39,6 +39,8 @@ class ManagementController extends Controller
         foreach($request->input()['id'] as $k =>$v) {
             $common = isset($request->input('common')[$k]) ? 1 : 0;
             $enabled = isset($request->input('enabled')[$k]) ? 1 : 0;
+			$st_default= Carbon::parse($request->default_datetime[$k]);
+			$st_default_end= Carbon::parse($request->default_datetime_end[$k]);
             $st = ShiftType::updateOrCreate(
             ['id'=>$v],
             [
@@ -47,8 +49,8 @@ class ManagementController extends Controller
             'committee_id' => $request->input('committee_id')[$k],
             'title' => $request->input('title')[$k],
             'description' => $request->input('description')[$k],
-            'default_datetime' => Carbon::now()->toDateString() . " " . $request->input('default_datetime')[$k],
-            'default_datetime_end' => Carbon::now()->toDateString() . " " . $request->input('default_datetime_end')[$k],
+            'default_datetime' => Carbon::parse("$st_default"),
+            'default_datetime_end' =>Carbon::parse("$st_default_end"),
             'updated_by' => $user->id
             ]);
         }

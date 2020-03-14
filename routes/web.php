@@ -29,6 +29,7 @@ Route::match(['get','post'],'/management/delRow/{shifttype}/', 'ManagementContro
 //shifts
 Route::match(['get'], '/shifts', 'ShiftController@index')->name('shifts');
 Route::match(['post'], '/shifts', 'ShiftController@UpdateShifts')->name('shifts');
+Route::match(['post'], '/shiftsEnlist', 'ShiftController@enlist')->name('shifts.enlist');
 Route::get('/shifts/page/{page}', 'ShiftController@index')->name('shifts.page');
 Route::get('/shifts/{date}', 'ShiftController@openDate')->name('shifts.date');
 
