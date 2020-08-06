@@ -36,3 +36,4 @@ Route::get('/shifts/{date}', 'ShiftController@openDate')->name('shifts.date');
 //shiftmanagement
 Route::match(['get','post'], '/shiftmanagement', 'ShiftController@admin')->name('shifts.admin');
 Route::get('/shiftmanagement/page/{page}', 'ShiftController@admin')->name('shifts.admin.page');
+Route::post('/shiftmanagement/page/{page}', 'ShiftController@admin')->name('shifts.admin.page');

@@ -33,13 +33,12 @@
 						</div>
                         @endif
 						<br>
-						ANGULAR? AJAX?
 						<form action="" method='POST'>
 						 {{ csrf_field() }}
 						<div style="display:flex;">
 						@foreach($shifttypes as $j => $type)
 						<div style="padding:5px;">
-							<input id="shift_type{{$j}}" name="input_shifttype[{{$type->id}}][]" type="checkbox"   @isset($shifttypes) checked @endisset }} data-toggle="toggle" data-on="{{$type->title}}" data-off="{{$type->title}}"  data-onstyle="primary">
+							<input id="shift_type{{$j}}" name="input_shifttype[{{$type->id}}][]" type="checkbox"   @if($type->common==true) checked @endif }} data-toggle="toggle" data-on="{{$type->title}}" data-off="{{$type->title}}"  data-onstyle="primary">
 						</div>
 						
 						@endforeach
@@ -75,13 +74,21 @@
 											format : 'YYYY-MM-DD',
                                             allowInputToggle: true,
                                             defaultDate : moment(),
+											minDate: moment(new Date()).add(-1,'days'),
 										});
 										$('#datetimepicker4b').datetimepicker({
 											format : 'YYYY-MM-DD',
                                             allowInputToggle: true,
-                                            defaultDate : moment(),
+                                            defaultDate : moment(new Date()).add(1,'days'),
+											
 										});
-									});
+										$("#datetimepicker4a").on("change.datetimepicker", function (e) {
+											$('#datetimepicker4b').datetimepicker('minDate', e.date);
+										});
+										$("#datetimepicker4b").on("change.datetimepicker", function (e) {
+											$('#datetimepicker4a').datetimepicker('maxDate', e.date);
+										});
+									});									
 								</script>
 							</div>
 						</div>
@@ -89,7 +96,7 @@
 						<input type="submit" value="Aanmaken">
 						</form>
 
-						{{-- <form action="" type='POST'>
+
 						<table class="table table-responsive diensten">
 							<thead>
 								<tr>
@@ -101,13 +108,16 @@
 								</tr>
 							</thead>
 							<tbody>
-						@foreach($shifts as $i => $shift)
+								@foreach($shifts as $i => $shift)
                                <tr>
                                <td><a href="{{ route('shifts.date', ['date' => $i]) }}">{{ $shift['carbon']->format('l d F') }}</a></td>
-						@foreach($shifttypes as $j => $type)
+								@foreach($shifttypes as $j => $type)
 
 									<td>
-									<input id="shift_id{{$i}}{{$j}}" name="[{{$i}}][{{$j}}][]" type="checkbox" data-toggle="toggle" data-on="" data-off=""  data-onstyle="primary"   @isset($shift[$i][$j]) checked @endisset }}  >
+										@isset($shift[$type->title]) @if( $shift[$type->title]==True)
+										✔
+										@endif
+										@endisset
 									</td>
 
 						@endforeach
@@ -118,24 +128,6 @@
 						@endforeach
 							</tbody>
 						</table>
-                    </div>
-					<div class="card-footer">
-                        <a href="{{
-                        $page == 1 ?
-                            route('shifts') :
-                            route('shifts.page', ['page' => (isset($page) ? $page-1 : -1)])
-                    }}" class="pull-left btn">Previous</a>
-
-                        <a href="{{
-                        $page == -1 ?
-                            route('shifts') :
-                            route('shifts.page', ['page' => (isset($page) ? $page+1 : 1)])
-                    }}" class="pull-right btn">Next</a>
-					<input type="submit" class="btn btn-primary float-right" value="Toepassen">
-                        <br class="clearfix"/>
-
-
-						</form> --}}
                     </div>
                 </div>
             </div>

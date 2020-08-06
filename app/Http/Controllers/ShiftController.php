@@ -57,6 +57,7 @@ class ShiftController extends Controller
 
 				//prepare view
 				return view('shifts', compact('shifttypes', 'page'),array(
+				'weeknos'=>$now_r->weekOfYear,
 				'shifttypes'=>$shifttypes,
 				'shifts'=>$data,
 				));
@@ -158,9 +159,10 @@ class ShiftController extends Controller
 				}
 				//create / fill from object to multidimensional arr
 			    foreach($shifts as $s){
-					$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=$s;
-			    }
+					$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=True;
 
+			    }
+				##echo('<pre>');print_r($data);echo('</pre>');die;;				
 				//prepare view
 				return view('shiftmanagement', compact('shifttypes', 'page'),array(
 				'shifttypes'=>$shifttypes,
@@ -174,23 +176,42 @@ class ShiftController extends Controller
 		}
 		$shifttypes=ShiftType::all();
 		$user = Auth::user();
-		$range=$this->generateDateRange(Carbon::parse($request->dt1), Carbon::parse($request->dt2),true);
+		$range=$this->generateDateRange(Carbon::parse($request->dt1), Carbon::parse($request->dt2),false);
+		#echo('<pre>');print_r($range);echo('</pre>');die;;
+		/*
+		Array
+		(
+			[0] => Carbon\Carbon Object
+				(
+					[date] => 2020-08-03 00:00:00.000000
+					[timezone_type] => 3
+					[timezone] => UTC
+				)
+
+			[1] => Carbon\Carbon Object
+				(
+					[date] => 2020-08-04 00:00:00.000000
+					[timezone_type] => 3
+					[timezone] => UTC
+				)
+		*/	
 		foreach($range as $d){
 			$date=$d->format('Y-m-d');
 			foreach($request->input_shifttype as $k=>$v){
-			$st = $shifttypes->find($k);
-			$st_default= Carbon::parse($st->default_datetime)->format('H:m:s');
-			$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:m:s');
-			$obj = new Shift;
-			$obj->shift_type_id=$k;
-			$obj->title=null;
-			$obj->datetime=Carbon::parse("$date $st_default");
-			$obj->datetime_end=Carbon::parse("$date $st_default_end");
-			$obj->updated_by=$user->id;
-			$obj->save();
+				$st = $shifttypes->find($k);
+				$st_default= Carbon::parse($st->default_datetime)->format('H:m:s');
+				$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:m:s');
+				$obj = new Shift;
+				$obj->shift_type_id=$k;
+				$obj->title=null;
+				$obj->datetime=Carbon::parse("$date $st_default");
+				$obj->datetime_end=Carbon::parse("$date $st_default_end");
+				$obj->updated_by=$user->id;
+				$obj->save();
+				
 			}
 		}
-		return redirect(route('shiftmanagement'))->with('info', 'Shifts aangepast!');
+		return redirect(route('shifts.admin'))->with('info', 'Shifts aangepast!');
 		
 
 		

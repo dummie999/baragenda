@@ -18,7 +18,7 @@
                             route('shifts') :
                             route('shifts.page', ['page' => (isset($page) ? $page-1 : -1)])
                     }}" class="pull-left btn">Previous</a>
-
+                        <div class="btn" style="width:20%">{{ $weeknos ?? ''  }} - {{ $weeknos+1 ?? ''  }}</div>
                         <a href="{{
                         $page == -1 ?
                             route('shifts') :
@@ -44,45 +44,42 @@
 								</tr>
 							</thead>
 							<tbody>
-						@foreach($shifts as $i => $shift)
+						@foreach($shifts as $j => $shift)
                                <tr>
-                               <td><a href="{{ route('shifts.date', ['date' => $i]) }}">{{ $shift['carbon']->format('l d F') }}</a></td>
-						@foreach($shifttypes as $j => $type)
-
-									<td>
-                                    <i>{{ $shift[$type->title]->title ?? '' }}</i>
-                                @if (array_key_exists($type->title,$shift))
-
-						@foreach( $shift[$type->title]->shiftuser as $k =>$u )
-                                        {{$u->info->name}}
-                                @if ((count($shift[$type->title]->shiftuser)-1) > $k)
-                                        <br>
-                                @endif
-						@endforeach
-                                @endif
-
-
-									</td>
-
-						@endforeach
-									<td>
-                                <button id="showEnlistment" type="button" data-date={{$i}} onClick="showEnlistment(this)" class="btn btn-primary">
+                               <td>@if (count($shift)>1)<a href="{{ route('shifts.date', ['date' => $j]) }}">@endif {{ $shift['carbon']->format('l d F') }}</a></td>
+                                    @foreach($shifttypes as $i => $type)
+                                        <td>
+                                            
+                                            @if (array_key_exists($type->title,$shift))
+                                                <i>{{ $shift[$type->title]->title ?? '' }}</i>
+                                                @foreach( $shift[$type->title]->shiftuser as $k =>$u )
+                                                    {{$u->info->name}}
+                                                    @if ((count($shift[$type->title]->shiftuser)-1) > $k)
+                                                        <br>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        </td>
+						            @endforeach
+                                <td>
+                                @if (count($shift)>1) <button id="showEnlistment" type="button" data-date={{$j}} onClick="showEnlistment(this)" class="btn btn-primary">
                                   Aanmelden
                                 </button>
+                                @endif
 								@isset($shift)
-								<form  action="{{ route('shifts.enlist') }}" method='POST' >
-										 {{ csrf_field() }}
-								<div id="E_{{$i}}" name="E_{{$i}}" style="display:none;">
-								<select name="shiftDate[{{$i}}]" id="S_{{$i}}" class="form-control">
-						@foreach($shift as $s)
-								@isset($s->shifttype)
-								<option name="O_{{$s->shift_type_id}}" value="{{$s->shift_type_id}}">{{$s->shifttype->title}}</value>
-								@endisset
-						@endforeach
-								</select>
-								<input type="submit" class="btn btn-warning form-control" value="Verzenden">
-								</div>
-								</form>
+                                    <form  action="{{ route('shifts.enlist') }}" method='POST' >
+                                            {{ csrf_field() }}
+                                    <div id="E_{{$j}}" name="E_{{$j}}" style="display:none;">
+                                    <select name="shiftDate[{{$j}}]" id="S_{{$j}}" class="form-control">
+                                        @foreach($shift as $s)
+                                            @isset($s->shifttype)
+                                                <option name="O_{{$s->shift_type_id}}" value="{{$s->shift_type_id}}">{{$s->shifttype->title}}</value>
+                                            @endisset
+                                        @endforeach
+                                    </select>
+                                    <input type="submit" class="btn btn-warning form-control" value="Verzenden">
+                                    </div>
+                                    </form>
 								@endisset
                                     </td>
 								</tr>
