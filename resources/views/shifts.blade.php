@@ -18,7 +18,7 @@
                             route('shifts') :
                             route('shifts.page', ['page' => (isset($page) ? $page-1 : -1)])
                     }}" class="pull-left btn">Previous</a>
-                        <div class="btn" style="width:20%">{{ $weeknos ?? ''  }} - {{ $weeknos+1 ?? ''  }}</div>
+                        <div class="btn center" style="width:75%">{{ $weeknos ?? ''  }} - {{ $weeknos+1 ?? ''  }}</div>
                         <a href="{{
                         $page == -1 ?
                             route('shifts') :
