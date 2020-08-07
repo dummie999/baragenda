@@ -174,6 +174,8 @@ class ShiftController extends Controller
 				return redirect(route('home'))->with('error', 'Dienst niet gevonden!');
 			}
 		}
+
+		//generate new shifts in daterange
 		$shifttypes=ShiftType::all();
 		$user = Auth::user();
 		$range=$this->generateDateRange(Carbon::parse($request->dt1), Carbon::parse($request->dt2),false);
@@ -238,6 +240,7 @@ class ShiftController extends Controller
 		foreach($request->shiftDate as $k=>$v){
 			$ds=Carbon::createFromFormat("Ymd", $k)->startOfDay();
 			$de=Carbon::createFromFormat("Ymd", $k)->endOfDay();
+			// need validation of duplicates shiftusers
 			$shift=Shift::where('shift_type_id',$v)->whereDate('datetime',array($ds,$de))->get()->first();
 			$su = new ShiftUser;
 			$su->shift_id = $shift->id;

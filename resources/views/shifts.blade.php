@@ -11,6 +11,7 @@
                         @else
                             Diensten tussen {{ reset($shifts)['carbon']->format('l d F') }} en {{ end($shifts)['carbon']->format('l d F') }}
                         @endif
+                        <a href="{{route('shifts.page', ['page' => 0])}}" class="pull-right btn">Deze week</a>
 						<hr>
 
 						<a href="{{
@@ -33,7 +34,8 @@
 						</div>
                         @endif
 						<br>
-						<table class="table table-responsive diensten">
+						<table class="table diensten">
+						{{--<table class="table table-responsive diensten">--}}
 							<thead>
 								<tr>
 									<th>Datum</th>
