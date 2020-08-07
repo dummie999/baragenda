@@ -64,7 +64,7 @@
                                         </td>
 						            @endforeach
                                 <td>
-                                @if (count($shift)>1) <button id="showEnlistment" type="button" data-date={{$j}} onClick="showEnlistment(this)" class="btn btn-primary">
+                                @if (count($shift)>1 && $shift['carbon']->gt($today)) <button id="showEnlistment" type="button" data-date={{$j}} onClick="showEnlistment(this)" class="btn btn-primary">
                                   Aanmelden
                                 </button>
                                 @endif

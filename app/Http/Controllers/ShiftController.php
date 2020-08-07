@@ -60,6 +60,7 @@ class ShiftController extends Controller
 				'weeknos'=>$now_r->weekOfYear,
 				'shifttypes'=>$shifttypes,
 				'shifts'=>$data,
+				'today'=>Carbon::today(),
 				));
 			}
 			catch(ModelNotFoundException $e){
