@@ -75,7 +75,7 @@ class ShiftController extends Controller
 			$day =  new Carbon("last Monday $date");
 		}
 		else{
-			$day =  new Carbon("last Sunday $date");
+			$day =  new Carbon("Sunday $date");
 		}
 		return $day;
 
@@ -163,7 +163,7 @@ class ShiftController extends Controller
 					$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=True;
 
 			    }
-				##echo('<pre>');print_r($data);echo('</pre>');die;;				
+				#echo('<pre>');print_r($data);echo('</pre>');die;;				
 				//prepare view
 				return view('shiftmanagement', compact('shifttypes', 'page'),array(
 				'shifttypes'=>$shifttypes,
@@ -202,8 +202,9 @@ class ShiftController extends Controller
 			$date=$d->format('Y-m-d');
 			foreach($request->input_shifttype as $k=>$v){
 				$st = $shifttypes->find($k);
-				$st_default= Carbon::parse($st->default_datetime)->format('H:m:s');
-				$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:m:s');
+				$st_default= Carbon::parse($st->default_datetime)->format('H:i:s');
+				#echo('<pre>');print_r(Carbon::parse($st->default_datetime)->format('H:i:s'));echo('</pre>');die;;
+				$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:i:s');
 				$obj = new Shift;
 				$obj->shift_type_id=$k;
 				$obj->title=null;
