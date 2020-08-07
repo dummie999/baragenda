@@ -241,11 +241,18 @@ class ShiftController extends Controller
 			$ds=Carbon::createFromFormat("Ymd", $k)->startOfDay();
 			$de=Carbon::createFromFormat("Ymd", $k)->endOfDay();
 			// need validation of duplicates shiftusers
-			$shift=Shift::where('shift_type_id',$v)->whereDate('datetime',array($ds,$de))->get()->first();
-			$su = new ShiftUser;
-			$su->shift_id = $shift->id;
-			$su->user_id = $user->id;
-			$su->save();
+			$shift=Shift::where('shift_type_id',$v)->whereDate('datetime',array($ds,$de))->with('shiftuser')->get()->first();
+			#echo("<pre>");print_r($shift->shiftuser->first()->id);echo("</pre>");die;
+			if(isset($shift->shiftuser->first()->id) && ($user->id == $shift->shiftuser->first()->id)){
+				#only allow to enlist once for a shift.
+				}
+			else {
+				$su = new ShiftUser;
+				$su->shift_id = $shift->id;
+				$su->user_id = $user->id;
+				$su->save();
+				}
+			
 		}
 		return redirect(route('shifts'))->with('info', 'Aangemeld!');
 
