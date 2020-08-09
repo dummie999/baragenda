@@ -131,7 +131,7 @@ class ShiftController extends Controller
 
     public function admin(Request $request,$page = 0)
     {
-		
+
         if(!is_numeric($page)) {
             return redirect(route('home'));
         }
@@ -175,52 +175,69 @@ class ShiftController extends Controller
 				return redirect(route('home'))->with('error', 'Dienst niet gevonden!');
 			}
 		}
+		//post
 
-		//generate new shifts in daterange
-		$shifttypes=ShiftType::all();
-		$user = Auth::user();
-		$range=$this->generateDateRange(Carbon::parse($request->dt1), Carbon::parse($request->dt2),false);
-		#echo('<pre>');print_r($range);echo('</pre>');die;;
-		/*
-		Array
-		(
-			[0] => Carbon\Carbon Object
-				(
-					[date] => 2020-08-03 00:00:00.000000
-					[timezone_type] => 3
-					[timezone] => UTC
-				)
+	    #echo("<pre>");print_r($request->all()); die;
 
-			[1] => Carbon\Carbon Object
-				(
-					[date] => 2020-08-04 00:00:00.000000
-					[timezone_type] => 3
-					[timezone] => UTC
-				)
-		*/	
-		foreach($range as $d){
-			$date=$d->format('Y-m-d');
-			$shift = Shift::whereBetween('datetime',array($d,Carbon::parse($d)->addHours(24)))->with('shifttype')->get(); //multiple shifts on one day
-			foreach($request->input_shifttype as $k=>$v){
-				$st = $shifttypes->find($k);
-				
-				#echo('<pre>');print_r($shift);echo('</pre>');die;
-				$st_default= Carbon::parse($st->default_datetime)->format('H:i:s');
-				$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:i:s');
-				if(!$shift->contains('shifttype', $st)){
-					$obj = new Shift;
-					$obj->shift_type_id=$k;
-					$obj->title=null;
-					$obj->datetime=Carbon::parse("$date $st_default");
-					$obj->datetime_end=Carbon::parse("$date $st_default_end");
-					$obj->updated_by=$user->id;
-					$obj->save();
-					}
-			}
-		} 
-		return redirect(route('shifts.admin'))->with('info', 'Shifts aangepast!');
-		
+		if ($request->has('input_shifttype')) {
 
+
+			//generate new shifts in daterange
+			$shifttypes=ShiftType::all();
+			$user = Auth::user();
+			$range=$this->generateDateRange(Carbon::parse($request->dt1), Carbon::parse($request->dt2),false);
+			#echo('<pre>');print_r($range);echo('</pre>');die;;
+			/*
+			Array
+			(
+				[0] => Carbon\Carbon Object
+					(
+						[date] => 2020-08-03 00:00:00.000000
+						[timezone_type] => 3
+						[timezone] => UTC
+					)
+
+				[1] => Carbon\Carbon Object
+					(
+						[date] => 2020-08-04 00:00:00.000000
+						[timezone_type] => 3
+						[timezone] => UTC
+					)
+			*/	
+			foreach($range as $d){
+				$date=$d->format('Y-m-d');
+				$shift = Shift::whereBetween('datetime',array($d,Carbon::parse($d)->addHours(24)))->with('shifttype')->get(); //multiple shifts on one day
+				foreach($request->input_shifttype as $k=>$v){
+					$st = $shifttypes->find($k);
+					
+					#echo('<pre>');print_r($shift);echo('</pre>');die;
+					$st_default= Carbon::parse($st->default_datetime)->format('H:i:s');
+					$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:i:s');
+					if(!$shift->contains('shifttype', $st)){
+						$obj = new Shift;
+						$obj->shift_type_id=$k;
+						$obj->title=null;
+						$obj->datetime=Carbon::parse("$date $st_default");
+						$obj->datetime_end=Carbon::parse("$date $st_default_end");
+						$obj->updated_by=$user->id;
+						$obj->save();
+						}
+				}
+			} 
+			return redirect(route('shifts.admin'))->with('info', 'Shifts aangepast!');
+		}
+
+		if ($request->has('del_shift_type')) {
+			$r=$request->del_shift_type;
+			$date=array_keys($r)[0];
+			$datec=Carbon::createFromFormat("Ymd", $date);
+			$shift_type_id=$r[$date];
+			$shift = Shift::whereBetween('datetime',array(Carbon::parse($datec),Carbon::parse($datec)->addHours(24)))->where('shift_type_id',$shift_type_id)->first();
+			$shift->delete();
+			#echo("<pre>");print_r($shift); die;
+			
+			return redirect(route('shifts.admin'))->with('info', 'Shifts aangepast!');
+		}
 		
 	}
     /**

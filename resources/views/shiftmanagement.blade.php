@@ -93,10 +93,11 @@
 							</div>
 						</div>
 
-						<input type="submit" value="Aanmaken">
+						<button type="submit" name="">Aanmaken</button>
 						</form>
 
-
+						<form action="" method='POST'>
+							{{ csrf_field() }}
 						<table class="table table-responsive diensten">
 							<thead>
 								<tr>
@@ -114,9 +115,10 @@
 								@foreach($shifttypes as $j => $type)
 
 									<td>
-										@isset($shift[$type->title]) @if( $shift[$type->title]==True)
-										<a href="">✔</a>
-										@endif
+										@isset($shift[$type->title]) 
+											@if( $shift[$type->title]==True)
+											<button type="submit" id="del_shift_type{{$i}}_{{$type['id']}}" class="link-button" name="del_shift_type[{{$i}}]" value="{{$type['id']}}">✔</button>
+											@endif
 										@endisset
 									</td>
 
@@ -128,6 +130,7 @@
 						@endforeach
 							</tbody>
 						</table>
+					</form>
                     </div>
                 </div>
             </div>
