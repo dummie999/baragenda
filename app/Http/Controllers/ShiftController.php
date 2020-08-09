@@ -200,21 +200,24 @@ class ShiftController extends Controller
 		*/	
 		foreach($range as $d){
 			$date=$d->format('Y-m-d');
+			$shift = Shift::whereBetween('datetime',array($d,Carbon::parse($d)->addHours(24)))->with('shifttype')->get(); //multiple shifts on one day
 			foreach($request->input_shifttype as $k=>$v){
 				$st = $shifttypes->find($k);
-				$st_default= Carbon::parse($st->default_datetime)->format('H:i:s');
-				#echo('<pre>');print_r(Carbon::parse($st->default_datetime)->format('H:i:s'));echo('</pre>');die;;
-				$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:i:s');
-				$obj = new Shift;
-				$obj->shift_type_id=$k;
-				$obj->title=null;
-				$obj->datetime=Carbon::parse("$date $st_default");
-				$obj->datetime_end=Carbon::parse("$date $st_default_end");
-				$obj->updated_by=$user->id;
-				$obj->save();
 				
+				#echo('<pre>');print_r($shift);echo('</pre>');die;
+				$st_default= Carbon::parse($st->default_datetime)->format('H:i:s');
+				$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:i:s');
+				if(!$shift->contains('shifttype', $st)){
+					$obj = new Shift;
+					$obj->shift_type_id=$k;
+					$obj->title=null;
+					$obj->datetime=Carbon::parse("$date $st_default");
+					$obj->datetime_end=Carbon::parse("$date $st_default_end");
+					$obj->updated_by=$user->id;
+					$obj->save();
+					}
 			}
-		}
+		} 
 		return redirect(route('shifts.admin'))->with('info', 'Shifts aangepast!');
 		
 
@@ -245,10 +248,8 @@ class ShiftController extends Controller
 			// need validation of duplicates shiftusers
 			$shift=Shift::where('shift_type_id',$v)->whereDate('datetime',array($ds,$de))->with('shiftuser')->get()->first();
 			#echo("<pre>");print_r($shift->shiftuser->first()->id);echo("</pre>");die;
-			if(isset($shift->shiftuser->first()->id) && ($user->id == $shift->shiftuser->first()->id)){
+			if(!$shift->shiftuser->contains('id', $user->id)){
 				#only allow to enlist once for a shift.
-				}
-			else {
 				$su = new ShiftUser;
 				$su->shift_id = $shift->id;
 				$su->user_id = $user->id;

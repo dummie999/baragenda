@@ -115,7 +115,7 @@
 
 									<td>
 										@isset($shift[$type->title]) @if( $shift[$type->title]==True)
-										✔
+										<a href="">✔</a>
 										@endif
 										@endisset
 									</td>
