@@ -105,6 +105,7 @@ class ShiftController extends Controller
 
 	public function openDate(Request $request,$date = 0)
     {
+	// default per day view of agenda. 
 	if (!$this->validateDate($date)){
 		return redirect(route('shifts'));
         }
@@ -151,7 +152,7 @@ class ShiftController extends Controller
                 $shifttypes=ShiftType::Where($whereMatch)->get();
 
                 //show requested date & events
-                $shifts = Shift::whereBetween('datetime',array($now_r_start,$now_r1_end))->with('shifttype','shiftuser.info')->get();
+                $shifts = Shift::withTrashed()->whereBetween('datetime',array($now_r_start,$now_r1_end))->with('shifttype','shiftuser.info')->get();
                 //echo('<pre>');print_r($shifts);
 				//create array of dates -> arr[2020-02-14][carbon]=CarbonObj
 				$arr=array();
@@ -160,8 +161,12 @@ class ShiftController extends Controller
 				}
 				//create / fill from object to multidimensional arr
 			    foreach($shifts as $s){
-					$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=True;
-
+					if ($s->deleted_at==null) {
+						$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=True;
+					}
+					else {
+						$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=False;
+					}
 			    }
 				#echo('<pre>');print_r($data);echo('</pre>');die;;				
 				//prepare view

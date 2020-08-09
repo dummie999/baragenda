@@ -22,7 +22,8 @@ class CreateInfosTable extends Migration
             $table->string('name'); //First Lastname
             $table->boolean('available')->default(true); //available
             $table->text('extra_info')->nullable(); //more info
-			$table->json('groups')->nullable(); //=memberOf
+            $table->json('groups')->nullable(); //=memberOf
+            $table->integer('admin')->unsigned()->default(0); //1=super admin 2=other
             #$table->string('mail'); //security issue?
             $table->timestamps();
 
