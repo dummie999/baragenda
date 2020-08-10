@@ -6,8 +6,6 @@ use App\Models\Shift;
 use App\Models\ShiftType;
 use App\Models\ShiftUser;
 
-
-
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -17,7 +15,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class ShiftController extends Controller
 {
 
-
+    public function __construct(){
+        $this->middleware('auth');
+    }
 
 /**
  * Display a listing of the resource.
