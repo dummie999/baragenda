@@ -16,6 +16,11 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ShiftController extends Controller
 {
+
+
+public function __construct(){
+	$this->middleware('auth');
+}
 /**
  * Display a listing of the resource.
  *
@@ -105,15 +110,15 @@ class ShiftController extends Controller
 
 	public function openDate(Request $request,$date = 0)
     {
-	// default per day view of agenda. 
-	if (!$this->validateDate($date)){
-		return redirect(route('shifts'));
+		// default per day view of agenda. 
+		if (!$this->validateDate($date)){
+			return redirect(route('shifts'));
         }
 		//get
-		$cdate = Carbon::parse($date)->startOfDay();
-        $cdateyd = Carbon::parse($date)->startOfDay()->subDay(1);
-		$cdate24=Carbon::parse($date)->addHours(24);
 		if($request->isMethod('get')){
+			$cdate = Carbon::parse($date)->startOfDay();
+			$cdateyd = Carbon::parse($date)->startOfDay()->subDay(1);
+			$cdate24=Carbon::parse($date)->addHours(24);
 			 $shift = Shift::whereBetween('datetime',array($cdate,$cdate24))
              ->orderBy('datetime', 'ASC')
              ->with('shifttype','shiftuser.info')
@@ -132,52 +137,53 @@ class ShiftController extends Controller
 
     public function admin(Request $request,$page = 0)
     {
-
-        if(!is_numeric($page)) {
-            return redirect(route('home'));
-        }
-        $page = intval($page);
-		//get
-		if($request->isMethod('get')){
-			//date
-			$now_r=Carbon::today()->addWeeks($page);
-			$now_r_start=$this->getDayStartEnd($now_r);
-			$now_r1=Carbon::today()->addWeeks($page+1);
-			$now_r1_end=$this->getDayStartEnd($now_r1,False);
-			$dates=$this->generateDateRange($now_r,$now_r1,true);
-			try {
-
-                //shifttypes (only common)
-                $whereMatch=['enabled'=> '1'];
-                $shifttypes=ShiftType::Where($whereMatch)->get();
-
-                //show requested date & events
-                $shifts = Shift::withTrashed()->whereBetween('datetime',array($now_r_start,$now_r1_end))->with('shifttype','shiftuser.info')->get();
-                //echo('<pre>');print_r($shifts);
-				//create array of dates -> arr[2020-02-14][carbon]=CarbonObj
-				$arr=array();
-				foreach($dates as $d){
-					$data[$d->format('Ymd')]=array('carbon'=>$d);
-				}
-				//create / fill from object to multidimensional arr
-			    foreach($shifts as $s){
-					if ($s->deleted_at==null) {
-						$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=True;
-					}
-					else {
-						$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=False;
-					}
-			    }
-				#echo('<pre>');print_r($data);echo('</pre>');die;;				
-				//prepare view
-				return view('shiftmanagement', compact('shifttypes', 'page'),array(
-				'shifttypes'=>$shifttypes,
-				'shifts'=>$data,
-				));
+		if(Auth::user()->info->admin>0) {
+			if(!is_numeric($page)) {
+				return redirect(route('home'));
 			}
-			catch(ModelNotFoundException $e){
-				//return home
-				return redirect(route('home'))->with('error', 'Dienst niet gevonden!');
+			$page = intval($page);
+			//get
+			if($request->isMethod('get')){
+				//date
+				$now_r=Carbon::today()->addWeeks($page);
+				$now_r_start=$this->getDayStartEnd($now_r);
+				$now_r1=Carbon::today()->addWeeks($page+1);
+				$now_r1_end=$this->getDayStartEnd($now_r1,False);
+				$dates=$this->generateDateRange($now_r,$now_r1,true);
+				try {
+
+					//shifttypes (only common)
+					$whereMatch=['enabled'=> '1'];
+					$shifttypes=ShiftType::Where($whereMatch)->get();
+
+					//show requested date & events
+					$shifts = Shift::withTrashed()->whereBetween('datetime',array($now_r_start,$now_r1_end))->with('shifttype','shiftuser.info')->get();
+					//echo('<pre>');print_r($shifts);
+					//create array of dates -> arr[2020-02-14][carbon]=CarbonObj
+					$arr=array();
+					foreach($dates as $d){
+						$data[$d->format('Ymd')]=array('carbon'=>$d);
+					}
+					//create / fill from object to multidimensional arr
+					foreach($shifts as $s){
+						if ($s->deleted_at==null) {
+							$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=True;
+						}
+						else {
+							$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=False;
+						}
+					}
+					#echo('<pre>');print_r($data);echo('</pre>');die;;				
+					//prepare view
+					return view('shiftmanagement', compact('shifttypes', 'page'),array(
+					'shifttypes'=>$shifttypes,
+					'shifts'=>$data,
+					));
+				}
+				catch(ModelNotFoundException $e){
+					//return home
+					return redirect(route('home'))->with('error', 'Dienst niet gevonden!');
+				}
 			}
 		}
 		//post
