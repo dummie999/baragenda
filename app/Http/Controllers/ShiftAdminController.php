@@ -160,10 +160,23 @@ class ShiftAdminController extends ShiftController
 		if ($request->has('del_shift_type')) {
 			$r=$request->del_shift_type;
 			$date=array_keys($r)[0];
-			$datec=Carbon::createFromFormat("Ymd", $date);
+			$datec=Carbon::createFromFormat("Ymd", $date)->startOfDay();
 			$shift_type_id=$r[$date];
-			$shift = Shift::whereBetween('datetime',array(Carbon::parse($datec),Carbon::parse($datec)->addHours(24)))->where('shift_type_id',$shift_type_id)->first();
-			$shift->delete();
+			$shift = Shift::whereBetween('datetime',array(Carbon::parse($datec),Carbon::parse($datec)->addHours(24)))->where('shift_type_id',$shift_type_id)->with('shiftuser')->first();
+            $shift->delete();
+            #need to fix hard delete of shiftuser row
+
+			
+			return redirect(route('shifts.admin'))->with('info', 'Shifts aangepast!');
+        }
+        
+        if ($request->has('res_shift_type')) {
+			$r=$request->res_shift_type;
+			$date=array_keys($r)[0];
+			$datec=Carbon::createFromFormat("Ymd", $date)->startOfDay();
+			$shift_type_id=$r[$date];
+			$shift = Shift::withTrashed()->whereBetween('datetime',array(Carbon::parse($datec),Carbon::parse($datec)->addHours(24)))->where('shift_type_id',$shift_type_id)->first();
+			$shift->restore();
 			#echo("<pre>");print_r($shift); die;
 			
 			return redirect(route('shifts.admin'))->with('info', 'Shifts aangepast!');
