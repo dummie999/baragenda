@@ -14,7 +14,9 @@ class ManagementController extends Controller
 
     public function __construct() {
         $this->middleware('auth');
+        $this->middleware('isSuperAdmin');
     }
+
 
      public function newRow(Request $request){
         $user = Auth::user();

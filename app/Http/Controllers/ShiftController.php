@@ -36,9 +36,11 @@ class ShiftController extends Controller
 			//date
 			$now_r=Carbon::today()->addWeeks($page*2);
 			$now_r_start=$this->getDayStartEnd($now_r);
-			$now_r2=Carbon::today()->addWeeks($page*2+2);
+			$now_r2=Carbon::today()->addWeeks($page*2+1);
 			$now_r2_end=$this->getDayStartEnd($now_r2,False);
-			$dates=$this->generateDateRange($now_r,$now_r2,true);
+			#echo("<pre>");print_r($now_r_start);
+			#echo("<pre>");print_r($now_r2_end);
+			$dates=$this->generateDateRange($now_r_start,$now_r2_end,false);
 			try {
 
                 //shifttypes (only common)
@@ -47,9 +49,9 @@ class ShiftController extends Controller
 
                 //show requested date & events
                 $shifts = Shift::whereBetween('datetime',array($now_r_start,$now_r2_end))->with('shifttype','shiftuser.info')->get();
-                //echo('<pre>');print_r($shifts);
+                 
 				//create array of dates -> arr[2020-02-14][carbon]=CarbonObj
-				$arr=array();
+				$data=array();
 				foreach($dates as $d){
 					$data[$d->format('Ymd')]=array('carbon'=>$d);
 				}
@@ -57,7 +59,7 @@ class ShiftController extends Controller
 			    foreach($shifts as $s){
 					$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=$s;
 			    }
-
+				#echo('<pre>');print_r($data);die;
 				//prepare view
 				return view('shifts', compact('shifttypes', 'page'),array(
 				'weeknos'=>$now_r->weekOfYear,

@@ -14,7 +14,9 @@ class LoginController extends Controller
             return view('login');
 
         if(App::environment('local', 'dev')){
-            Auth::login(User::find('1'), true);
+            $user=User::where('username',$request->username)->first();
+            #print_r($user); die;
+            Auth::login($user, true);
             return redirect(route('home'));
         }
 
