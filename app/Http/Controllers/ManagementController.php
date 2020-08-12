@@ -17,7 +17,6 @@ class ManagementController extends Controller
         $this->middleware('isSuperAdmin');
     }
 
-
      public function newRow(Request $request){
         $user = Auth::user();
         $st = new ShiftType;
@@ -32,11 +31,17 @@ class ManagementController extends Controller
     }
 
     public function changeSettings(Request $request){
+        if(Auth::user()->info->admin!=1) {
+            return redirect(route('home'));
+        }
+
         if($request->isMethod('get')){
             $shifttypes=ShiftType::with('committee','user.info')->get();
             $committees=Committee::get();
             return view('management', compact('shifttypes','committees'));
         }
+
+        //post
         $user = Auth::user();
         foreach($request->input()['id'] as $k =>$v) {
             $common = isset($request->input('common')[$k]) ? 1 : 0;
