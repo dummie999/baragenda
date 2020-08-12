@@ -45,7 +45,14 @@ class ShiftAdminController extends ShiftController
 
 		return $dates;
 	}
+    public function committeeShifts() {
+		$user=Auth::user()->info;
+		$shifts = shift::whereHas('committee', function($q) use ($user)
+		{
+			$q->where('user_id','=', $user->id); 
+		})->with('shifttype.committee')->where('datetime','>=',carbon::today())->get();
 
+	}
 
 	private function validateDate($date, $format = 'Ymd')
 	{
@@ -67,7 +74,7 @@ class ShiftAdminController extends ShiftController
 				$now_r=Carbon::today()->addWeeks($page);
 				$now_r_start=$this->getDayStartEnd($now_r);
 				$now_r1=Carbon::today()->addWeeks($page+1);
-				$now_r1_end=$this->getDayStartEnd($now_r1,False);
+				$now_r1_end=$this->getDayStartEnd($now_r1,true);
 				$dates=$this->generateDateRange($now_r,$now_r1,true);
 				try {
 
