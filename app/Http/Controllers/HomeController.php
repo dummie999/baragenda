@@ -33,7 +33,7 @@ class HomeController extends Controller
         }
         else {
             $userid=$user->id;
-            echo('<pre>');print_r($user->id);echo('</pre>');
+            #echo('<pre>');print_r($user->id);echo('</pre>');
             $shifts = shift::with('shifttype.committee')->where('datetime','>=',carbon::today())->with(array('shiftuser' => function($query) use ($user)
             {
                 $query->where('user_id', $user->id); 

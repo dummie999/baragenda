@@ -2,6 +2,17 @@
 
 @section('content')
     <div class="container">
+
+		<nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+			<div class="container">
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+						@admin <li class="nav-item"><a class="nav-link" href="{{ route('shifts.admin')}}">Diensten</a></li>@endadmin
+						@superadmin<li class="nav-item"><a class="nav-link" href=" {{route('management.settings') }} ">Commissie</a></li>@endsuperadmin
+					</ul>
+				</div>
+			</div>
+		</nav>
         <div class="row">
             <div class="col-md-12 ">
                 <div class="card">
