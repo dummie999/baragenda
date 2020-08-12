@@ -15,7 +15,8 @@
         "laravel/framework": "^6.18",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^1.1",
-        "rlanvin/php-rrule": "^1.6"
+        "rlanvin/php-rrule": "^1.6",
+        "spatie/laravel-google-calendar": "2.6.2"
     },
     "require-dev": {
         "facade/ignition": "^1.4",
