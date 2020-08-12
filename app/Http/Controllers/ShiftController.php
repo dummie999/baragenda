@@ -172,7 +172,23 @@ class ShiftController extends Controller
 		}
 		return redirect(route('shifts'))->with('info', 'Aangemeld!');
 
+	}
+	
+    public function removeUser(Request $request)
+    {
+		$shift_id=array_keys($request->del_shift_user)[0];
+		$user_id=$request->del_shift_user[$shift_id];
+			#Shift::find($shift_id)->shiftuser()->where('id', $user_id)->detach();
+			$shift=Shift::find($shift_id)->shiftuser()->detach($user_id);
+			
+			#echo("<pre>");print_r($shift);echo("</pre>");die;
+	
+			
+		
+		return redirect(route('shifts'))->with('info', 'Lid van dienst uitgeschreven!');
+
     }
+
     /**
      * Store a newly created resource in storage.
      *

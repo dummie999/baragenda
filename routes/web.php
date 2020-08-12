@@ -32,6 +32,7 @@ Route::match(['post'], '/shifts', 'ShiftController@UpdateShifts')->name('shifts'
 Route::match(['post'], '/shiftsEnlist', 'ShiftController@enlist')->name('shifts.enlist');
 Route::get('/shifts/page/{page}', 'ShiftController@index')->name('shifts.page');
 Route::get('/shifts/{date}', 'ShiftController@openDate')->name('shifts.date');
+Route::post('/shifts/{date}', 'ShiftController@removeUser')->name('shifts.removeUser');
 
 //shiftmanagement
 Route::match(['get','post'], '/shiftmanagement', 'ShiftAdminController@admin')->name('shifts.admin');

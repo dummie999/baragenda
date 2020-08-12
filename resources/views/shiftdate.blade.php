@@ -17,6 +17,8 @@
 						</div>
                         @endif
 						<br>
+						<form action="" method='POST'>
+							{{ csrf_field() }}
 						<table class="table responsive-table diensten">
 							<thead>
 								<tr>
@@ -35,7 +37,8 @@
 							   <td>{{ Carbon\Carbon::parse($s->datetime)->format('H:i') }}</td>
 							   <td>
                            @foreach( $s->shiftuser as $j=>$u )
-                               {{ $u->info->name  }}
+							   {{ $u->info->name   }}
+							   <button type="submit" id="del_shift_user{{$s->id}}_{{$u->id}}" class="link-button" name="del_shift_user[{{$s->id}}]" value="{{$u->id}}">⚡</button>
                            @if ((count($s->shiftuser)-1) > $j)
                                    <br>
                            @endif
@@ -47,6 +50,7 @@
 
 							</tbody>
 						</table>
+					</form>
                     </div>
 					<div class="card-footer">
 

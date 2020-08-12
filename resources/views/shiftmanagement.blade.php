@@ -131,7 +131,7 @@
 											<button type="submit" id="del_shift_type{{$i}}_{{$type['id']}}" class="link-button" name="del_shift_type[{{$i}}]" value="{{$type['id']}}">✔</button>
 											@endif
 											@if( $shift[$type->title]==False)
-											<button type="text" id="res_shift_type{{$i}}_{{$type['id']}}" class="link-button" name="res_shift_type[{{$i}}]" value="{{$type['id']}}">⎌</button>
+											<button type="submit" id="res_shift_type{{$i}}_{{$type['id']}}" class="link-button" name="res_shift_type[{{$i}}]" value="{{$type['id']}}">⎌</button>
 											@endif
 										@endisset
 									</td>
