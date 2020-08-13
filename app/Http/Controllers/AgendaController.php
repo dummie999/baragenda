@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Spatie\GoogleCalendar\Event as event;
 
-class ReservationController extends Controller
+class AgendaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +14,9 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        //
+        $events = Event::get();
+        print_r($events);die;
+        return view('agenda');
     }
 
     /**

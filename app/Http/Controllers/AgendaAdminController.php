@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ReservationAdminController extends Controller
+class AgendaAdminController extends AgendaController
 {
     /**
      * Display a listing of the resource.

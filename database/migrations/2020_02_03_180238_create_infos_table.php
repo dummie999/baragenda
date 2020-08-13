@@ -21,6 +21,7 @@ class CreateInfosTable extends Migration
 			$table->string('relatienummer')->nullable();//300000111231241
             $table->string('name'); //First Lastname
             $table->boolean('available')->default(true); //available
+            $table->boolean('autofill_name')->default(true); //autofill name
             $table->text('extra_info')->nullable(); //more info
             $table->json('groups')->nullable(); //=memberOf
             $table->integer('admin')->unsigned()->default(0); //1=super admin 2=other

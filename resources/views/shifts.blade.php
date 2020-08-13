@@ -34,7 +34,7 @@
 						</div>
                         @endif
                         <br>
-						<table class="table diensten">
+						<table class="table table-responsive diensten">
 						{{--<table class="table table-responsive diensten">--}}
 							<thead>
 								<tr>
