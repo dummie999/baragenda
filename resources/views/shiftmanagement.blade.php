@@ -44,69 +44,81 @@
 						</div>
                         @endif
 						<br>
-						<form action="" method='POST'>
-						 {{ csrf_field() }}
-						<div style="display:flex;">
-						@foreach($shifttypes as $j => $type)
-						<div style="padding:5px;">
-							<input id="shift_type{{$j}}" name="input_shifttype[{{$type->id}}][]" type="checkbox"   @if($type->common==true) checked @endif }} data-toggle="toggle" data-on="{{$type->title}}" data-off="{{$type->title}}"  data-onstyle="primary">
-						</div>
-						
-						@endforeach
-						</div>
-						<div style="padding:5px;">
-							<input id="excludeWeekend" name="excludeWeekend[]" type="checkbox" data-toggle="toggle" data-on="Weekdays" data-off="Full Week"  data-onstyle="primary" checked>
-						</div>
 						<div class="container">
-							<div class="row">
-								<div class="col-sm-4">
-									<div class="form-group">
-										<div class="input-group date" id="datetimepicker4a" data-target-input="nearest">
-											<input name="dt1" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4a"/>
-											<div class="input-group-append" data-target="#datetimepicker4a" data-toggle="datetimepicker">
-												<div class="input-group-text"><i class="fa fa-calendar"></i></div>
-											</div>
+							<form action="" method='POST'>
+								{{ csrf_field() }}
+								<div class="row">
+									<div class="col-sm-12">
+										<div style="display:flex; margin: 0 0 0 -5px">
+											@foreach($shifttypes as $j => $type)
+												<div style="padding:5px;">
+													<input id="shift_type{{$j}}" name="input_shifttype[{{$type->id}}][]" type="checkbox"   @if($type->common==true) checked @endif }} data-toggle="toggle" data-on="{{$type->title}}" data-off="{{$type->title}}"  data-onstyle="primary">
+												</div>
+									
+											@endforeach
 										</div>
 									</div>
 								</div>
-                                <div class="col-sm-4">
-                                <div class="form-group">
-                                    <div class="input-group date" id="datetimepicker4b" data-target-input="nearest">
-                                        <input name="dt2" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4b"/>
-                                        <div class="input-group-append" data-target="#datetimepicker4b" data-toggle="datetimepicker">
-                                            <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-								<script type="text/javascript">
-									$(function () {
-										$('#datetimepicker4a').datetimepicker({
-											format : 'YYYY-MM-DD',
-                                            allowInputToggle: true,
-                                            defaultDate : moment(),
-											minDate: moment(new Date()).add(-1,'days'),
-										});
-										$('#datetimepicker4b').datetimepicker({
-											format : 'YYYY-MM-DD',
-                                            allowInputToggle: true,
-                                            defaultDate : moment(new Date()).add(1,'days'),
-											
-										});
-										$("#datetimepicker4a").on("change.datetimepicker", function (e) {
-											$('#datetimepicker4b').datetimepicker('minDate', e.date);
-										});
-										$("#datetimepicker4b").on("change.datetimepicker", function (e) {
-											$('#datetimepicker4a').datetimepicker('maxDate', e.date);
-										});
-									});									
-								</script>
-							</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<div style="padding:10px 5px 10px 0;">
+											<input id="excludeWeekend" name="excludeWeekend[]" type="checkbox" data-toggle="toggle" data-on="Weekdays" data-off="Full Week"  data-onstyle="primary" checked>
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group">
+											<div class="input-group date" id="datetimepicker4a" data-target-input="nearest">
+												<input name="dt1" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4a"/>
+												<div class="input-group-append" data-target="#datetimepicker4a" data-toggle="datetimepicker">
+													<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="col-sm-4">
+										<div class="form-group">
+											<div class="input-group date" id="datetimepicker4b" data-target-input="nearest">
+												<input name="dt2" type="text" class="form-control datetimepicker-input" data-target="#datetimepicker4b"/>
+												<div class="input-group-append" data-target="#datetimepicker4b" data-toggle="datetimepicker">
+													<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<script type="text/javascript">
+										$(function () {
+											$('#datetimepicker4a').datetimepicker({
+												format : 'YYYY-MM-DD',
+												allowInputToggle: true,
+												defaultDate : moment(),
+												minDate: moment(new Date()).add(-1,'days'),
+											});
+											$('#datetimepicker4b').datetimepicker({
+												format : 'YYYY-MM-DD',
+												allowInputToggle: true,
+												defaultDate : moment(new Date()).add(1,'days'),
+												
+											});
+											$("#datetimepicker4a").on("change.datetimepicker", function (e) {
+												$('#datetimepicker4b').datetimepicker('minDate', e.date);
+											});
+											$("#datetimepicker4b").on("change.datetimepicker", function (e) {
+												$('#datetimepicker4a').datetimepicker('maxDate', e.date);
+											});
+										});									
+									</script>
+								</div>
+								<div class="row">
+									<div class="col-sm-12">
+										<button type="submit" class="btn btn-success" name="">Aanmaken</button>
+									</div>
+								</div>
+								<Br>
+							</form>
 						</div>
-
-						<button type="submit" class="btn btn-success" name="">Aanmaken</button>
-						</form>
-
+						
 						<form action="" method='POST'>
 							{{ csrf_field() }}
 						<table class="table table-responsive diensten">
