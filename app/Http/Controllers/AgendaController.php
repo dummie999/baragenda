@@ -14,8 +14,8 @@ class AgendaController extends Controller
      */
     public function index()
     {
-        $events = Event::get();
-        print_r($events);die;
+        #$events = Event::get();
+        #print_r($events);die;
         return view('agenda');
     }
 
