@@ -80,7 +80,7 @@
 
 									<div id="E_{{$j}}" class="enlistform" name="E_{{$j}}" style="display:none;">
 										<div class="autocomplete enlistautocomplete" >
-										<input id="ac_{{$j}}" type="text" name="shiftUser[{{$j}}]" placeholder="Naam" value="{{$user->info->name}}">
+										<input id="ac_{{$j}}" type="text" name="shiftUser[{{$j}}]" placeholder="Naam" value=@if($user->info->autofill_name==1)"{{$user->info->name}}"@endif>
 										</div>
                                     <select name="shiftDate[{{$j}}]" id="S_{{$j}}" class="form-control">
                                         @foreach($shift as $s)

@@ -22,7 +22,9 @@
 							<b>Voorkeuren</b><br>
                                 <label for="available">Open voor diensten</label>
                               <input id="available" name="available[]" type="checkbox" data-toggle="toggle" data-on="Ja" data-off="Nee"  data-onstyle="primary"   {{ $info->available == 1 ? 'checked' : '' }}  >
-
+                              
+                              <label for="autofill_name">Naam automatisch invullen</label>
+                              <input id="autofill_name" name="autofill_name[]" type="checkbox" data-toggle="toggle" data-on="Ja" data-off="Nee"  data-onstyle="primary"   {{ $info->autofill_name == 1 ? 'checked' : '' }}  >
                             <div class="form-group">
                                 <label for="extra_info">Extra informatie</label>
                                 <input id="extra_info" class="form-control" name="extra_info" value="{{ $info->extra_info }}">
