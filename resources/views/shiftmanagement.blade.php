@@ -104,7 +104,7 @@
 							</div>
 						</div>
 
-						<button type="submit" name="">Aanmaken</button>
+						<button type="submit" class="btn btn-success" name="">Aanmaken</button>
 						</form>
 
 						<form action="" method='POST'>

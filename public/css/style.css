@@ -5,8 +5,8 @@
     text-decoration: none;
     cursor: pointer; 
 }
-.management.table td, .management.table th {
-min-width: 165px;
+.form-control{
+  min-width: 90px;
 }
 
 * { box-sizing: border-box; }

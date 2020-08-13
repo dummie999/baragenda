@@ -61,10 +61,10 @@
 											<td>
 												 
 												
-														<div class="col-sm-8">
+														<div class="col-sm-12">
 															<input type="text" class="form-control datetimepicker-input" name="default_datetime[{{$s->id}}]" id="datetimepicker5a_{{$s->id}}" data-toggle="datetimepicker" data-target="#datetimepicker5a_{{$s->id}}"/>
 														</div>
-														<div class="col-sm-8">
+														<div class="col-sm-12">
 															<input type="text" class="form-control datetimepicker-input" name="default_datetime_end[{{$s->id}}]" id="datetimepicker5b_{{$s->id}}" data-toggle="datetimepicker" data-target="#datetimepicker5b_{{$s->id}}"/>
 														</div>
 														<script type="text/javascript">
