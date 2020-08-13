@@ -38,7 +38,8 @@
 							   <td>
                            @foreach( $s->shiftuser as $j=>$u )
 							   {{ $u->info->name   }}
-							   <button type="submit" id="del_shift_user{{$s->id}}_{{$u->id}}" class="link-button" name="del_shift_user[{{$s->id}}]" value="{{$u->id}}">⚡</button>
+							   {{-- This needs fix comparing date vs today --}}
+							   @if ( Carbon\Carbon::parse($s->datetime)->ne($today)) <button type="submit" id="del_shift_user{{$s->id}}_{{$u->id}}" class="link-button" name="del_shift_user[{{$s->id}}]" value="{{$u->id}}">⚡</button>@endif
                            @if ((count($s->shiftuser)-1) > $j)
                                    <br>
                            @endif

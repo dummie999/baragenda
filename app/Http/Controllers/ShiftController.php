@@ -66,6 +66,7 @@ class ShiftController extends Controller
 				'shifttypes'=>$shifttypes,
 				'shifts'=>$data,
 				'today'=>Carbon::today(),
+				'user'=>Auth::user(),
 				));
 			}
 			catch(ModelNotFoundException $e){
@@ -154,7 +155,9 @@ class ShiftController extends Controller
      */
     public function enlist(Request $request)
     {
-		$user = Auth::user();
+		#print_r($_POST);die;
+		#$user = Auth::user(); /* need to fix this -> user in request->shiftuser find in User:: */
+		#$user = User::contains('id', $user->id)
 		foreach($request->shiftDate as $k=>$v){
 			$ds=Carbon::createFromFormat("Ymd", $k)->startOfDay();
 			$de=Carbon::createFromFormat("Ymd", $k)->endOfDay();
