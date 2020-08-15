@@ -166,7 +166,7 @@ return [
         /*
          * Package Service Providers...
          */
-        App\Helpers\GSCalendar\GoogleCalendar\GoogleCalendarServiceProvider::class,
+        App\Helpers\GSCalendar\GoogleCalendarServiceProvider::class,
         /*
          * Application Service Providers...
          */

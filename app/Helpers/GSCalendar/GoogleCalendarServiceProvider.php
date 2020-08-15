@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers\GSCalendar\GoogleCalendar;
+namespace App\Helpers\GSCalendar;
 
 use Illuminate\Support\ServiceProvider;
 use App\Helpers\GSCalendar\Exceptions\InvalidConfiguration;
@@ -16,7 +16,7 @@ class GoogleCalendarServiceProvider extends ServiceProvider
 
     public function register()
     {
-    #    $this->mergeConfigFrom(__DIR__.'/../config/google-calendar.php', 'google-calendar');
+        #$this->mergeConfigFrom(__DIR__.'/../../../config/google-calendar.php', 'google-calendar');
 
         $this->app->bind(GoogleCalendar::class, function () {
             $config = config('google-calendar');
@@ -26,6 +26,11 @@ class GoogleCalendarServiceProvider extends ServiceProvider
             return GoogleCalendarFactory::createForCalendarId($config['calendar_id']);
         });
 
+        $this->app->bind(Resource::class, function () {
+
+            return GoogleCalendarFactory::createForResources();
+        });
+        
         $this->app->alias(GoogleCalendar::class, 'GSCalendar');
     }
 

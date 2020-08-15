@@ -1,6 +1,6 @@
 <?php
 
-namespace  App\Helpers\GSCalendar\GoogleCalendar;
+namespace  App\Helpers\GSCalendar;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterface;

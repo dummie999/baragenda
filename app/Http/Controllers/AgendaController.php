@@ -1,6 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-use App\Helpers\GSCalendar\GoogleCalendar;
+
+use App\Helpers\GSCalendar\Event;
+use App\Helpers\GSCalendar\Resource;
 
 use Illuminate\Http\Request;
 
@@ -14,8 +16,9 @@ class AgendaController extends Controller
      */
     public function index()
     {
-        $events =  GoogleResource::get();
-        #print_r($events);die;
+        #$event =  Event::get( $startDateTime = null,  $endDateTime = null,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
+        #$res =  Resource::get();
+        #echo('<pre>');print_r($event);echo('</pre>');
         return view('agenda');
     }
 
