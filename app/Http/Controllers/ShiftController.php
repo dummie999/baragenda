@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Shift;
 use App\Models\ShiftType;
 use App\Models\ShiftUser;
+use App\Models\User;
 
 use Carbon\Carbon;
 use DateTime;
@@ -155,26 +156,31 @@ class ShiftController extends Controller
      */
     public function enlist(Request $request)
     {
-		#print_r($_POST);die;
+		$date=array_keys($request->shiftUser)[0];
+		
 		#$user = Auth::user(); /* need to fix this -> user in request->shiftuser find in User:: */
-		#$user = User::contains('id', $user->id)
-		foreach($request->shiftDate as $k=>$v){
-			$ds=Carbon::createFromFormat("Ymd", $k)->startOfDay();
-			$de=Carbon::createFromFormat("Ymd", $k)->endOfDay();
-			// need validation of duplicates shiftusers
-			$shift=Shift::where('shift_type_id',$v)->whereDate('datetime',array($ds,$de))->with('shiftuser')->get()->first();
-			#echo("<pre>");print_r($shift->shiftuser->first()->id);echo("</pre>");die;
-			if(!$shift->shiftuser->contains('id', $user->id)){
-				#only allow to enlist once for a shift.
-				$su = new ShiftUser;
-				$su->shift_id = $shift->id;
-				$su->user_id = $user->id;
-				$su->save();
-				}
-			
+		if (!User::with('info')->get()->contains('info.name', $request->shiftUser[$date])){
+			return redirect(route('shifts'))->with('info', 'Gebruiker niet gevonden!');
 		}
-		return redirect(route('shifts'))->with('info', 'Aangemeld!');
-
+		else {
+			$user = User::with('info')->get()->where('info.name', $request->shiftUser[$date])->first();
+			#echo('<pre>');print_r($user);echo('<pre>');die;
+			foreach($request->shiftDate as $k=>$v){
+				$ds=Carbon::createFromFormat("Ymd", $k)->startOfDay();
+				$de=Carbon::createFromFormat("Ymd", $k)->endOfDay();
+				// need validation of duplicates shiftusers
+				$shift=Shift::where('shift_type_id',$v)->whereDate('datetime',array($ds,$de))->with('shiftuser')->get()->first();
+				#echo("<pre>");print_r($user->id);echo("</pre>");die;
+				if(!$shift->shiftuser->contains('id', $user->id)){
+					#only allow to enlist once for a shift.
+					$su = new ShiftUser;
+					$su->shift_id = $shift->id;
+					$su->user_id = $user->id;
+					$su->save();
+				}
+			}
+			return redirect(route('shifts'))->with('info', 'Aangemeld!');
+		}
 	}
 	
     public function removeUser(Request $request)

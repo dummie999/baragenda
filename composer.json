@@ -12,13 +12,12 @@
         "adldap2/adldap2-laravel": "^6.0.8",
         "barryvdh/laravel-ide-helper": "^2.4",
         "fideloper/proxy": "^4.0",
-        "google/apiclient": "^2.0",
+        "google/apiclient": "^2.7",
         "laravel/framework": "^6.18",
         "laravel/tinker": "^2.0",
         "nesbot/carbon": "^2.38",
         "laravel/ui": "^1.1",
-        "rlanvin/php-rrule": "^1.6",
-        "spatie/laravel-google-calendar": "2.6.2"
+        "rlanvin/php-rrule": "^1.6"
     },
     "require-dev": {
         "facade/ignition": "^1.4",

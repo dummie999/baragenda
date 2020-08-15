@@ -11,4 +11,6 @@ return [
      *  The id of the Google Calendar that will be used by default.
      */
     'calendar_id' => env('GOOGLE_CALENDAR_ID'),
+    'calendar_id_private' => env('GOOGLE_CALENDAR_ID_PRIVATE'),
+    'calendar_id_public' => env('GOOGLE_CALENDAR_ID_PUBLIC'),
 ];

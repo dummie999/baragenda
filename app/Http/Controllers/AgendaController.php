@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
+use App\Helpers\GSCalendar\GoogleCalendar;
 
 use Illuminate\Http\Request;
-use Spatie\GoogleCalendar\Event as event;
+
 
 class AgendaController extends Controller
 {
@@ -14,7 +14,7 @@ class AgendaController extends Controller
      */
     public function index()
     {
-        #$events =  Event::get();
+        $events =  GoogleResource::get();
         #print_r($events);die;
         return view('agenda');
     }
