@@ -13,16 +13,20 @@
 							<thead>
 								<tr>
 									<th>Datum</th>
+									<th>Agenda</th>
 									<th>Titel</th>
 								</tr>
 							</thead>
 							<tbody>
 
-						@foreach($eventsPublic as $i => $event)
-								<tr>
-                               <td>{{ $event->googleEvent->start->dateTime ?? $event->googleEvent->start->date  }}</td>
-							   <td>{{ $event->googleEvent->summary  }}</td>
-								</tr>
+						@foreach($events as $i => $date)
+							@foreach($date as $j => $event)
+									<tr>
+								<td>{{ $event['start']['carbon']->format('Y-m-d H:i') }}</td>
+								<td>{{ $event['calendar'] }}</td>
+								<td>{{ $event['summary']  }}</td>
+									</tr>
+							@endforeach
 						@endforeach
 
 							</tbody>
