@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\GSCalendar\Event;
 use App\Helpers\GSCalendar\Resource;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 
@@ -16,10 +16,17 @@ class AgendaController extends Controller
      */
     public function index()
     {
-        #$event =  Event::get( $startDateTime = null,  $endDateTime = null,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
+        $today=Carbon::parse("today");
+        $nextweeksunday=Carbon::parse("next week sunday");
+        $eventsPublic =  Event::get( $startDateTime =$today,  $endDateTime = $nextweeksunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
+        $eventsPrivate =  Event::get( $startDateTime =$today,  $endDateTime = $nextweeksunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
         #$res =  Resource::get();
-        #echo('<pre>');print_r($event);echo('</pre>');
-        return view('agenda');
+        #echo('<pre>');print_r($eventsPrivate);echo('</pre>');
+        return view('agenda',array(
+            'eventsPublic'=>$eventsPublic,
+            'eventsPrivate'=>$eventsPrivate,
+            ));
+
     }
 
     /**
