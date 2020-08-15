@@ -18,9 +18,9 @@
 							</thead>
 							<tbody>
 
-						@foreach($eventsPrivate as $i => $event)
+						@foreach($eventsPublic as $i => $event)
 								<tr>
-                               <td>{{ $event->googleEvent->start->dateTime }}</td>
+                               <td>{{ $event->googleEvent->start->dateTime ?? $event->googleEvent->start->date  }}</td>
 							   <td>{{ $event->googleEvent->summary  }}</td>
 								</tr>
 						@endforeach

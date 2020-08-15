@@ -17,7 +17,7 @@ class AgendaController extends Controller
     public function index()
     {
         $today=Carbon::parse("today");
-        $nextweeksunday=Carbon::parse("next week sunday");
+        $nextweeksunday=Carbon::parse("next month");
         $eventsPublic =  Event::get( $startDateTime =$today,  $endDateTime = $nextweeksunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
         $eventsPrivate =  Event::get( $startDateTime =$today,  $endDateTime = $nextweeksunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
         #$res =  Resource::get();
