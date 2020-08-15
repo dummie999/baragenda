@@ -17,7 +17,7 @@ class LoginController extends Controller
             return view('login');
 
         if(App::environment('local', 'dev')){
-            if (User::with('info')->get()->contains('username', $request->username)){
+            if (User::with('info')->get()->contains('username', strtolower($request->username))){
                 $user=User::where('username',$request->username)->first();
                 #print_r($user); die;
                 Auth::login($user, true);
