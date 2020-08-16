@@ -49,9 +49,9 @@
 								{{ csrf_field() }}
 								<div class="row">
 									<div class="col-sm-12">
-										<div style="display:flex; margin: 0 0 0 -5px">
+										<div class='row' style="display:block; margin: 0 0 0 -5px"
 											@foreach($shifttypes as $j => $type)
-												<div style="padding:5px;">
+												<div class="col-xs-1" style="padding:5px;">
 													<input id="shift_type{{$j}}" name="input_shifttype[{{$type->id}}][]" type="checkbox"   @if($type->common==true) checked @endif }} data-toggle="toggle" data-on="{{$type->title}}" data-off="{{$type->title}}"  data-onstyle="primary">
 												</div>
 									
