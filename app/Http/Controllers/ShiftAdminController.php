@@ -141,6 +141,8 @@ class ShiftAdminController extends ShiftController
 						[timezone] => UTC
 					)
 			*/	
+
+			# deze code nalopen, kan  efficienter
 			foreach($range as $d){
 				$date=$d->format('Y-m-d');
 				$shift = Shift::whereBetween('datetime',array($d,Carbon::parse($d)->addHours(24)))->with('shifttype')->get(); //multiple shifts on one day

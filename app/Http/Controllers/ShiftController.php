@@ -127,6 +127,8 @@ class ShiftController extends Controller
              ->get();
 			 #echo("<pre>");print_r($shift);die;
 		//prepare view
+
+		//formatting weghalen hier en in view zetten
 			return view('shiftdate', compact('shift'),array(
 			'shift'=>$shift,
             'prev'=>$cdateyd->format('Ymd'),

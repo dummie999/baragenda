@@ -9,8 +9,14 @@
 
                 <div class="card-body">
                     <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
+                        {{ csrf_field() }}
+                        @if(!empty($msg))
+                            <div class="alert alert-danger">
+                                {{ $msg }}
+                            </div>
+                        @endif
+                        <div class="alert alert-info text-center">Je accountnaam is de eerste letter van je voornaam plus je achternaam voluit geschreven.</div>
+                        <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
                         <div class="form-group row">
                             <label for="username" class="col-md-4 col-form-label text-md-right">{{ __('Username') }}</label>
 

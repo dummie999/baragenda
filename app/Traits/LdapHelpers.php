@@ -33,7 +33,7 @@ trait LdapHelpers
         return $users->map(function ($user){
             return [
                 'name' => $user->cn[0],
-                'lidnummer' => $user->description[0]
+                'employeeId' => $user->employeeId[0]
             ];
         }, $users);
     }
@@ -62,11 +62,11 @@ trait LdapHelpers
         $dbUser = null;
         try {
             // We first check if we already have this user in our database
-            $dbUser = User::findOrFail($user->description[0]);
+            $dbUser = User::findOrFail($user->username);
         } catch(ModelNotFoundException $e){
             // If not, we create a new user
             $dbUser = new User();
-            $dbUser->lidnummer = $user->description[0];
+            $dbUser->info->relatienummer = $user->employeeId[0];
         }
 
         // We update all the information of the user

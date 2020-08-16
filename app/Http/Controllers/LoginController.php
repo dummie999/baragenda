@@ -1,9 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\User;
+
+use Adldap\Auth\BindException;
 use Adldap\Laravel\Facades\Adldap;
+use App\Models\User;
 use App\Traits\LdapHelpers;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
