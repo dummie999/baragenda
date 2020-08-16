@@ -4,6 +4,7 @@ namespace App\Traits;
 use Adldap\Auth\BindException;
 use Adldap\Laravel\Facades\Adldap;
 use App\Models\User;
+use App\Models\Info;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -47,48 +48,44 @@ trait LdapHelpers
             return $e;
         }
     }
-    //fix nesting of groups, get all groups of user while  groups are member of parent Group
+    //todo: fix nesting of groups, get all groups of user while  groups are member of parent Group
     public function getUserGroups($user){
         return $user
             ->getGroups(['*'], true)
-            ->map(function($obj){ return $obj->dn; });
+            ->map(function($obj){ return $obj->distinguishedname[0]; });
     }
 
     public function isUserInGroup($user, $group){
-        return $this->getUserGroups($user)->contains($group);
+        return $this->getUserGroups($user)->contains(config('baragenda.ldap.admin_group'));
     }
 
     public function saveLdapUser($user){
         $dbUser = null;
         try {
             // We first check if we already have this user in our database
-            $dbUser = User::findOrFail($user->username);
+            $dbUser = User::findOrFail($user->samaccountname[0]);
         } catch(ModelNotFoundException $e){
             // If not, we create a new user
             $dbUser = new User();
-            $dbUser->username=$user->username;
+            $dbUser->username=$user->samaccountname[0];
+            // Save it back to the database
+            $dbUser->save();
         }
-        try { 
-            $dbUser->info();
-        } catch(ModelNotFoundException $e){
-            //no info, create one
-            $info = new Info();
-            $dbUser->info()->save($info);
-        }
-
         // We update all the information of the user
-        $dbUser->info->objectGUID = $user->objectguid[0];
-        $dbUser->info->lidnummer = $user->employeeNumber[0];
-        $dbUser->info->relatienummer = $user->employeeId[0];
-        $dbUser->info->name = $user->cn[0];
-        $dbUser->info->email = $user->mail[0];
-        //$dbUser->info->phonenumber = $user->telephonenumber[0];
-
+        $info = $dbUser->info ?: new Info;
+        $info->objectGUID = bin2hex($user->objectguid[0]);
+        $info->lidnummer = $user->employeeNumber[0];
+        $info->relatienummer = $user->employeeId[0];
+        $info->name = $user->cn[0];
+        $info->email = $user->mail[0];
+        
+        // We save the info with relation to user
+        $dbUser->info()->save($info);
+        
         // Check if the user is a baragenda admin (only superadmin)
-        $dbUser->info->admin = $user->memberof != null && $this->isUserInGroup($user, config('baragenda.ldap.admin_group'));
+        $dbUser->info()->admin = $user->memberof != null && $this->isUserInGroup($user, config('baragenda.ldap.admin_group'));
+        #echo('<pre>');print_r( $this->isUserInGroup($user, config('baragenda.ldap.admin_group')));die;
 
-        // Save it back to the database
-        $dbUser->save();
 
         // And return it so we can use it
         return $dbUser;

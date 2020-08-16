@@ -38,7 +38,8 @@ class HomeController extends Controller
             })->with('shifttype.committee')->where('datetime','>=',carbon::today())->get();
             $arr=array();
             foreach($shifts as $s){
-                $arr[]=array('date'=>Carbon::parse($s->datetime)->format('Ymd'),'data'=>$s);
+                $carbon=Carbon::parse($s->datetime);
+                $arr[]=array('carbon'=>$carbon,'date'=>$carbon->format('Ymd'),'data'=>$s);
             }
             #echo('<pre>');print_r($shifts);echo('</pre>');die;
             return view('home',array(
