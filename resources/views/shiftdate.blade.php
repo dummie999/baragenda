@@ -6,10 +6,10 @@
             <div class="col-md-12 ">
                 <div class="card">
                     <div class="card-header">
-                       	<a class="btn" href="./{{$prev}}">Previous</a>
-                        |<div class="btn" style="width:20%">{{$today}}</div>|
-                        <a class="btn" href="./{{$next}}">Next</a>
-                    </div>
+                       	<a class="btn" href="./{{$prev->format('Ymd')}}">Previous</a>
+                        |<div class="btn" style="width:20%">{{$today->format('l d M')}}</div>|
+                        <a class="btn" href="./{{$next->format('Ymd')}}">Next</a>
+                   </div>
                     <div class="card-block">
                         @if (session('status'))
 						<div class="alert alert-success">

@@ -47,7 +47,7 @@ trait LdapHelpers
             return $e;
         }
     }
-
+    //fix nesting of groups, get all groups of user while  groups are member of parent Group
     public function getUserGroups($user){
         return $user
             ->getGroups(['*'], true)
@@ -66,15 +66,25 @@ trait LdapHelpers
         } catch(ModelNotFoundException $e){
             // If not, we create a new user
             $dbUser = new User();
-            $dbUser->info->relatienummer = $user->employeeId[0];
+            $dbUser->username=$user->username;
+        }
+        try { 
+            $dbUser->info();
+        } catch(ModelNotFoundException $e){
+            //no info, create one
+            $info = new Info();
+            $dbUser->info()->save($info);
         }
 
         // We update all the information of the user
-        $dbUser->name = $user->cn[0];
-        $dbUser->email = $user->mail[0];
-        $dbUser->phonenumber = $user->telephonenumber[0];
+        $dbUser->info->objectGUID = $user->objectguid[0];
+        $dbUser->info->lidnummer = $user->employeeNumber[0];
+        $dbUser->info->relatienummer = $user->employeeId[0];
+        $dbUser->info->name = $user->cn[0];
+        $dbUser->info->email = $user->mail[0];
+        //$dbUser->info->phonenumber = $user->telephonenumber[0];
 
-        // Check if the user is a baragenda admin
+        // Check if the user is a baragenda admin (only superadmin)
         $dbUser->info->admin = $user->memberof != null && $this->isUserInGroup($user, config('baragenda.ldap.admin_group'));
 
         // Save it back to the database

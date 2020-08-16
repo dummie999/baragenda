@@ -131,9 +131,9 @@ class ShiftController extends Controller
 		//formatting weghalen hier en in view zetten
 			return view('shiftdate', compact('shift'),array(
 			'shift'=>$shift,
-            'prev'=>$cdateyd->format('Ymd'),
-            'today'=>$cdate->format('l d F'),
-            'next'=>$cdate24->format('Ymd')
+            'prev'=>$cdateyd,
+            'today'=>$cdate,
+            'next'=>$cdate24,
 			));
 
 		}
