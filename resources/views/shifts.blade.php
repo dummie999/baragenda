@@ -48,7 +48,7 @@
 							<tbody>
 						@foreach($shifts as $j => $shift)
                                <tr>
-                               <td>@if (count($shift)>1)<a href="{{ route('shifts.date', ['date' => $j]) }}">@endif {{ $shift['carbon']->format('l d F') }}</a></td>
+                               <td>@if (count($shift)>1)<a href="{{ route('shifts.date', ['date' => $j]) }}">@endif {{ $shift['carbon']->locale('nl_NL')->format('l d F') }}</a></td>
                                     @foreach($shifttypes as $i => $type)
                                         <td>
                                             

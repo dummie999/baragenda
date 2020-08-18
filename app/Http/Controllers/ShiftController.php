@@ -6,12 +6,14 @@ use App\Models\Shift;
 use App\Models\ShiftType;
 use App\Models\ShiftUser;
 use App\Models\User;
-
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+
+
+
 
 class ShiftController extends Controller
 {
@@ -28,7 +30,8 @@ class ShiftController extends Controller
 
     public function index(Request $request,$page = 0)
     {
-        if(!is_numeric($page)) {
+		#print_r(Carbon::today()->format('l d f'));die;
+		if(!is_numeric($page)) {
             return redirect(route('home'));
         }
         $page = intval($page);
@@ -59,7 +62,8 @@ class ShiftController extends Controller
 				//create / fill from object to multidimensional arr
 			    foreach($shifts as $s){
 					$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=$s;
-			    }
+
+				}
 				#echo('<pre>');print_r($data);die;
 				//prepare view
 				return view('shifts', compact('shifttypes', 'page'),array(

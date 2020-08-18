@@ -48,10 +48,10 @@ class AgendaController extends Controller
             $carbon=$event->googleEvent->start->date ? Carbon::parse($event->googleEvent->start->date) : Carbon::parse($event->googleEvent->start->dateTime);
             $displayname=$event->googleEvent->organizer->displayName;
             switch($displayname) {
-                case 'Baragenda': 
+                case env('GSUITE_CAL_PRIV_SUMM'): 
                     $calendar='Interne Agenda'; 
                 break;
-                case 'Catena-agenda':
+                case env('GSUITE_CAL_PUBL_SUMM'):
                      $calendar='Openbare Agenda'; 
                 break;
                 default : $calendar=NULL;
