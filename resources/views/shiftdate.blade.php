@@ -33,7 +33,8 @@
 						@foreach($shift as $i => $s)
 								<tr>
 							   <td>{{ $s->shifttype->title }}</td>
-							   <td id="content">{{ $s->title }}</td>
+							   <td id="content">{{ $s->title }}<i class="fas fa-edit"></i>
+							   </td>
 							   <td>{{ Carbon\Carbon::parse($s->datetime)->format('H:i') }}</td>
 							   <td>
                            @foreach( $s->shiftuser as $j=>$u )
