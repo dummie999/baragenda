@@ -20,7 +20,7 @@
                         @if(!isset($page) || $page == 0)
                             Diensten in de komende week
                         @else
-                            Diensten tussen {{ reset($shifts)['carbon']->format('l d F') }} en {{ end($shifts)['carbon']->format('l d F') }}
+                            Diensten tussen {{ reset($shifts)['carbon']->translatedFormat('l d F') }} en {{ end($shifts)['carbon']->translatedFormat('l d F') }}
                         @endif
 						<hr>
 
@@ -134,7 +134,7 @@
 							<tbody>
 								@foreach($shifts as $i => $shift)
                                <tr>
-                               <td><a href="{{ route('shifts.date', ['date' => $i]) }}">{{ $shift['carbon']->format('l d F') }}</a></td>
+                               <td><a href="{{ route('shifts.date', ['date' => $i]) }}">{{ $shift['carbon']->translatedFormat('l d F') }}</a></td>
 								@foreach($shifttypes as $j => $type)
 
 									<td>

@@ -7,7 +7,7 @@
                 <div class="card">
                     <div class="card-header">
                        	<a class="btn" href="./{{$prev->format('Ymd')}}">Previous</a>
-                        |<div class="btn" style="width:20%">{{$today->format('l d M')}}</div>|
+                        |<div class="btn" style="width:20%">{{$today->translatedFormat('l d M')}}</div>|
                         <a class="btn" href="./{{$next->format('Ymd')}}">Next</a>
                    </div>
                     <div class="card-block">

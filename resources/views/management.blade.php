@@ -79,8 +79,8 @@
 														</script>
 												                                          
 											</td>                                            
-                                            <td>{{$s->updated_at}} <br>({{$s->user->info->name}})</td>
-                                            <td>{{$s->created_at}}</td>
+                                            <td>{{Carbon\Carbon::parse($s->updated_at)->format('Y-m-d H:i')}} <br>{{($s->user->info->name)}}</td>
+                                            <td>{{Carbon\Carbon::parse($s->created_at)->format('Y-m-d H:i')}}</td>
                                         <td>
 
                                         <a href="{{ route('management.delRow', ['shifttype' => $s->id]) }}" class="btn btn-danger">Remove</a>

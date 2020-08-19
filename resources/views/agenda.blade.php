@@ -23,8 +23,8 @@
 						@foreach($events as $i => $date)
 							@foreach($date as $j => $event)
 									<tr>
-								<td>{{ $event['start']['carbon']->format('l d F')  }}</td>
-								<td>{{ $event['start']['carbon']->isstartofday() ? '' : $event['start']['carbon']->format('H:i') }}</td>
+								<td>{{ $event['start']['carbon']->translatedFormat('l d F')  }}</td>
+								<td>{{ $event['start']['carbon']->isstartofday() ? '' : $event['start']['carbon']->translatedFormat('H:i') }}</td>
 								<td>{{ $event['calendar'] }}</td>
 								<td>{{ $event['summary']  }}</td>
 									</tr>
