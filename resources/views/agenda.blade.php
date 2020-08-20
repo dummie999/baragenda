@@ -23,13 +23,9 @@
 											left small bar
 										</div>
 										<div class="" style=" overflow-x:auto; overflow-y:scroll; display:flex; align-items:flex-start">
-											<div class="p-2 bg-info flex-fill">Flex item 1</div>
-											<div class="p-2 bg-info flex-fill">Flex item 2</div>
-											<div class="p-2 bg-info flex-fill">Flex item 3</div>
-											<div class="p-2 bg-info flex-fill">Flex item 4</div>
-											<div class="p-2 bg-info flex-fill">Flex item 5</div>
-											<div class="p-2 bg-info flex-fill">Flex item 6</div>
-											<div class="p-2 bg-info flex-fill">Flex item 7</div>
+											@foreach($events as $i => $date)
+											<div class="p-2 flex-fill">{{$date['carbon']->translatedFormat('l')}}</div>
+											@endforeach
 										</div>
 									</div>
 								</div>

@@ -85,7 +85,7 @@ class AgendaController extends Controller
 
         foreach($events as $date=>$eventList){
 
-            if (array_key_exists($date,$dates)) { $dates[$date]=$eventList; }
+            if (array_key_exists($date,$dates)) { $dates[$date]['events']=$eventList; }
             
         }
         #echo('<pre>');print_r($dates);echo('</pre>');;die;
@@ -201,11 +201,11 @@ class AgendaController extends Controller
                 $interval = $this->generateDateRange(Carbon::parse($event->googleEvent->start->date),Carbon::parse($event->googleEvent->end->date),false,false); //create interval
                 foreach($interval as $i=>$carb){
                     $eventFormat['start']['carbon']=$carb; //replace start time by interval item time
-                    $eventsArray[$carb->format('Ymd')]['events'][]=$eventFormat; //for every interval insert self
+                    $eventsArray[$carb->format('Ymd')][]=$eventFormat; //for every interval insert self
                 }
                 continue; //skip the default insert (when there is  interval)
             }
-            $eventsArray[$carbon->format('Ymd')]['events'][]=$eventFormat;
+            $eventsArray[$carbon->format('Ymd')][]=$eventFormat;
             #echo('<pre>');print_r(($eventsArray));echo('</pre>');die;;
         }
         return $eventsArray;
