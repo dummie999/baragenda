@@ -9,8 +9,58 @@ use Illuminate\Http\Request;
 
 class AgendaController extends Controller
 {
+    /**
+     * Creates a range of dates.  | 
+     * $firstday=true --> mon-sun | 
+     * $preparray=true --> array[Ymd]=array(carbon=>carbon object,'nameArray'=>array())| 
+	 * @param \Carbon $start_date
+	 * @param \Carbon $end_date
+	 * @param \Boolean $firstday
+	 * @param \Boolean $prepArray
+	 * @param \String $prepArrayFormat
+	 * @param \String $nameArray
+	 *
+	 * @return array
+	 */
+	private function generateDateRange(Carbon $start_date, Carbon $end_date, $firstday=false,$prepArray=false,$prepArrayFormat='Ymd',$nameArray='events')
+	{
+        /*
+        wed/fri (firstday=true) --> mon-sun
+        wed/fri (firstday=false) --> wed/thu/fri
+        wed/fri (firstday=true, preparray=true) --> array[date]=array(carbon=>Carbon,... ))
 
+        [20200823] => Array
+        (
+            [carbon] => Carbon\Carbon Object
+                (
+                    [date] => 2020-08-23 00:00:00.000000
+                    [timezone_type] => 3
+                    [timezone] => UTC
+                )
 
+            [events] => Array
+        
+        */
+		if($firstday){
+			$start_date =  new Carbon("last Monday $start_date"); 
+			$end_date =  new Carbon("last Sunday $end_date");
+		}
+		$dates = [];
+
+		for($date = $start_date->copy(); $date->lte($end_date); $date->addDay()) {
+			$dates[] =  new Carbon($date);
+        }
+        if($prepArray){
+            foreach($dates as $k=>$d){
+                $arr[$d->format($prepArrayFormat)]=array('carbon'=>$d,$nameArray=>array());
+            }
+            $dates=$arr;
+        }
+
+		return $dates;
+    }
+    
+    
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +69,7 @@ class AgendaController extends Controller
     public function index()
     {
         $today=Carbon::parse("today");
-        $nextweeksunday=Carbon::parse("next month");
+        $nextweeksunday=Carbon::parse("next week sunday");
         $eventsPublic =  Event::get( $startDateTime =$today,  $endDateTime = $nextweeksunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
         $eventsPrivate =  Event::get( $startDateTime =$today,  $endDateTime = $nextweeksunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
         $events = $this->format2view($eventsPublic);
@@ -29,9 +79,42 @@ class AgendaController extends Controller
         #$res =  Resource::get();
         #$echo('<pre>');print_r($eventsPrivate[0]);echo('</pre>');
         ksort($events,0);
-        #echo('<pre>');print_r($events);echo('</pre>');die;
+        //echo('<pre>');print_r($events);echo('</pre>');die;+
+       
+        $dates=$this->generateDateRange($today,$nextweeksunday,false,true); // give me an array of dates!!!!
+        foreach($events as $k=>$e){
+            $dates[$k]['events']=$e;
+        }
+
+      
+        /*
+        [20200823] => Array
+            (
+                [carbon] => Carbon\Carbon Object
+                    (
+                        [date] => 2020-08-23 00:00:00.000000
+                        [timezone_type] => 3
+                        [timezone] => UTC
+                    )
+
+                [events] => Array
+                    (
+                        [0] => Array
+                            (
+                                [summary] => Film
+                                [calendar] => Interne Agenda
+                                [description] => 
+                                [created] => Carbon\Carbon Object
+                                    (
+                                        [date] => 2018-04-16 19:07:58.000000
+                                        [timezone_type] => 2
+                                        [timezone] => Z
+        */
+        #echo('<pre>');print_r(($events));echo('</pre>');die;;
+       
+
         return view('agenda',array(
-            'events'=>$events
+            'events'=>$dates
             ));
 
     }
@@ -44,6 +127,28 @@ class AgendaController extends Controller
      */
     private function format2view(object $events, $eventsArray=array()): Array
     {
+    /* 
+    Array
+    (
+        [20200823] => Array
+            (
+                [0] => Array
+                    (
+                        [summary] => Film
+                        [calendar] => Interne Agenda
+                        [description] => 
+                        [created] => Carbon\Carbon Object
+                            (
+                                [date] => 2018-04-16 19:07:58.000000
+                                [timezone_type] => 2
+                                [timezone] => Z
+                            )
+
+
+
+    */
+
+
         foreach($events as $k =>$event) {
             $carbon=$event->googleEvent->start->date ? Carbon::parse($event->googleEvent->start->date) : Carbon::parse($event->googleEvent->start->dateTime);
             $displayname=$event->googleEvent->organizer->displayName;

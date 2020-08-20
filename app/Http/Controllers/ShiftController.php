@@ -91,7 +91,6 @@ class ShiftController extends Controller
 	}
 	private function generateDateRange(Carbon $start_date, Carbon $end_date, $firstday=false)
 	{
-		Carbon::setLocale(config('app.locale'));
 		if($firstday){
 			$start_date =  new Carbon("last Monday $start_date");
 			$end_date =  new Carbon("last Sunday $end_date");
