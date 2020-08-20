@@ -128,9 +128,10 @@ class AgendaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    //public function edit($id)
+    public function edit()
     {
-        //
+        return view('editevent');
     }
 
     /**

@@ -20,6 +20,8 @@ Route::post('/logout', 'LoginController@logout')->name('logout');
 
 //agenda
 Route::match(['get'], '/agenda', 'AgendaController@index')->name('agenda');
+Route::match(['get'], '/editevent', 'AgendaController@edit')->name('edit');
+
 
 //user settings
 Route::match(['get', 'post'], '/settings', 'UserSettingsController@changeSettings')->name('user.settings');
