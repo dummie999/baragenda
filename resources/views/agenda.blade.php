@@ -47,12 +47,13 @@
 						<tbody>
 
 					@foreach($events as $i => $date)
+						@if(count($date['events'])<1) <tr><td>{{$date['carbon']->translatedFormat('l d F')}}</td><td></td><td></td><td></td></tr> @endif
 						@foreach($date['events'] as $j => $event)
 								<tr>
-							<td>{{ $event['start']['carbon']->translatedFormat('l d F')  }}</td>
-							<td>{{ $event['start']['carbon']->isstartofday() ? '' : $event['start']['carbon']->translatedFormat('H:i') }}</td>
-							<td>{{ $event['calendar'] }}</td>
-							<td>{{ $event['summary']  }}</td>
+									<td>@if($j==0){{ $event['start']['carbon']->translatedFormat('l d F')  }}@endif</td>
+									<td>{{ $event['start']['carbon']->isstartofday() ? '' : $event['start']['carbon']->translatedFormat('H:i') }}</td>
+									<td>{{ $event['calendar'] }}</td>
+									<td>{{ $event['summary']  }}</td>
 								</tr>
 						@endforeach
 					@endforeach

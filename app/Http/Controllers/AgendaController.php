@@ -42,8 +42,8 @@ class AgendaController extends Controller
         
         */
 		if($firstday){
-			$start_date =  new Carbon("last Monday $start_date"); 
-			$end_date =  new Carbon("last Sunday $end_date");
+			$start_date =  new Carbon("Monday $start_date"); 
+			$end_date =  new Carbon("Sunday $end_date");
 		}
 		$dates = [];
 
@@ -51,10 +51,11 @@ class AgendaController extends Controller
 			$dates[] =  new Carbon($date);
         }
         if($prepArray){
+            $array=array();
             foreach($dates as $k=>$d){
-                $arr[$d->format($prepArrayFormat)]=array('carbon'=>$d,$nameArray=>array());
+                $array[$d->format($prepArrayFormat)]=array('carbon'=>$d,$nameArray=>array());
             }
-            $dates=$arr;
+            $dates=$array;
         }
 
 		return $dates;
@@ -68,10 +69,10 @@ class AgendaController extends Controller
      */
     public function index()
     {
-        $today=Carbon::parse("today");
-        $nextweeksunday=Carbon::parse("next week sunday");
-        $eventsPublic =  Event::get( $startDateTime =$today,  $endDateTime = $nextweeksunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
-        $eventsPrivate =  Event::get( $startDateTime =$today,  $endDateTime = $nextweeksunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
+        $today=Carbon::parse("this week monday");
+        $sunday=Carbon::parse("next sunday");
+        $eventsPublic =  Event::get( $startDateTime =$today,  $endDateTime = $sunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
+        $eventsPrivate =  Event::get( $startDateTime =$today,  $endDateTime = $sunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
         $events = $this->format2view($eventsPublic);
         $events = $this->format2view($eventsPrivate,$events);
         
@@ -81,7 +82,8 @@ class AgendaController extends Controller
         ksort($events,0);
         //echo('<pre>');print_r($events);echo('</pre>');die;+
        
-        $dates=$this->generateDateRange($today,$nextweeksunday,false,true); // give me an array of dates!!!!
+        $dates=$this->generateDateRange($today,$sunday,true,true); // give me an array of dates!!!!
+        #echo('<pre>');print_r($dates);echo('</pre>');die;
         foreach($events as $k=>$e){
             $dates[$k]['events']=$e;
         }
