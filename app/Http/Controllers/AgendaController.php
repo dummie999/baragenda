@@ -75,19 +75,17 @@ class AgendaController extends Controller
         $eventsPrivate =  Event::get( $startDateTime =$today,  $endDateTime = $sunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
         $events = $this->format2view($eventsPublic);
         $events = $this->format2view($eventsPrivate,$events);
-        
-        
-        #$res =  Resource::get();
-        #$echo('<pre>');print_r($eventsPrivate[0]);echo('</pre>');
         ksort($events,0);
-        //echo('<pre>');print_r($events);echo('</pre>');die;+
-       
+        
+        #echo('<pre>');print_r($events);echo('</pre>');;die;
         $dates=$this->generateDateRange($today,$sunday,true,true); // give me an array of dates!!!!
-        #echo('<pre>');print_r($dates);echo('</pre>');die;
-        foreach($events as $k=>$e){
-            $dates[$k]['events']=$e;
-        }
 
+        foreach($events as $date=>$eventList){
+
+            if (array_key_exists($date,$dates)) { $dates[$date]=$eventList; }
+            
+        }
+        #echo('<pre>');print_r($dates);echo('</pre>');;die;
       
         /*
         [20200823] => Array
@@ -163,7 +161,8 @@ class AgendaController extends Controller
                 break;
                 default : $calendar=NULL;
             }
-            $eventsArray[$carbon->format('Ymd')][]=array(
+            
+            $eventFormat = array(
                 'summary'=>$event->googleEvent->summary,
                 'calendar'=> $calendar,
                 'description'=>$event->googleEvent->description,
@@ -191,8 +190,20 @@ class AgendaController extends Controller
                 'end'=>array(
                     'dateTime'=>$event->googleEvent->end->dateTime,
                     'date'=>$event->googleEvent->end->date,
-                    'carbon'=>$event->googleEvent->end->date ? Carbon::parse($event->googleEvent->end->date) : Carbon::parse($event->googleEvent->end->dateTime)),
+                    'carbon'=>$event->googleEvent->end->date ? Carbon::parse($event->googleEvent->end->date) : Carbon::parse($event->googleEvent->end->dateTime))
+               
                 );
+            //if multiday event (diff datetime >1), then expand array by interval and insert self event. Also ingore default insert by 'continue'
+            if(Carbon::parse($eventFormat['end']['carbon'])->diffInDays(Carbon::parse($eventFormat['start']['carbon']))>1) {
+                $interval = $this->generateDateRange(Carbon::parse($event->googleEvent->start->date),Carbon::parse($event->googleEvent->end->date),false,false); //create interval
+                foreach($interval as $i=>$carb){
+                    $eventFormat['start']['carbon']=$carb; //replace start time by interval item time
+                    $eventsArray[$carb->format('Ymd')]['events'][]=$eventFormat; //for every interval insert self
+                }
+                continue; //skip the default insert (when there is  interval)
+            }
+            $eventsArray[$carbon->format('Ymd')]['events'][]=$eventFormat;
+            #echo('<pre>');print_r(($eventsArray));echo('</pre>');die;;
         }
         return $eventsArray;
     }
