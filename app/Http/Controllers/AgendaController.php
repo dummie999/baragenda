@@ -252,6 +252,8 @@ class AgendaController extends Controller
     //public function edit($id)
     public function edit()
     {
+        $today=Carbon::today()->format("Y-m-d");
+        $nowHour=Carbon::now()->startOfHour()->format("H:i:s");
         $resources=Resource::get();
         #echo('<pre>');print_r($resources);echo('</pre>');;die;
         $resourceArray=array();
@@ -259,11 +261,14 @@ class AgendaController extends Controller
         {
             $resourceArray[]=array(
                 "email"=>$r['email'],
-                "name"=>$r['name']
+                "name"=>$r['name'],
+                "capacity"=>$r['capacity']
             );
 
         }
         return view('editevent',array(
+            'today'=>$today,
+            'nowHour'=>$nowHour,
             'resources'=>$resources
             
             ));

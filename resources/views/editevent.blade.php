@@ -57,11 +57,11 @@
                                                     <div class="col-6">
                                                 <div class="form-inline">
                                                     <div class="form-group">
-                                                        <input id="inputDateStart" class="form-control" type="date" name="eventNew[start][date]" required></input>
-                                                        <input id="inputTimeStart" class="form-control" type="time" name="eventNew[start][time]" required></input>
+                                                        <input id="inputDateStart" class="form-control" type="date" name="eventNew[start][date]" value={{$today}} required></input>
+                                                        <input id="inputTimeStart" class="form-control" type="time" name="eventNew[start][time]" value={{$nowHour}} required></input>
                                                         <a>tot</a>
-                                                        <input id="inputDateEnd" class="form-control" type="date" name="eventNew[end][date]" required></input>
-                                                        <input id="inputTimeEnd" class="form-control" type="time" name="eventNew[end][time]" required></input>
+                                                        <input id="inputDateEnd" class="form-control" type="date" name="eventNew[end][date]" value={{$today}} required></input>
+                                                        <input id="inputTimeEnd" class="form-control" type="time" name="eventNew[end][time]" value={{$nowHour}} required></input>
                                                     </div>
                                                 </div>
                                             </div>
@@ -131,7 +131,7 @@
                                                                 <label for="room_select">Ruimtes:</label>
                                                                 <select id="room_select" class="form-control" name="eventNew[rooms][]" multiple form="createform">
                                                                     @foreach($resources as $r)
-                                                                        <option value={{$r['email']}}>{{$r['name']}}</option>
+                                                                        <option data-toggle="tooltip" title="Capaciteit:{{$r['capacity']}}" value={{$r['email']}}>{{$r['name']}}</option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>

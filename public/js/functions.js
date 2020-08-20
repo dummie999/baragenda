@@ -27,3 +27,5 @@ $(document).on("dblclick", "#content", function(){
     });
 
 })
+
+$('[data-toggle="tooltip"]').tooltip(); 
