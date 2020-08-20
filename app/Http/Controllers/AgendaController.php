@@ -71,6 +71,9 @@ class AgendaController extends Controller
     {
         $today=Carbon::parse("this week monday");
         $sunday=Carbon::parse("next sunday");
+
+        
+        #echo('<pre>');print_r($resourceArray);echo('</pre>');;die;
         $eventsPublic =  Event::get( $startDateTime =$today,  $endDateTime = $sunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
         $eventsPrivate =  Event::get( $startDateTime =$today,  $endDateTime = $sunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
         $events = $this->format2view($eventsPublic);
@@ -249,7 +252,21 @@ class AgendaController extends Controller
     //public function edit($id)
     public function edit()
     {
-        return view('editevent');
+        $resources=Resource::get();
+        #echo('<pre>');print_r($resources);echo('</pre>');;die;
+        $resourceArray=array();
+        foreach($resources as $r)
+        {
+            $resourceArray[]=array(
+                "email"=>$r['email'],
+                "name"=>$r['name']
+            );
+
+        }
+        return view('editevent',array(
+            'resources'=>$resources
+            
+            ));
     }
 
     /**

@@ -130,6 +130,9 @@
                                                             <div class="form-group">
                                                                 <label for="room_select">Ruimtes:</label>
                                                                 <select id="room_select" class="form-control" name="eventNew[rooms][]" multiple form="createform">
+                                                                    @foreach($resources as $r)
+                                                                        <option value={{$r['email']}}>{{$r['name']}}</option>
+                                                                    @endforeach
                                                                 </select>
                                                             </div>
                                                         
