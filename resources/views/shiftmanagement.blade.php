@@ -139,12 +139,16 @@
 
 									<td>
 										@isset($shift[$type->title]) 
-											@if( $shift[$type->title]==True)
-											<button type="submit" id="del_shift_type{{$i}}_{{$type['id']}}" class="link-button" name="del_shift_type[{{$i}}]" value="{{$type['id']}}">✔</button>
+											@if( $shift[$type->title]===0)
+												<button type="submit" id="del_shift_type{{$i}}_{{$type['id']}}" class="link-button fas fa-calendar-times" style="color:black;" name="del_shift_type[{{$i}}]" value="{{$type['id']}}"></button>
 											@endif
-											@if( $shift[$type->title]==False)
-											<button type="submit" id="res_shift_type{{$i}}_{{$type['id']}}" class="link-button" name="res_shift_type[{{$i}}]" value="{{$type['id']}}">⎌</button>
+											@if( $shift[$type->title]===-1)
+												<button type="submit" id="res_shift_type{{$i}}_{{$type['id']}}" class="link-button fas fa-undo" style="color:red; name="res_shift_type[{{$i}}]" value="{{$type['id']}}"></button>
 											@endif
+											@if( $shift[$type->title]===1)
+												<button type="submit" id="user_shift_type{{$i}}_{{$type['id']}}" style="color:green;"  class="link-button fas fa-user" style="color:black;" name="user_shift_type[{{$i}}]" value="{{$type['id']}}"></button>
+											@endif
+											<i ></i>
 										@endisset
 									</td>
 

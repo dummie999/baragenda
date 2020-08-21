@@ -126,10 +126,14 @@
                                                                 <input type="text" class="form-control" name="eventNew[location]" placeholder="Geef exacte locatie op" value="Studentenvereniging V.S.L. Catena, Kolfmakersteeg 8, 2311 VG Leiden, Netherlands"></input>
                                                             </div>
                                                         </div>
-                                                        <div class="row">	                                                            
+                                                        <div class="row">
                                                             <div class="form-group">
+                                                                <label for="description">Omschrijving</label>
+                                                                <textarea class="form-control" name="eventNew[description]" id="description" rows="8" cols="50"></textarea>
+                                                              </div>		                                                            
+                                                            <div class="form-group" style="min-width:30%">
                                                                 <label for="room_select">Ruimtes:</label>
-                                                                <select id="room_select" class="form-control" name="eventNew[rooms][]" multiple form="createform">
+                                                                <select id="room_select" class="form-control" name="eventNew[rooms][]" multiple form="createform" style="min-height:200px">
                                                                     @foreach($resources as $r)
                                                                         <option data-toggle="tooltip" title="Capaciteit:{{$r['capacity']}}" value={{$r['email']}}>{{$r['name']}}</option>
                                                                     @endforeach
@@ -140,8 +144,7 @@
 
                                                      
                                                        
-                                                            <a>Omschrijving</a>
-                                                            <textarea name="eventNew[description]" rows="5" cols="40" ></textarea>		
+	
                                                         </div>
                                                         
                                                     </div>

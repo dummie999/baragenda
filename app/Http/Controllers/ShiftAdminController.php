@@ -84,7 +84,7 @@ class ShiftAdminController extends ShiftController
 
 					//show requested date & events
 					$shifts = Shift::withTrashed()->whereBetween('datetime',array($now_r_start,$now_r1_end))->with('shifttype','shiftuser.info')->get();
-					//echo('<pre>');print_r($shifts);
+					#echo('<pre>');print_r($shifts);echo('</pre>');die;;
 					//create array of dates -> arr[2020-02-14][carbon]=CarbonObj
 					$arr=array();
 					foreach($dates as $d){
@@ -92,14 +92,17 @@ class ShiftAdminController extends ShiftController
 					}
 					//create / fill from object to multidimensional arr
 					foreach($shifts as $s){
-						if ($s->deleted_at==null) {
-							$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=True;
+						if(!$s->shiftuser->isEmpty()){
+							$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=1;
+						}
+						elseif ($s->deleted_at==null) {
+							$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=0;
 						}
 						else {
-							$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=False;
+							$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=-1;
 						}
 					}
-					#echo('<pre>');print_r($data);echo('</pre>');die;;				
+					#echo('<pre>');print_r($data);				
 					//prepare view
 					return view('shiftmanagement', compact('shifttypes', 'page'),array(
 					'shifttypes'=>$shifttypes,
