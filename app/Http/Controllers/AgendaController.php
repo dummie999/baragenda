@@ -69,26 +69,53 @@ class AgendaController extends Controller
      */
     public function index()
     {
-        $today=Carbon::parse("this week monday");
-        $sunday=Carbon::parse("next sunday");
+        $start=Carbon::parse("this week monday");
+        $end=Carbon::parse("this week sunday")->endOfDay();
 
         
         #echo('<pre>');print_r($resourceArray);echo('</pre>');;die;
-        $eventsPublic =  Event::get( $startDateTime =$today,  $endDateTime = $sunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
-        $eventsPrivate =  Event::get( $startDateTime =$today,  $endDateTime = $sunday,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
+        $eventsPublic =  Event::get( $startDateTime =$start,  $endDateTime = $end,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
+        $eventsPrivate =  Event::get( $startDateTime =$start,  $endDateTime = $end,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
         $events = $this->format2view($eventsPublic);
         $events = $this->format2view($eventsPrivate,$events);
         ksort($events,0);
         
-        #echo('<pre>');print_r($events);echo('</pre>');;die;
-        $dates=$this->generateDateRange($today,$sunday,true,true); // give me an array of dates!!!!
+        #echo('<pre>');print_r(($events));echo('</pre>');die;;
+
+
+    
+        $dates=$this->generateDateRange($start,$end,true,true); // give me an array of dates!!!!
 
         foreach($events as $date=>$eventList){
-
-            if (array_key_exists($date,$dates)) { $dates[$date]['events']=$eventList; }
+            //if startdate is IN this period
+            if (array_key_exists($date,$dates)) { 
+                $dates[$date]['events']=$eventList; //fill the events in the dates
+            }
+            //go through each event.
+            else {
+                foreach($eventList as $i=>$event){
+                    #print_r(Carbon::parse($event['start']['carbon'])->format('N'));
+                    if($event['start']['carbon']->between($start,$end)) {
+                        //print_r($event['summary'] . "startdate is in week"); //can never happen due to above
+                    }
+                    if($event['end']['carbon']->between($start,$end)) {
+                        //print_r($event['summary'] . " enddate of period is in this week"); //event of lastweek until somewhere this week
+                        $event['shape']['pos_day']=0;                        
+                        $event['shape']['size_day']=round((intval(Carbon::parse($event['end']['carbon'])->format('N'))-1)/7,2);                        
+                        $dates[$start->format('Ymd')]['events'][]=$event;
+                    }
+                    elseif(reset($dates)['carbon']->between($event['start']['carbon'],$event['end']['carbon'])) {
+                        //print_r($event['summary'] . "monday  is in period"); // event of lastweek until somewhere next week
+                        $event['shape']['pos_day']=0;
+                        $event['shape']['size_day']=1;
+                        $dates[$start->format('Ymd')]['events'][]=$event;
+                    }
+                }
+            }
+ 
             
         }
-        #echo('<pre>');print_r($dates);echo('</pre>');;die;
+      # echo('<pre>');print_r($dates);echo('</pre>');;die;
       
         /*
         [20200823] => Array
@@ -113,9 +140,9 @@ class AgendaController extends Controller
                                         [timezone_type] => 2
                                         [timezone] => Z
         */
-        #echo('<pre>');print_r(($events));echo('</pre>');die;;
+        #echo('<pre>');print_r(($dates));echo('</pre>');
        
-
+        
         return view('agenda',array(
             'events'=>$dates
             ));
@@ -193,20 +220,39 @@ class AgendaController extends Controller
                 'end'=>array(
                     'dateTime'=>$event->googleEvent->end->dateTime,
                     'date'=>$event->googleEvent->end->date,
-                    'carbon'=>$event->googleEvent->end->date ? Carbon::parse($event->googleEvent->end->date) : Carbon::parse($event->googleEvent->end->dateTime))
-               
+                    'carbon'=>$event->googleEvent->end->date ? Carbon::parse($event->googleEvent->end->date) : Carbon::parse($event->googleEvent->end->dateTime)),
+                'interval'=>null
                 );
+
+
             //if multiday event (diff datetime >1), then expand array by interval and insert self event. Also ingore default insert by 'continue'
-            if(Carbon::parse($eventFormat['end']['carbon'])->diffInDays(Carbon::parse($eventFormat['start']['carbon']))>1) {
+             if(Carbon::parse($eventFormat['end']['carbon'])->diffInDays(Carbon::parse($eventFormat['start']['carbon']))>1) {
                 $interval = $this->generateDateRange(Carbon::parse($event->googleEvent->start->date),Carbon::parse($event->googleEvent->end->date),false,false); //create interval
-                foreach($interval as $i=>$carb){
-                    $eventFormat['start']['carbon']=$carb; //replace start time by interval item time
+               $eventFormat['interval']=$interval; // this or below... still need to figure out.. 
+/*                 foreach($interval as $i=>$carb){
+                    $eventFormat['start']['carbon']=Carbon::parse($carb)->startOfDay(); //replace start time by interval item time
+                    $eventFormat['end']['carbon']=Carbon::parse($carb)->addDay()->startOfDay(); //replace start time by interval item time
+                    $eventFormat['shape']=array(
+                        'pos'=>round(Carbon::parse($eventFormat['start']['carbon'])->startOfDay()->diffInMinutes(Carbon::parse($eventFormat['start']['carbon']))/1440,3),
+                        'size'=>round((Carbon::parse($eventFormat['start']['carbon'])->diffInMinutes(Carbon::parse($eventFormat['end']['carbon'])))/1440,3)
+                    ); 
                     $eventsArray[$carb->format('Ymd')][]=$eventFormat; //for every interval insert self
-                }
-                continue; //skip the default insert (when there is  interval)
-            }
+                } */
+                //continue; //skip the default insert (when there is  interval)
+            }  
+
+
+            //for each event calculate pos/size for display
+            $eventFormat['shape']=array(
+                'pos'=>round(Carbon::parse($eventFormat['start']['carbon'])->startOfDay()->diffInMinutes(Carbon::parse($eventFormat['start']['carbon']))/1440,3),
+                'pos_day'=>round((intval(Carbon::parse($eventFormat['start']['carbon'])->format('N'))-1)/7,2),
+                'size'=>round(Carbon::parse($eventFormat['start']['carbon'])->diffInMinutes(Carbon::parse($eventFormat['end']['carbon']))/1440,3),
+                'size_day'=>1/7
+
+                
+            );           
             $eventsArray[$carbon->format('Ymd')][]=$eventFormat;
-            #echo('<pre>');print_r(($eventsArray));echo('</pre>');die;;
+            
         }
         return $eventsArray;
     }
