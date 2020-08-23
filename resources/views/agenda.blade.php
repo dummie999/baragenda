@@ -68,6 +68,9 @@
 															format: 'L'
 														});
 													});
+													$("#datetimepicker13").on("change.datetimepicker", function (e) {
+													console.log(e);
+													});
 												</script>
 											</div>
 										</div>
