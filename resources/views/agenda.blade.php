@@ -131,62 +131,62 @@
 												<div class="border-div grid-bottom-tabs" style=" ">
 													<div class="border-div bottom-tabs-time" style="" >
 														<div class="border-div tabs-time-list " style="" >
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	00:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	01:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	02:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	03:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	04:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	05:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	06:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	07:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	08:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	09:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	10:00
 																</div>
 															</div>
-															<div class="vertTimeItem">
+															<div class="vertTimeItem vertTimeItemCompact">
 																<div class="vertTimeItemFont">
 																	11:00
 																</div>
@@ -264,10 +264,13 @@
 																<div class="border-div bottom-tabs-gridcell" style="position:relative">
 																	@foreach($date['events'] as $j => $event)
 																		@if($event['shape']['size']<1)
-																			<div class="event-button" style="z-index: {{$j+15}};top:{{$event['shape']['pos']*960}}px; height:{{$event['shape']['size']*960}}px;">
+																			<div class="event-button" style="z-index: {{$j+15}};top:
+																			@if($event['shape']['pos']<=0.5) {{20/720*24*$event['shape']['pos'] *100}}% {{--20=time;720=total--}}
+																			@else {{((40/720)*(24*($event['shape']['pos']-0.5))+(0.5*24*(20/720))) * 100}}% {{--20&40=time;720=total--}}
+																			@endif; height:{{$event['shape']['size']*}}px;">
 																				<div class="event-button-data">
 																					<div class="event-button-title">
-																						{{ $event['summary']  }}
+																						{{ $event['summary']  }}:{{ $event['shape']['pos']  }}
 																					</div>
 																					<div class="event-button-time">
 																						{{ $event['start']['carbon']->translatedFormat('H:i') }}-{{ $event['end']['carbon']->translatedFormat('H:i') }}

@@ -1,5 +1,5 @@
 .border-div {
-    /* border:1px solid black; */
+    /* border:1px solidsolid black; */
 }
 
 
@@ -341,7 +341,7 @@ Google Div class transfered
     position: relative;
     box-sizing: border-box;
     margin-left: auto;
-    height: 960px;
+    height: 720px;
     margin-top: 5px;
     margin-bottom: 5px;
 
@@ -352,6 +352,10 @@ Google Div class transfered
     position: relative;
     padding-right: 8px;
     text-align: right;
+}
+.vertTimeItemCompact{
+    /* s4ZaLd  */
+    height: 20px !important;
 }
 .vertTimeItemFont{
     /* ebZ3od MANBAf  */
@@ -373,7 +377,7 @@ Google Div class transfered
 .tabs-content-events{
   /*   cOpq4e elYzab-cXXICe-Hjleke */
     min-width: 100%;
-    min-height: 960px;
+    min-height: 720;
     flex: none;
     display: inline-flex;
     vertical-align: top;
