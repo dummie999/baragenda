@@ -92,13 +92,13 @@
 											$('#datetimepicker4a').datetimepicker({
 												format : 'YYYY-MM-DD',
 												allowInputToggle: true,
-												defaultDate : moment(),
+												defaultDate : moment(new Date()).add(1,'days'),
 												minDate: moment(new Date()).add(-1,'days'),
 											});
 											$('#datetimepicker4b').datetimepicker({
 												format : 'YYYY-MM-DD',
 												allowInputToggle: true,
-												defaultDate : moment(new Date()).add(1,'days'),
+												defaultDate : moment(new Date()).add(8,'days'),
 												
 											});
 											$("#datetimepicker4a").on("change.datetimepicker", function (e) {
