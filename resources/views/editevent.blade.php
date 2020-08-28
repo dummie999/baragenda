@@ -14,36 +14,36 @@
     <div class="row">
         <div class="col-md-12 ">
             <div class="card">
-                <div class="card-header">
-                    <h4 class="">Nieuw event</h4>
-                </div>
-                <div class="card-block" style="">
-                    @if (session('status'))
-                    <div class="alert alert-success">
-                        {{ session('status') }}
+                <form id="createform" name="createEvent" action="" method="post">
+                    {{ csrf_field() }}
+                    <div class="card-header">
+                        <h4 class="">Nieuw event</h4>
                     </div>
-                    @endif
-                    <br>
-
-                    <div class="container ">
-                        <form id="createform" name="createEvent" action="" method="post">
+                    <div class="card-block" style="">
+                        @if (session('status'))
+                        <div class="alert alert-success">
+                            {{ session('status') }}
+                        </div>
+                        @endif
+                        <br>
+                        <div class="container ">
                             <div class="row">
                                 <div class="col-8">
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Titel</span>
                                         </div>
-                                        <input type="text" class="form-control" name="eventNew[summary]"></input>
+                                        <input type="text" class="form-control" name="eventNew[summary]" required></input>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-4">
-                                    <input type="hidden" name="eventNew[agenda]" value="private"></input>
+                                    <input type="hidden" name="eventNew[agenda]" value="0"></input>
                                     <div class="form-check">
                                         <label class="form-check-label">
                                             <input type="checkbox" class="form-check-input" name="eventNew[agenda]"
-                                                value="public">Toevoegen aan publieke agenda
+                                                value="1">Toevoegen aan publieke agenda
                                         </label>
                                     </div>
                                     <br />
@@ -66,7 +66,7 @@
                                             <input id="inputDateEnd" class="form-control" type="date"
                                                 name="eventNew[end][date]" value={{$today}} required></input>
                                             <input id="inputTimeEnd" class="form-control" type="time"
-                                                name="eventNew[end][time]" value={{$nowHour}} required></input>
+                                                name="eventNew[end][time]" value={{$nowHour2}} required></input>
                                         </div>
                                     </div>
                                 </div>
@@ -76,8 +76,8 @@
                                     <div class="input-group mb-3 ">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <input type="hidden" name="eventNew[allDay]" value=false></input>
-                                                <input type="checkbox" name="eventNew[allDay]" value=true></input>
+                                                <input type="hidden" name="eventNew[allDay]" value=0></input>
+                                                <input type="checkbox" name="eventNew[allDay]" value=1></input>
                                             </div>
                                         </div>
 
@@ -88,11 +88,11 @@
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <input type="hidden" name="eventNew[recurring][active]" value=false /></input>
+                                    <input type="hidden" name="eventNew[recurring][active]" value=0 /></input>
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">
-                                                <input type="checkbox"></input>
+                                                <input type="checkbox" value=1></input>
                                             </div>
                                         </div>
                                         <input class="input-group-text btn" type="button" id="inputRecurrenceButton"
@@ -118,47 +118,45 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="row  pane_details-time">
+                            <div class="row  pane_details-time" style="min-height:400px;">
                                 <div class="col-8">
-                                    <div class="tab-content" style="height:30vh">
+                                    <div class="tab-content" style="height:initial">
                                         <div class="tab-pane container active" id="event">
-
                                             <div class="row">
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">Locatie:</span>
+                                                <div class="col-12">
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">Locatie:</span>
+                                                        </div>
+                                                        <input type="text" class="form-control" name="eventNew[location]"
+                                                            placeholder="Geef exacte locatie op"
+                                                            value="Studentenvereniging V.S.L. Catena, Kolfmakersteeg 8, 2311 VG Leiden, Netherlands" required></input>
                                                     </div>
-                                                    <input type="text" class="form-control" name="eventNew[location]"
-                                                        placeholder="Geef exacte locatie op"
-                                                        value="Studentenvereniging V.S.L. Catena, Kolfmakersteeg 8, 2311 VG Leiden, Netherlands"></input>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="form-group" style="width:70%; height:200px; ">
-                                                    <label for="description">Omschrijving</label>
-                                                    <textarea class="form-control" name="eventNew[description]"
-                                                        id="description" style="width:100%; height:100%"></textarea>
+                                            <div class="row" style="">
+                                                <div class="col-6">
+                                                    <div class="form-group" style=" height:200px; ">
+                                                        <label for="description">Omschrijving</label>
+                                                        <textarea class="form-control" name="eventNew[description]"
+                                                            id="description" style="width:100%; height:100%" required></textarea>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group" style="width:30%; height:100%">
-                                                    <label for="room_select">Ruimtes:</label>
-                                                    <select id="room_select" class="form-control"
-                                                        name="eventNew[rooms][]" multiple form="createform"
-                                                        style="height:200px">
-                                                        @foreach($resources as $r)
-                                                        <option data-toggle="tooltip"
-                                                            title="Capaciteit: {{$r['capacity']}}" value={{$r['email']}}>
-                                                            {{$r['name']}}</option>
-                                                        @endforeach
-                                                    </select>
+                                                <div class="col-6">
+                                                    <div class="form-group" style="height:100%">
+                                                        <label for="room_select">Ruimtes:</label>
+                                                        <select id="room_select" class="form-control"
+                                                            name="eventNew[rooms][]" multiple form="createform"
+                                                            style="height:200px">
+                                                            @foreach($resources as $r)
+                                                            <option data-toggle="tooltip"
+                                                                title="Capaciteit: {{$r['capacity']}}" value={{$r['email']}}>
+                                                                {{$r['name']}}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </div>
-
-
-
-
-
-
                                             </div>
-
                                         </div>
                                         <div class="tab-pane container " id="time"> test </div>
                                         <div class="tab-pane container " id="notifications">
@@ -206,9 +204,9 @@
                                                         <label class="form-check-label">
                                                             <input type="hidden"
                                                                 name="eventNew[option][guestsCanModify]"
-                                                                value=false /></input>
+                                                                value=0 /></input>
                                                             <input type="checkbox" class="form-check-input"
-                                                                name="eventNew[option][guestsCanModify]" value=true>Aan
+                                                                name="eventNew[option][guestsCanModify]" value=1>Aan
                                                             te passen door gasten.
                                                         </label>
                                                     </div>
@@ -217,10 +215,10 @@
                                                         <label class="form-check-label">
                                                             <input type="hidden"
                                                                 name="eventNew[option][guestsCanInviteOthers]"
-                                                                value=false /></input>
+                                                                value=0 /></input>
                                                             <input type="checkbox" class="form-check-input"
                                                                 name="eventNew[option][guestsCanInviteOthers]"
-                                                                value=true checked>Gasten toestaan anderen uit te
+                                                                value=1 >Gasten toestaan anderen uit te
                                                             nodigen.
                                                         </label>
                                                     </div>
@@ -229,10 +227,10 @@
                                                         <label class="form-check-label">
                                                             <input type="hidden"
                                                                 name="eventNew[option][guestsCanSeeOtherGuests]"
-                                                                value=false /></input>
+                                                                value=0 /></input>
                                                             <input type="checkbox" class="form-check-input"
                                                                 name="eventNew[option][guestsCanSeeOtherGuests]"
-                                                                value=true checked>Gastenlijst zichtbaar
+                                                                value=1 >Gastenlijst zichtbaar
                                                         </label>
                                                     </div>
                                                 </div>
@@ -241,22 +239,22 @@
                                     </div>
                                 </div>
                             </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="card-footer">
-                    <div class="row">
-                        <div class="col-md-2">
-                            <input type="submit" class="btn btn-warning" name="submit" value="Toevoegen"></input>
-                        </div>
-                        
-                        <div class="col-md-2 offset-md-8">
-                            <a href={{ url()->previous() }}>
-                                <button type="button" class="btn btn-secondary">Sluiten</button>
-                            </a>
                         </div>
                     </div>
-                </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <input type="submit" class="btn btn-warning" name="submit" value="Toevoegen"></input>
+                            </div>
+                            
+                            <div class="col-md-2 offset-md-8">
+                                <a href={{ url()->previous() }}>
+                                    <button type="button" class="btn btn-secondary">Sluiten</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
