@@ -29,3 +29,8 @@ $(document).on("dblclick", "#content", function(){
 })
 
 $('[data-toggle="tooltip"]').tooltip(); 
+
+//not working yet
+function scrollTo(perc){
+	window.scrollTo(0,document.querySelector(".grid-bottom-tabs").scrollHeight);
+}

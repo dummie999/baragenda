@@ -9,12 +9,12 @@ Google Div class transfered
 
 .cal_left {
     position: absolute;
-    top: 10%;
+    top: 15%;
 }
 
 .ag-create-container{
     position: absolute;
-    left: 8px;
+    left: 40px;
     top: 15px;
     transition: left,top 300ms linear;
     z-index: 506;

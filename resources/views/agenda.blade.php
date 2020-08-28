@@ -133,7 +133,7 @@
 												</div>
 											</div>
 											<div class="border-div data-grid-bottom" style=" ">
-												<div class="border-div grid-bottom-tabs" style=" ">
+												<div class="border-div grid-bottom-tabs" onload="scrollTo(0.5)" style="">
 													<div class="border-div bottom-tabs-time" style="" >
 														<div class="border-div tabs-time-list " style="" >
 															<div class="vertTimeItem vertTimeItemCompact">
