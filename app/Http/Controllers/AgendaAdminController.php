@@ -131,6 +131,8 @@ class AgendaAdminController extends AgendaController
         }
 
 
+    
+
 
     /**
      * Update the specified resource in storage.

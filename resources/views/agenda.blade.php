@@ -1,3 +1,5 @@
+@section('scripts')
+	<script src="{{ asset('js/agenda.js') }}" defer></script>
 @section('styles')
 	<link href="{{ asset('css/agenda.css') }}" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
@@ -25,7 +27,7 @@
 							</nav>
 						</div>
 						<div class="border-div ag-topleft">
-							<a href={{ route('agenda/edit')}}>
+							<a href={{ route('agenda.edit')}}>
 								<div class="ag-create-container">
 									<button class="ag-create-button"  >
 										<span class="ag-create-span"></span>
@@ -64,13 +66,35 @@
 												<script type="text/javascript">
 													$(function () {
 														$('#datetimepicker13').datetimepicker({
+															locale:'nl',
+															calendarWeeks: true,
 															inline: true,
 															format: 'L'
 														});
 													});
-													$("#datetimepicker13").on("change.datetimepicker", function (e) {
-													console.log(e);
-													});
+													$( document ).ready(function() {
+														$("#datetimepicker13").on("change.datetimepicker", function (e) {
+															iso=moment(e.date._d).toISOString();
+															console.log(iso)
+															try {
+																$.post("{{ route('agenda.getdate') }}", {
+																	date: iso,
+																	"_token": "{{ csrf_token() }}",
+																})
+																.then(function(response){
+																	var data=response.data;
+																	parseAgenda(data)
+																})
+															}
+															catch (err){
+																console.log("error "+err)
+															}
+														});
+													})
+														
+																									
+
+																										
 												</script>
 											</div>
 										</div>
@@ -87,13 +111,13 @@
 												</div>
 												<div class="border-div grid-top-days" style="">
 													<div class="border-div top-days-list " style="">
-														@foreach($events as $i => $date)
+														@foreach(array_values($events) as $i => $date)
 															<div class="vertDayColumn border-div ">
 																<div class="vertDayColumn-data border-div ">
-																	<div class="vertDayColumn-dayname border-div ">
+																	<div id="dayname_{{$i}}" class="vertDayColumn-dayname border-div ">
 																		{{$date['carbon']->translatedFormat('D')}}
 																	</div>
-																	<div class="vertDayColumn-dayno border-div ">
+																	<div id="dayno_{{$i}}" class="vertDayColumn-dayno border-div ">
 																		{{$date['carbon']->translatedFormat('d')}}
 																	</div>
 																</div>
@@ -265,8 +289,8 @@
 													</div>
 													<div class="border-div bottom-tabs-content" style="">
 														<div class="border-div tabs-content-events" style="">
-															@foreach($events as $i => $date)
-																<div class="border-div bottom-tabs-gridcell" style="position:relative">
+															@foreach(array_values($events) as $i => $date)
+														<div id="grid_{{$i}}" class="border-div bottom-tabs-gridcell" style="position:relative">
 																	@foreach($date['events'] as $j => $event)
 																		@if($event['shape']['size']<1)
 																			<div class="event-button" style="z-index: {{$j+15}};top:

@@ -160,7 +160,7 @@ class ShiftController extends Controller
      */
     public function enlist(Request $request)
     {
-		$date=array_keys($request->shiftUser)[0];
+		$date=array_keys($request->shiftUser)[0]; // hier zit error array_keys expects to be array null gvien
 		
 		#$user = Auth::user(); /* need to fix this -> user in request->shiftuser find in User:: */
 		if (!User::with('info')->get()->contains('info.name', $request->shiftUser[$date])){

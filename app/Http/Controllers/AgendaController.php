@@ -71,16 +71,28 @@ class AgendaController extends Controller
     {
         $start=Carbon::parse("this week monday");
         $end=Carbon::parse("this week sunday")->endOfDay();
+        $dates = $this->getRangeEvents($start,$end);
+        return view('agenda',array(
+            'events'=>$dates
+            ));
+    }
 
-        
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getRangeEvents($start,$end,$minimal=False)
+    {        
         #echo('<pre>');print_r($resourceArray);echo('</pre>');;die;
         $eventsPublic =  Event::get( $startDateTime =$start,  $endDateTime = $end,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
         $eventsPrivate =  Event::get( $startDateTime =$start,  $endDateTime = $end,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
-        $events = $this->format2view($eventsPublic);
-        $events = $this->format2view($eventsPrivate,$events);
+        $events = $this->format2view($eventsPublic,array(),$minimal);
+        $events = $this->format2view($eventsPrivate,$events,$minimal);
         ksort($events,0);
         
-        #echo('<pre>');print_r((reset($eventsPublic)));echo('</pre>');die;;
+       #echo('<pre>');print_r((($events)));echo('</pre>');die;;
 
 
     
@@ -101,7 +113,7 @@ class AgendaController extends Controller
                     if($event['end']['carbon']->between($start,$end)) {
                         //print_r($event['summary'] . " enddate of period is in this week"); //event of lastweek until somewhere this week
                         $event['shape']['pos_day']=0;                        
-                        $event['shape']['size_day']=round((intval(Carbon::parse($event['end']['carbon'])->format('N'))-1)/7,2);                        
+                        $event['shape']['size_day']=$event['shape']['size'] >7 ? 1 :  round((intval(Carbon::parse($event['end']['carbon'])->format('N'))-1)/7,2);                        
                         $dates[$start->format('Ymd')]['events'][]=$event;
                     }
                     elseif(reset($dates)['carbon']->between($event['start']['carbon'],$event['end']['carbon'])) {
@@ -115,7 +127,7 @@ class AgendaController extends Controller
  
             
         }
-      # echo('<pre>');print_r($dates);echo('</pre>');;die;
+       #echo('<pre>');print_r($dates);echo('</pre>');die;
       
         /*
         [20200823] => Array
@@ -143,9 +155,7 @@ class AgendaController extends Controller
         #echo('<pre>');print_r(($dates));echo('</pre>');
        
         
-        return view('agenda',array(
-            'events'=>$dates
-            ));
+        return $dates;
 
     }
 
@@ -155,7 +165,7 @@ class AgendaController extends Controller
      * @param array  $eventsArray
      * @return \Illuminate\Http\Response
      */
-    private function format2view(object $events, $eventsArray=array()): Array
+    private function format2view(object $events, $eventsArray=array(),$minimal=false): Array
     {
     /* 
     Array
@@ -194,25 +204,8 @@ class AgendaController extends Controller
             
             $eventFormat = array(
                 'summary'=>$event->googleEvent->summary,
-                'calendar'=> $calendar,
                 'description'=>$event->googleEvent->description,
-                'created'=>Carbon::parse($event->googleEvent->created),
-                'guestsCanInviteOthers'=>$event->googleEvent->guestsCanInviteOthers,
-                'guestsCanModify'=>$event->googleEvent->guestsCanModify,
-                'guestsCanSeeOtherGuests'=>$event->googleEvent->guestsCanSeeOtherGuests,
-                'htmlLink'=>$event->googleEvent->htmlLink,
                 'id'=>$event->googleEvent->id,
-                'location'=>$event->googleEvent->location,
-                'recurrence'=>$event->googleEvent->recurrence,
-                'recurringEventId'=>$event->googleEvent->recurringEventId,
-                'status'=>$event->googleEvent->status,
-                'updated'=>$event->googleEvent->updated,
-                'creator'=>array(
-                    'displayName'=>$event->googleEvent->creator->displayName,
-                    'email'=>$event->googleEvent->creator->email),
-                'organizer'=>array(
-                    'displayName'=>$event->googleEvent->organizer->displayName,
-                    'email'=>$event->googleEvent->organizer->email),
                 'start'=>array(
                     'dateTime'=>$event->googleEvent->start->dateTime,
                     'date'=>$event->googleEvent->start->date,
@@ -224,7 +217,28 @@ class AgendaController extends Controller
                 'interval'=>null
                 );
 
-
+            if(!$minimal){
+                $arr = array(
+                    'calendar'=> $calendar, 
+                    'created'=>Carbon::parse($event->googleEvent->created),
+                    'guestsCanInviteOthers'=>$event->googleEvent->guestsCanInviteOthers,
+                    'guestsCanModify'=>$event->googleEvent->guestsCanModify,
+                    'guestsCanSeeOtherGuests'=>$event->googleEvent->guestsCanSeeOtherGuests,
+                    'htmlLink'=>$event->googleEvent->htmlLink,
+                    'location'=>$event->googleEvent->location,
+                    'recurrence'=>$event->googleEvent->recurrence,
+                    'recurringEventId'=>$event->googleEvent->recurringEventId,
+                    'status'=>$event->googleEvent->status,
+                    'updated'=>$event->googleEvent->updated,
+                    'creator'=>array(
+                        'displayName'=>$event->googleEvent->creator->displayName,
+                        'email'=>$event->googleEvent->creator->email),
+                    'organizer'=>array(
+                        'displayName'=>$event->googleEvent->organizer->displayName,
+                        'email'=>$event->googleEvent->organizer->email)
+                    );
+                    $eventFormat+=$arr;                    
+            }
             //if multiday event (diff datetime >1), then expand array by interval and insert self event. Also ingore default insert by 'continue'
              if(Carbon::parse($eventFormat['end']['carbon'])->diffInDays(Carbon::parse($eventFormat['start']['carbon']))>1) {
                 $interval = $this->generateDateRange(Carbon::parse($event->googleEvent->start->date),Carbon::parse($event->googleEvent->end->date),false,false); //create interval
@@ -246,17 +260,29 @@ class AgendaController extends Controller
             $eventFormat['shape']=array(
                 'pos'=>round(Carbon::parse($eventFormat['start']['carbon'])->startOfDay()->diffInMinutes(Carbon::parse($eventFormat['start']['carbon']))/1440,3),
                 'pos_day'=>round((intval(Carbon::parse($eventFormat['start']['carbon'])->format('N'))-1)/7,2),
-                'size'=>round(Carbon::parse($eventFormat['start']['carbon'])->diffInMinutes(Carbon::parse($eventFormat['end']['carbon']))/1440,3),
-                'size_day'=>1/7
+                'size'=>round(Carbon::parse($eventFormat['start']['carbon'])->diffInMinutes(Carbon::parse($eventFormat['end']['carbon']))/1440,3));
+
+            $eventFormat['shape']['size_day']=$eventFormat['shape']['size'] >7 ? 1 :  round((intval(Carbon::parse($eventFormat['end']['carbon'])->format('N'))-1)/7,2); 
 
                 
-            );           
+                     
             $eventsArray[$carbon->format('Ymd')][]=$eventFormat;
             
         }
         return $eventsArray;
     }
-
+    //function should send less data 
+    public function getdate(Request $request){
+        $request->validate(['s' => 'regex:/^[a-zA-Z0-9 :()+]+$/']);
+        $start=Carbon::parse($request->date)->startOfWeek();
+        $end=$start->copy()->endOfWeek();
+        $dates = $this->getRangeEvents($start,$end,true);
+        #foreach($dates as $k =>$v){
+        #    $dates[$k]['carbon']=$v['carbon']->toIso8601String();
+        #}
+        #echo('<pre>');print_r($dates);echo('</pre>');;die;
+        return response()->json(array('data'=>$dates));
+    }
     /**
      * Show the form for creating a new resource.
      *
