@@ -55,7 +55,7 @@
                                             @if (array_key_exists($type->title,$shift))
                                                 <i>{{ $shift[$type->title]->title ?? '' }}</i>
                                                 @foreach( $shift[$type->title]->shiftuser as $k =>$u )
-                                                    {{$u->info->name}}
+                                                    {{$u->info->name ?? "<Onbekend lid>"}}
                                                     @if ((count($shift[$type->title]->shiftuser)-1) > $k)
                                                         <br>
                                                     @endif

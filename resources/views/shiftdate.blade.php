@@ -38,7 +38,7 @@
 							   <td>{{ Carbon\Carbon::parse($s->datetime)->format('H:i') }}</td>
 							   <td>
                            @foreach( $s->shiftuser as $j=>$u )
-							   {{ $u->info->name   }}
+							   {{ $u->info->name ?? "<Onbekend lid>"  }}
 							   {{-- This needs fix comparing date vs today --}}
 							   @if ( Carbon\Carbon::parse($s->datetime)->isAfter(Carbon\Carbon::parse($today))) <button type="submit" id="del_shift_user{{$s->id}}_{{$u->id}}" class="link-button" name="del_shift_user[{{$s->id}}]" value="{{$u->id}}">⚡</button>@endif
                            @if ((count($s->shiftuser)-1) > $j)
