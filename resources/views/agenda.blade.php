@@ -59,7 +59,7 @@
 												<div class="form-group">
 													<div class="row">
 														<div class="col-md-12">
-															<div id="datetimepicker13"></div>
+															<div id="datetimepicker13" style="border: 1px solid #0000000d"></div>
 														</div>
 													</div>
 												</div>

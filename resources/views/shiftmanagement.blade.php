@@ -49,20 +49,22 @@
 								{{ csrf_field() }}
 								<div class="row">
 									<div class="col-sm-12">
-										<div class='row' style="display:block; margin: 0 0 0 -5px"
-											@foreach($shifttypes as $j => $type)
-												<div class="col-xs-1" style="padding:5px;">
-													<input id="shift_type{{$j}}" name="input_shifttype[{{$type->id}}][]" type="checkbox"   @if($type->common==true) checked @endif }} data-toggle="toggle" data-on="{{$type->title}}" data-off="{{$type->title}}"  data-onstyle="primary">
-												</div>
-									
-											@endforeach
+										<div class='row' style="display:block; margin: 0 0 0 -5px">
+											<div class="flex-container">
+												@foreach($shifttypes as $j => $type)
+													<div class="flex-item" style="padding:5px; min-width:120px !important">
+														<input id="shift_type{{$j}}" name="input_shifttype[{{$type->id}}][]" type="checkbox"  @if($type->common==true) checked @endif }} data-size="normal" data-width="150" data-toggle="toggle" data-on="{{$type->title}}" data-off="{{$type->title}}"  data-onstyle="primary">
+													</div>
+										
+												@endforeach
+											</div>
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-sm-12">
 										<div style="padding:10px 5px 10px 0;">
-											<input id="excludeWeekend" name="excludeWeekend[]" type="checkbox" data-toggle="toggle" data-on="Weekdays" data-off="Full Week"  data-onstyle="primary" checked>
+											<input id="excludeWeekend" name="excludeWeekend[]" type="checkbox" data-toggle="toggle" data-on="Weekdays" data-off="Full Week" data-size="normal" data-width="150"  data-onstyle="primary" checked>
 										</div>
 									</div>
 								</div>
