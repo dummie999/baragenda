@@ -160,8 +160,8 @@ class ShiftController extends Controller
      */
     public function enlist(Request $request)
     {
-		$date=array_keys($request->shiftUser)[0]; // hier zit error array_keys expects to be array null gvien
-		
+		$date=array_keys($request->shiftDate)[0]; // hier zit error array_keys expects to be array null gvien //shiftUser[20200830]: Netcie Superadmin / shiftDate[20200830]: 1]
+		#print_r(array_keys($request->shiftUser)); die; 
 		#$user = Auth::user(); /* need to fix this -> user in request->shiftuser find in User:: */
 		if (!User::with('info')->get()->contains('info.name', $request->shiftUser[$date])){
 			return redirect(route('shifts'))->with('info', 'Gebruiker niet gevonden!');
