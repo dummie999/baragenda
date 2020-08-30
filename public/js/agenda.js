@@ -29,7 +29,7 @@ function parseAgenda(data){
                 //console.log(id,event)
                 $('#grid_'+index).append(
                     $('<div/>', {
-                        'class': 'event-button',
+                        'class': event.calendarNo==0 ? "event-button2" : "event-button",
                         'css':{
                             "z-index":"15",
                             "top":pos+"%",

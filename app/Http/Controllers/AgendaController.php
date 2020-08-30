@@ -194,16 +194,20 @@ class AgendaController extends Controller
             $displayname=$event->googleEvent->organizer->displayName;
             switch($displayname) {
                 case env('GSUITE_CAL_PRIV_SUMM'): 
-                    $calendar='Interne Agenda'; 
+                    $calendar=env('GSUITE_CAL_PRIV_SUMM_DISPLAY'); 
+                    $calendarNo=0;
                 break;
                 case env('GSUITE_CAL_PUBL_SUMM'):
-                     $calendar='Openbare Agenda'; 
+                     $calendar=env('GSUITE_CAL_PRIV_SUMM_DISPLAY');
+                     $calendarNo=1;
                 break;
-                default : $calendar=NULL;
+                default : $calendar=NULL;$calendarNo=0;
             }
             
             $eventFormat = array(
                 'summary'=>$event->googleEvent->summary,
+                'calendar'=> $calendar,
+                'calendarNo'=>$calendarNo, 
                 'description'=>$event->googleEvent->description,
                 'id'=>$event->googleEvent->id,
                 'start'=>array(
@@ -219,7 +223,6 @@ class AgendaController extends Controller
 
             if(!$minimal){
                 $arr = array(
-                    'calendar'=> $calendar, 
                     'created'=>Carbon::parse($event->googleEvent->created),
                     'guestsCanInviteOthers'=>$event->googleEvent->guestsCanInviteOthers,
                     'guestsCanModify'=>$event->googleEvent->guestsCanModify,
