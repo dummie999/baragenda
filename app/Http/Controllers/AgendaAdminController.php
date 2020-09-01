@@ -53,7 +53,7 @@ class AgendaAdminController extends AgendaController
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Create or edit a Calenda Event
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -61,14 +61,15 @@ class AgendaAdminController extends AgendaController
     public function edit(Request $request, $id=null)
     {
        # echo('<pre>');print_r(Carbon::now('Europe/Amsterdam'));echo('</pre>');;die;;
+       // when opneining this page
         if($request->isMethod('get')){
-            $today=Carbon::today('Europe/Amsterdam')->format("Y-m-d");
-            $nowHour=Carbon::now('Europe/Amsterdam')->addHour(1)->startOfHour();
-            $nowHour2=$nowHour->copy()->addHour(2);
-            $resources=Resource::get();
+            $today=Carbon::today('Europe/Amsterdam')->format("Y-m-d"); //date today
+            $nowHour=Carbon::now('Europe/Amsterdam')->addHour(1)->startOfHour(); //next hour rounded down to hour, 7:05->8:00
+            $nowHour2=$nowHour->copy()->addHour(2); // copy object + add 2hr
+            $resources=Resource::get(); //get all Calendar Resources (rooms)
             #echo('<pre>');print_r($resources);echo('</pre>');;die;
-            $resourceArray=array();
-            foreach($resources as $r)
+            $resourceArray=array(); //new array
+            foreach($resources as $r) //loop over rooms
             {
                 $resourceArray[]=array(
                     "email"=>$r['email'],
@@ -85,10 +86,11 @@ class AgendaAdminController extends AgendaController
                 
                 ));
         }
+        //when posting the form
         if($request->isMethod('post')){
            # echo("<pre>");print_r($request->eventNew);echo("</pre>");die;
            
-            $calendar=$request->eventNew['agenda'] ==0 ? env('GOOGLE_CALENDAR_ID_PRIVATE') : env('GOOGLE_CALENDAR_ID_PUBLIC');
+            $calendar=$request->eventNew['agenda'] ==0 ? env('GOOGLE_CALENDAR_ID_PRIVATE') : env('GOOGLE_CALENDAR_ID_PUBLIC'); //which calendar 
             $event = new Event; //new obj
             $event->name = $request->eventNew['summary']; //title
             $event->startDateTime = $request->eventNew['allDay'] == 0 ? Carbon::parse($request->eventNew['start']['date'] . " " . $request->eventNew['start']['time']) : Carbon::parse($request->eventNew['start']['date']) ;

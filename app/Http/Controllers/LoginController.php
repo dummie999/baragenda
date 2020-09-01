@@ -19,6 +19,7 @@ class LoginController extends Controller
         if($request->isMethod('get'))
             return view('login');
 
+        //debug login, username must exist in database, then you can login without Ldap    
         if(App::environment('local', 'dev')){
             if (User::with('info')->get()->contains('username', strtolower($request->username))){
                 $user=User::where('username',$request->username)->first();

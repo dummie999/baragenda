@@ -29,15 +29,15 @@ class HomeController extends Controller
     public function index()
     {
         if (!$user=Auth::user()){
-            return view('home');
+            return view('home'); // no logged in?
         }
-        else {
-            $shifts = shift::whereHas('shiftuser', function($q) use ($user)
+        else { //show your shifts
+            $shifts = shift::whereHas('shiftuser', function($q) use ($user) //get yyour shiffsts
             {
                 $q->where('user_id','=', $user->id); 
-            })->with('shifttype.committee')->where('datetime','>=',carbon::today())->get();
+            })->with('shifttype.committee')->where('datetime','>=',carbon::today())->get(); // where date is equal or later than today
             $arr=array();
-            foreach($shifts as $s){
+            foreach($shifts as $s){ //format shift
                 $carbon=Carbon::parse($s->datetime);
                 $arr[]=array('carbon'=>$carbon,'date'=>$carbon->format('Ymd'),'data'=>$s);
             }

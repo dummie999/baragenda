@@ -64,6 +64,7 @@
 													</div>
 												</div>
 												<script type="text/javascript">
+												var data
 													$(function () {
 														$('#datetimepicker13').datetimepicker({
 															locale:'nl',
@@ -74,6 +75,7 @@
 														});
 													});
 													$( document ).ready(function() {
+														
 														$("#datetimepicker13").on("change.datetimepicker", function (e) {
 															iso=moment(e.date._d).toISOString();
 															console.log(iso)
@@ -83,7 +85,7 @@
 																	"_token": "{{ csrf_token() }}",
 																})
 																.then(function(response){
-																	var data=response.data;
+																	data=response.data;
 																	parseAgenda(data)
 																})
 															}
@@ -291,13 +293,14 @@
 													<div class="border-div bottom-tabs-content" style="">
 														<div class="border-div tabs-content-events" style="">
 															@foreach(array_values($events) as $i => $date)
-														<div id="grid_{{$i}}" class="border-div bottom-tabs-gridcell" style="position:relative">
+																<div id="grid_{{$i}}" class="border-div bottom-tabs-gridcell" style="position:relative">
 																	@foreach($date['events'] as $j => $event)
 																		@if($event['shape']['size']<1)
-																			<div class={{ $event['calendar']==1 ? "event-button" : "event-button2"}} style="z-index: {{$j+15}};top:
-																			@if($event['shape']['pos']<=0.5) {{20/720*24*$event['shape']['pos'] *100}}% {{--20=time;720=total--}}
-																			@else {{((40/720)*(24*($event['shape']['pos']-0.5))+(0.5*24*(20/720))) * 100}}% {{--20&40=time;720=total--}}
-																			@endif; height:{{$event['shape']['size']*720}}px;">
+																			<div onclick="eventModal({{array_keys($events)[$i]}},{{$j}},data)" class="{{ $event['calendar']==1 ? "event-button" : "event-button2"}}" 
+																			style="z-index: {{$j+15}};top: 
+																				@if($event['shape']['pos']<=0.5) {{20/720*24*$event['shape']['pos'] *100}}% {{--20=time;720=total--}}
+																				@else {{((40/720)*(24*($event['shape']['pos']-0.5))+(0.5*24*(20/720))) * 100}}% {{--20&40=time;720=total--}}
+																				@endif; height:{{$event['shape']['size']*720}}px;">
 																				<div class="event-button-data">
 																					<div class="event-button-title">
 																						{{ $event['summary']   }}
@@ -313,6 +316,50 @@
 															@endforeach
 														</div>
 													</div>
+														<!-- Modal -->
+														<div id="myModal" class="modal fade" role="dialog">
+															<div class="modal-dialog">
+														
+															<!-- Modal content-->
+															<div class="modal-content">
+																<div class="modal-header">
+																</div>
+																<div class="modal-body">
+																<div class="row">
+																</div>
+																<div class="row">
+																	<div class="col-1">
+																		
+																	</div>
+																	<div class="col-11">
+																		<h3 id="md_summary"></h3>
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col-1">
+																	</div>
+																	<div class="col-11">
+																		<h3 id="md_time"></h3>
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col-1">
+																		<div id="test"></div>
+																	</div>
+																	<div class="col-11">
+																		<h3 id="md_summary"></h3>
+																	</div>
+																</div>
+																</div>
+																<div class="modal-footer">
+																<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+																</div>
+															</div>
+														
+															</div>
+														</div>
+
+
 												</div>
 											</div>
 										</div>

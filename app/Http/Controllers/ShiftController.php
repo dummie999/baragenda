@@ -25,7 +25,7 @@ class ShiftController extends Controller
  *
  * @return \Illuminate\Http\Response
  */
-
+	
     public function index(Request $request,$page = 0)
     {
 		#print_r(Carbon::today()->format('l d f'));die;
@@ -42,6 +42,8 @@ class ShiftController extends Controller
 			$now_r2_end=$this->getDayStartEnd($now_r2,False);
 			#echo("<pre>");print_r($now_r_start);
 			#echo("<pre>");print_r($now_r2_end);
+			
+			//give me al teh dates of view
 			$dates=$this->generateDateRange($now_r_start,$now_r2_end,false);
 			try {
 
@@ -63,7 +65,7 @@ class ShiftController extends Controller
 
 				}
 				#echo('<pre>');print_r($data);die;
-				//prepare view
+				//prepare view with data
 				return view('shifts', compact('shifttypes', 'page'),array(
 				'weeknos'=>$now_r->weekOfYear,
 				'shifttypes'=>$shifttypes,
@@ -78,6 +80,15 @@ class ShiftController extends Controller
 			}
 		}
 	}
+	/**
+	*
+	*
+	*
+	*
+	*
+	 */
+
+	
 	private function getDayStartEnd(Carbon $date, $start=true)
 	{
 		if($start){
@@ -89,6 +100,7 @@ class ShiftController extends Controller
 		return $day;
 
 	}
+	//same as other ones, generate me a date
 	private function generateDateRange(Carbon $start_date, Carbon $end_date, $firstday=false)
 	{
 		if($firstday){
@@ -153,7 +165,7 @@ class ShiftController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * When user wants to inlist (self/other) to shift 
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -163,11 +175,11 @@ class ShiftController extends Controller
 		$date=array_keys($request->shiftDate)[0]; // hier zit error array_keys expects to be array null gvien //shiftUser[20200830]: Netcie Superadmin / shiftDate[20200830]: 1]
 		#print_r(array_keys($request->shiftUser)); die; 
 		#$user = Auth::user(); /* need to fix this -> user in request->shiftuser find in User:: */
-		if (!User::with('info')->get()->contains('info.name', $request->shiftUser[$date])){
+		if (!User::with('info')->get()->contains('info.name', $request->shiftUser[$date])){ //if user not found
 			return redirect(route('shifts'))->with('info', 'Gebruiker niet gevonden!');
 		}
 		else {
-			$user = User::with('info')->get()->where('info.name', $request->shiftUser[$date])->first();
+			$user = User::with('info')->get()->where('info.name', $request->shiftUser[$date])->first(); //find user 
 			#echo('<pre>');print_r($user);echo('<pre>');die;
 			foreach($request->shiftDate as $k=>$v){
 				$ds=Carbon::createFromFormat("Ymd", $k)->startOfDay();
@@ -187,12 +199,15 @@ class ShiftController extends Controller
 		}
 	}
 	
+	/**
+	 * function to remove user (on page ShiftDate) , not yet working due to able to delete in past
+	 */
     public function removeUser(Request $request)
     {
-		$shift_id=array_keys($request->del_shift_user)[0];
-		$user_id=$request->del_shift_user[$shift_id];
+		$shift_id=array_keys($request->del_shift_user)[0]; //get  shift id
+		$user_id=$request->del_shift_user[$shift_id]; //get user
 			#Shift::find($shift_id)->shiftuser()->where('id', $user_id)->detach();
-			$shift=Shift::find($shift_id)->shiftuser()->detach($user_id);
+			$shift=Shift::find($shift_id)->shiftuser()->detach($user_id); //remove pivot
 			
 			#echo("<pre>");print_r($shift);echo("</pre>");die;
 	

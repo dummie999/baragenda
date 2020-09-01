@@ -407,6 +407,7 @@ Google Div class transfered
     margin-left: -1px;
     margin-top: 1px;
     outline: none;
+    cursor:pointer;
     border: 1px solid #fff;
 }
 .event-button2{
@@ -420,6 +421,7 @@ Google Div class transfered
     margin-left: -1px;
     margin-top: 1px;
     outline: none;
+    cursor:pointer;
     border: 1px solid #fff;
 }
 .event-button-data{

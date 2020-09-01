@@ -41,15 +41,17 @@ class AgendaController extends Controller
             [events] => Array
         
         */
+        //range starting from first day of that week till last day of that week
 		if($firstday){
 			$start_date =  new Carbon("Monday $start_date"); 
 			$end_date =  new Carbon("Sunday $end_date");
 		}
-		$dates = [];
-
+		$dates = []; //empty array init
+        //loop over every day 
 		for($date = $start_date->copy(); $date->lte($end_date); $date->addDay()) {
-			$dates[] =  new Carbon($date);
+			$dates[] =  new Carbon($date); //creat carbon obj
         }
+        //prepare the array for a specific format
         if($prepArray){
             $array=array();
             foreach($dates as $k=>$d){
@@ -69,17 +71,18 @@ class AgendaController extends Controller
      */
     public function index()
     {
-        $start=Carbon::parse("this week monday");
-        $end=Carbon::parse("this week sunday")->endOfDay();
-        $dates = $this->getRangeEvents($start,$end);
+        $start=Carbon::parse("this week monday"); // get me this week monday
+        $end=Carbon::parse("this week sunday")->endOfDay(); //get me this week sunday, last minue
+        $dates = $this->getRangeEvents($start,$end); //get me range of dates between
         return view('agenda',array(
             'events'=>$dates
             ));
     }
 
 
+
     /**
-     * Display a listing of the resource.
+     * Get all events 
      *
      * @return \Illuminate\Http\Response
      */
@@ -88,9 +91,9 @@ class AgendaController extends Controller
         #echo('<pre>');print_r($resourceArray);echo('</pre>');;die;
         $eventsPublic =  Event::get( $startDateTime =$start,  $endDateTime = $end,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PUBLIC'));
         $eventsPrivate =  Event::get( $startDateTime =$start,  $endDateTime = $end,  $queryParameters = [],  $calendarId = env('GOOGLE_CALENDAR_ID_PRIVATE'));
-        $events = $this->format2view($eventsPublic,array(),$minimal);
-        $events = $this->format2view($eventsPrivate,$events,$minimal);
-        ksort($events,0);
+        $events = $this->format2view($eventsPublic,array(),$minimal); //format the Obj
+        $events = $this->format2view($eventsPrivate,$events,$minimal); //format + append object
+        ksort($events,0); //sort on date
         
        #echo('<pre>');print_r((($events)));echo('</pre>');die;;
 
@@ -112,9 +115,9 @@ class AgendaController extends Controller
                     }
                     if($event['end']['carbon']->between($start,$end)) {
                         //print_r($event['summary'] . " enddate of period is in this week"); //event of lastweek until somewhere this week
-                        $event['shape']['pos_day']=0;                        
-                        $event['shape']['size_day']=$event['shape']['size'] >7 ? 1 :  round((intval(Carbon::parse($event['end']['carbon'])->format('N'))-1)/7,2);                        
-                        $dates[$start->format('Ymd')]['events'][]=$event;
+                        $event['shape']['pos_day']=0; //where to start on a all day event                        
+                        $event['shape']['size_day']=$event['shape']['size'] >7 ? 1 :  round((intval(Carbon::parse($event['end']['carbon'])->format('N'))-1)/7,2);  //where to end on a all day event                      
+                        $dates[$start->format('Ymd')]['events'][]=$event; // append events to array with specific format
                     }
                     elseif(reset($dates)['carbon']->between($event['start']['carbon'],$event['end']['carbon'])) {
                         //print_r($event['summary'] . "monday  is in period"); // event of lastweek until somewhere next week
@@ -274,7 +277,7 @@ class AgendaController extends Controller
         }
         return $eventsArray;
     }
-    //function should send less data 
+    //function should send less data (this function is for Ajax Post requests)
     public function getdate(Request $request){
         $request->validate(['s' => 'regex:/^[a-zA-Z0-9 :()+]+$/']);
         $start=Carbon::parse($request->date)->startOfWeek();
