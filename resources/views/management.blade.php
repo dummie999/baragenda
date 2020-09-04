@@ -44,7 +44,7 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">
-                                                    <select name="committee_id[{{$s->id}}]" class="form-control" >
+                                                    <select name="committee_id[{{$s->id}}]" class="form-control form-control-minwidth" >
                                                         @isset($s->committee_id) @else <option></option>@endisset
                                                         @foreach($committees as $c)
                                                         <option @isset($s->committee->name) @if($c->name==$s->committee->name) selected  @endif @endisset value="{{ $c->id }}" > {{$c->name}}  </option>

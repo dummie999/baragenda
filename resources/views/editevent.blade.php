@@ -58,31 +58,40 @@
                                 <div class="col-6">
                                     <div class="form-inline">
                                         <div class="form-group">
-                                            <input id="inputDateStart" class="form-control" type="date"
-                                                name="eventNew[start][date]" value={{$today}} required></input>
-                                            <input id="inputTimeStart" class="form-control" type="time"
-                                                name="eventNew[start][time]" value={{$nowHour}} required></input>
-                                            <a>tot</a>
-                                            <input id="inputDateEnd" class="form-control" type="date"
-                                                name="eventNew[end][date]" value={{$today}} required></input>
-                                            <input id="inputTimeEnd" class="form-control" type="time"
-                                                name="eventNew[end][time]" value={{$nowHour2}} required></input>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="input-group mb-3 ">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text">
-                                                <input type="hidden" name="eventNew[allDay]" value=0></input>
-                                                <input type="checkbox" name="eventNew[allDay]" value=1></input>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" style="min-width:65px">Vanaf</span>
+                                                </div>
+                                                <input id="inputDateStart" class="form-control" type="date"
+                                                    name="eventNew[start][date]" value={{$today}} required></input>
+                                                <input id="inputTimeStart" class="form-control" type="time"
+                                                    name="eventNew[start][time]" value={{$nowHour}} required></input>
                                             </div>
                                         </div>
-
-                                        <span class="input-group-text">Gehele dag</span>
-
+                                                  
+                                        <div class="form-group">
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" style="min-width:65px">Tot</span>
+                                                </div>
+                                                <input id="inputDateEnd" class="form-control" type="date"
+                                                    name="eventNew[end][date]" value={{$today}} required></input>
+                                                <input id="inputTimeEnd" class="form-control" type="time"
+                                                    name="eventNew[end][time]" value={{$nowHour2}} required></input>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group mb-3 ">
+                                                <div class="input-group-prepend">
+                                                    <div class="input-group-text">
+                                                        <input type="hidden" name="eventNew[allDay]" value=0></input>
+                                                        <input type="checkbox" name="eventNew[allDay]" value=1></input>
+                                                    </div>
+                                                </div>
+        
+                                                <span class="input-group-text"style="min-width:105px" >Gehele dag</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -95,9 +104,9 @@
                                                 <input type="checkbox" value=1></input>
                                             </div>
                                         </div>
-                                        <input class="input-group-text btn" type="button" id="inputRecurrenceButton"
+                                        <input class="input-group-text btn btn-info" type="button" id="inputRecurrenceButton"
                                             data-toggle="modal" data-target="#inputRecurrenceModal"
-                                            value="Herhalen"></input>
+                                            value="Herhalen" style="min-width:105px"></input>
 
                                     </div>
                                 </div>
@@ -107,6 +116,9 @@
                                     <li class="nav-item">
                                         <a class="nav-link active" data-toggle="tab" href="#event">Details</a>
                                     </li>
+                                    <li class="nav-item">
+                                        <a class="nav-link " data-toggle="tab" href="#location">Locatie</a>
+                                    </li>                                    
                                     <li class="nav-item">
                                         <a class="nav-link" data-toggle="tab" href="#time">Vrije ruimtes & tijden</a>
                                     </li>
@@ -121,7 +133,19 @@
                             <div class="row  pane_details-time" style="min-height:400px;">
                                 <div class="col-8">
                                     <div class="tab-content" style="height:initial">
+                                        <div class="row">&nbsp;</div>
                                         <div class="tab-pane container active" id="event">
+                                            <div class="row" style="">
+                                                <div class="col-12">
+                                                    <div class="form-group" style=" height:200px; ">
+                                                        <label for="description">Omschrijving</label>
+                                                        <textarea class="form-control" name="eventNew[description]"
+                                                            id="description" style="width:100%; height:100%" required></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>                                       
+                                        <div class="tab-pane container" id="location">
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="input-group mb-3">
@@ -135,13 +159,6 @@
                                                 </div>
                                             </div>
                                             <div class="row" style="">
-                                                <div class="col-6">
-                                                    <div class="form-group" style=" height:200px; ">
-                                                        <label for="description">Omschrijving</label>
-                                                        <textarea class="form-control" name="eventNew[description]"
-                                                            id="description" style="width:100%; height:100%" required></textarea>
-                                                    </div>
-                                                </div>
                                                 <div class="col-6">
                                                     <div class="form-group" style="height:100%">
                                                         <label for="room_select">Ruimtes:</label>
@@ -158,80 +175,88 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="tab-pane container " id="time"> test </div>
+                                        <div class="tab-pane container " id="time">Onder ontwikkeling..</div>
                                         <div class="tab-pane container " id="notifications">
 
                                             <div class="row">
-
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">Notificatie</span>
+                                                <div class="col-12">
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">Notificatie</span>
+                                                        </div>
+                                                        <select class="btn btn-outline-secondary"
+                                                            name="eventNew[reminder][type]">
+                                                            <option value="" selected>Geen</option>
+                                                            <option value="popup">Notificatie</option>
+                                                            <option value="email">Email</option>
+                                                        </select>
                                                     </div>
-                                                    <select class="btn btn-outline-secondary"
-                                                        name="eventNew[reminder][type]">
-                                                        <option value="" selected>Geen</option>
-                                                        <option value="popup">Notificatie</option>
-                                                        <option value="email">Email</option>
-                                                    </select>
-                                                    <input class="form-control" type="number"
-                                                        name="eventNew[reminder][no]"></input>
-                                                    <select class="btn btn-outline-secondary"
-                                                        name="eventNew[reminder][period]">
-                                                        <option value="1">min</option>
-                                                        <option value="60">hour</option>
-                                                        <option value="1440" selected>days</option>
-                                                        <option value="10080">week</option>
-                                                    </select>
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">Herinnering</span>
+                                                        </div>
+                                                        <input class="form-control" type="number"
+                                                            name="eventNew[reminder][no]"></input>
+                                                        <select class="btn btn-outline-secondary"
+                                                            name="eventNew[reminder][period]">
+                                                            <option value="1">Minuut</option>
+                                                            <option value="60">Uur</option>
+                                                            <option value="1440" selected>Dag</option>
+                                                            <option value="10080">Week</option>
+                                                        </select>
+                                                    </div>
+                                                    <br />
                                                 </div>
-                                                <br />
                                             </div>
 
 
                                         </div>
                                         <div class="tab-pane container " id="guests">
-                                            <div class="col-12">
-                                                <div class="input-group mb-3">
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">Gasten:</span>
-                                                    </div>
-                                                    <input type="text" class="form-control"
-                                                        name="eventNew[guests][]"></input>
-                                                </div>
-
-                                                <div class="row">
-
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input type="hidden"
-                                                                name="eventNew[option][guestsCanModify]"
-                                                                value=0 /></input>
-                                                            <input type="checkbox" class="form-check-input"
-                                                                name="eventNew[option][guestsCanModify]" value=1>Aan
-                                                            te passen door gasten.
-                                                        </label>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="input-group mb-3">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">Gasten:</span>
+                                                        </div>
+                                                        <input type="text" class="form-control"
+                                                            name="eventNew[guests][]"></input>
                                                     </div>
 
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input type="hidden"
-                                                                name="eventNew[option][guestsCanInviteOthers]"
-                                                                value=0 /></input>
-                                                            <input type="checkbox" class="form-check-input"
-                                                                name="eventNew[option][guestsCanInviteOthers]"
-                                                                value=1 >Gasten toestaan anderen uit te
-                                                            nodigen.
-                                                        </label>
-                                                    </div>
+                                                    <div class="row">
 
-                                                    <div class="form-check">
-                                                        <label class="form-check-label">
-                                                            <input type="hidden"
-                                                                name="eventNew[option][guestsCanSeeOtherGuests]"
-                                                                value=0 /></input>
-                                                            <input type="checkbox" class="form-check-input"
-                                                                name="eventNew[option][guestsCanSeeOtherGuests]"
-                                                                value=1 >Gastenlijst zichtbaar
-                                                        </label>
+                                                        <div class="form-check-inline">
+                                                            <label class="form-check-label">
+                                                                <input type="hidden"
+                                                                    name="eventNew[option][guestsCanModify]"
+                                                                    value=0 /></input>
+                                                                <input type="checkbox" class="form-check-input"
+                                                                    name="eventNew[option][guestsCanModify]" value=1>Aan
+                                                                te passen door gasten.
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check-inline">
+                                                            <label class="form-check-label">
+                                                                <input type="hidden"
+                                                                    name="eventNew[option][guestsCanInviteOthers]"
+                                                                    value=0 /></input>
+                                                                <input type="checkbox" class="form-check-input"
+                                                                    name="eventNew[option][guestsCanInviteOthers]"
+                                                                    value=1 >Gasten toestaan anderen uit te
+                                                                nodigen.
+                                                            </label>
+                                                        </div>
+
+                                                        <div class="form-check-inline">
+                                                            <label class="form-check-label">
+                                                                <input type="hidden"
+                                                                    name="eventNew[option][guestsCanSeeOtherGuests]"
+                                                                    value=0 /></input>
+                                                                <input type="checkbox" class="form-check-input"
+                                                                    name="eventNew[option][guestsCanSeeOtherGuests]"
+                                                                    value=1 >Gastenlijst zichtbaar
+                                                            </label>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

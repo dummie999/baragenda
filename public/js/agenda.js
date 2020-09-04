@@ -52,7 +52,7 @@ function parseAgenda(data){
                             "z-index": "15",
                             "top": pos+"%",
                             "height": event.shape.size*720+"px",
-                            "click":  function eventModal(key, id)}
+                            "click":  function eventModal(key, id) }
                         
                 
                     }).append(

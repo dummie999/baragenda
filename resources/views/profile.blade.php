@@ -19,11 +19,7 @@
                             <div class="row">
                                 <div class="col-12">Lidnummer: {{ $info->lidnummer ?? '' }} </div></div>
                             <div class="row">
-                                <div class="col-12">Relatienummer: {{ $info->relatienummer ?? '' }} </div></div>
-                            <div class="row">
-                                <div class="col-12">Sinds: {{ $info->created_at ?? '' }} </div></div>
-                            <div class="row">
-                                <div class="col-12">Laatste wijziging: {{ $info->updated_at ?? '' }} </div></div><br>
+                                <div class="col-12">Relatienummer: {{ $info->relatienummer ?? '' }} </div></div><br>
 							<div class="row">
                                 <div class="col-12"><b>Voorkeuren</b></div></div>
                             <div class="row">
