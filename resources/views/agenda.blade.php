@@ -42,17 +42,17 @@
 													<path fill="none" d="M0 0h36v36H0z"></path>
 												</svg>
 											</div>
-											<div class="ag-create-text"  >Create</div>
+											<div class="ag-create-text"  >Nieuw</div>
 										</span>
 									</button>
 								</div>
 							</a>
 
 						</div>
-						
+
 						<div class="border-div ag-full" style="">
 							<div class="border-div ag-left" style="">
-								<div class="cal_left"> 
+								<div class="cal_left">
 									<div class="row">
 										<div class="col-12">
 											<div style="overflow:hidden; padding-left:15px; padding-right:15px; ">
@@ -75,7 +75,7 @@
 														});
 													});
 													$( document ).ready(function() {
-														
+
 														$("#datetimepicker13").on("change.datetimepicker", function (e) {
 															iso=moment(e.date._d).toISOString();
 															console.log(iso)
@@ -94,10 +94,10 @@
 															}
 														});
 													})
-														
-																									
 
-																										
+
+
+
 												</script>
 											</div>
 										</div>
@@ -105,12 +105,12 @@
 								</div>
 							</div>
 							<div class="border-div ag-right" style=" ">
-								<div class="border-div ag-right-main" style= ""> 
+								<div class="border-div ag-right-main" style= "">
 									<div class="border-div ag-right-main-data" style="">
 										<div class="border-div data-grid" style="">
 											<div class="border-div data-grid-top" style=""">
 												<div class="border-div grid-top-filler" style="">
-												
+
 												</div>
 												<div class="border-div grid-top-days" style="">
 													<div class="border-div top-days-list " style="">
@@ -129,8 +129,8 @@
 														<div class="p-2 vertDayColumn border-div "></div>
 													</div>
 													<div  class="grid-top-allday border-div" >
-														<div  class="top-allday-data border-div" > 
-															<div  class="allday-data-list  border-div" > 
+														<div  class="top-allday-data border-div" >
+															<div  class="allday-data-list  border-div" >
 																@php
 																	$loopvar = 0;
 																@endphp
@@ -138,10 +138,10 @@
 																	@foreach($date['events'] as $j => $event)
 																		@if($event['shape']['size']>=1)
 																			<div style="
-																					width:{{ $event['shape']['size_day']*100}}%; 
+																					width:{{ $event['shape']['size_day']*100}}%;
 																					top: {{$loopvar}}em;
 																					left: {{ ($event['shape']['pos_day'])*100 }}%;"
-																				class="allday-data-item border-div" > 
+																				class="allday-data-item border-div" >
 																				<div class="allday-data-item-button">
 																					<span class="allday-data-item-span">
 																						{{$event['summary']}}
@@ -285,7 +285,7 @@
 															</div>
 															<div class="vertTimeItem">
 																<div class="vertTimeItemFont">
-																	
+
 																</div>
 															</div>
 														</div>
@@ -296,8 +296,8 @@
 																<div id="grid_{{$i}}" class="border-div bottom-tabs-gridcell" style="position:relative">
 																	@foreach($date['events'] as $j => $event)
 																		@if($event['shape']['size']<1)
-																			<div onclick="eventModal({{array_keys($events)[$i]}},{{$j}},data)" class="{{ $event['calendar']==1 ? "event-button" : "event-button2"}}" 
-																			style="z-index: {{$j+15}};top: 
+																			<div onclick="eventModal({{array_keys($events)[$i]}},{{$j}},data)" class="{{ $event['calendar']==1 ? "event-button" : "event-button2"}}"
+																			style="z-index: {{$j+15}};top:
 																				@if($event['shape']['pos']<=0.5) {{20/720*24*$event['shape']['pos'] *100}}% {{--20=time;720=total--}}
 																				@else {{((40/720)*(24*($event['shape']['pos']-0.5))+(0.5*24*(20/720))) * 100}}% {{--20&40=time;720=total--}}
 																				@endif; height:{{$event['shape']['size']*720}}px;">
@@ -319,7 +319,7 @@
 														<!-- Modal -->
 														<div id="myModal" class="modal fade" role="dialog">
 															<div class="modal-dialog">
-														
+
 															<!-- Modal content-->
 															<div class="modal-content">
 																<div class="modal-header">
@@ -329,7 +329,7 @@
 																</div>
 																<div class="row">
 																	<div class="col-1">
-																		
+
 																	</div>
 																	<div class="col-11">
 																		<h3 id="md_summary"></h3>
@@ -355,7 +355,7 @@
 																<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 																</div>
 															</div>
-														
+
 															</div>
 														</div>
 

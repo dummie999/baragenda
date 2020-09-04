@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Google_Service_Calendar_EventCreator;
 use App\Helpers\GSCalendar\Event;
 use App\Helpers\GSCalendar\Resource;
 use Carbon\Carbon;
@@ -83,57 +84,84 @@ class AgendaAdminController extends AgendaController
                 'nowHour'=>$nowHour->translatedFormat("H:i:s"),
                 'nowHour2'=>$nowHour2->translatedFormat("H:i:s"),
                 'resources'=>$resources
-                
+
                 ));
         }
         //when posting the form
         if($request->isMethod('post')){
            # echo("<pre>");print_r($request->eventNew);echo("</pre>");die;
-           
-            $calendar=$request->eventNew['agenda'] ==0 ? env('GOOGLE_CALENDAR_ID_PRIVATE') : env('GOOGLE_CALENDAR_ID_PUBLIC'); //which calendar 
-            $event = new Event; //new obj
-            $event->name = $request->eventNew['summary']; //title
-            $event->startDateTime = $request->eventNew['allDay'] == 0 ? Carbon::parse($request->eventNew['start']['date'] . " " . $request->eventNew['start']['time']) : Carbon::parse($request->eventNew['start']['date']) ;
-            $event->endDateTime = Carbon::parse($request->eventNew['end']['date'] . " " . $request->eventNew['end']['time']);
-          
-            $event->setDescription($request->eventNew['description']); //description
+            $eventNew = $request->eventNew;
+            $calendar=$eventNew['agenda'] ==0 ? env('GOOGLE_CALENDAR_ID_PRIVATE') : env('GOOGLE_CALENDAR_ID_PUBLIC'); //which calendar
             $creator = new Google_Service_Calendar_EventCreator(); //creator object
-                $creator->setDisplayName(env('GSUITE_CREATOR_NAME')); 
+                $creator->setDisplayName(env('GSUITE_CREATOR_NAME'));
                 $creator->setEmail(env('GSUITE_CREATOR_EMAIL'));
-            $event->setCreator($creator); //set creator to event
-  
+
             // fixing empty arrays of guests
-
-            $request->eventNew['guests'] = array_filter(array_map(null, $$request->eventNew['guests']));
-
+            $eventNew['guests'] = array_filter(array_map(null, $eventNew['guests']));
+            if (isset($eventNew['guests'])) {
+                foreach($eventNew['guests'] as $k=>$a){ //loop over attendees
+                    $eventNew['guests'][$k]=array('email'=>$a);
+                }
+            }
             // if rooms exist merge with guests
-
-            if (isset($request->eventNew['rooms'])) {
-                $request->eventNew['attendees'] = array_merge($request->eventNew['rooms'], $request->eventNew['guests']);
+            if (isset($eventNew['rooms'])) {
+                foreach($eventNew['rooms'] as $k=>$a){ //loop over attendees
+                    $eventNew['rooms'][$k]=array('email'=>$a,'resource'=>true);
+                }
+                $eventNew['attendees'] = array_merge($eventNew['rooms'], $eventNew['guests']);
             }
             else {
-                $request->eventNew['attendees'] = $request->eventNew['guests'];
-            }            
-            //add guests
-            foreach($request->eventNew['guests'] as $key => $value) {
-                $obj_attendee = new Google_Service_Calendar_EventAttendee();
-                $obj_attendee->setEmail($value);
-                $attendees[] = $obj_attendee;
+                $eventNew['attendees'] = $eventNew['guests'];
             }
-            if (isset($attendees)) {
-                $event->attendees = $attendees;
-            }                      
-            $event->setLocation($$request->eventNew['location']);
-            $event->setGuestsCanModify($request->eventNew['option']['guestsCanModify']);
-            $event->setGuestsCanInviteOthers($request->eventNew['option']['guestsCanInviteOthers']);
-            $event->setGuestsCanSeeOtherGuests($request->eventNew['option']['guestsCanSeeOtherGuests']);            
-            #$event->create($calendarId=$calendar);
 
+
+
+            if($eventNew['allDay'] == 0){
+                $start = array('startDateTime' => Carbon::parse($eventNew['start']['date'] . " " . $eventNew['start']['time'],'Europe/Amsterdam') );
+                $end   = array('endDateTime' => Carbon::parse($eventNew['end']['date'] . " " . $eventNew['end']['time'],'Europe/Amsterdam') );
             }
+            else {
+                $start = array('startDate' =>Carbon::parse($eventNew['start']['date'],'Europe/Amsterdam'));
+                $end   = array('endDate' => Carbon::parse($eventNew['end']['date'],'Europe/Amsterdam'));
+                }
+
+
+            $eventData = array(
+                'name' => $eventNew['summary'], //title
+                'description' => $eventNew['description'], //description
+                'creator'=>$creator, //set creator to event
+                'location' => $eventNew['location'],
+                'GuestsCanModify' => $eventNew['option']['guestsCanModify'],
+                'guestsCanInviteOthers' => $eventNew['option']['guestsCanInviteOthers'],
+                'GuestsCanSeeOtherGuests' => $eventNew['option']['guestsCanSeeOtherGuests'],
+                'attendees' => $eventNew['attendees'],
+
+            );
+            if($eventNew['reminder']['type']){
+                $reminder = array('reminders' => array(
+                    'useDefault' => FALSE,
+                    'overrides' => array(
+                        array('method' =>  $eventNew['reminder']['type'], 'minutes' => $eventNew['reminder']['no'] * $eventNew['reminder']['period'])
+                    )
+                ));
+                $eventData+=$reminder;
+            }
+
+            $eventData+=$start;
+            $eventData+=$end;
+
+            #echo('<pre>');print_r($eventData);echo('</pre>');;
+            #echo('<pre>');print_r($eventNew);echo('</pre>');;
+            $event = new Event;
+            $event->create($eventData,$calendarId=$calendar);
+
+            return redirect(route('agenda'))->with('info', 'Agenda item aangemaakt');
         }
 
+    }
 
-    
+
+
 
 
     /**
