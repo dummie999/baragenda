@@ -1,8 +1,12 @@
 .border-div {
     /* border:1px solidsolid black; */
 }
-
-
+.modal-backdrop.show {
+    opacity:0.05 !important;
+}
+.modal-dialog {
+    box-shadow: 2px 2px #888888 !important;
+}
 /*
 Google Div class transfered
 */

@@ -11,15 +11,6 @@ use Illuminate\Http\Request;
 
 class AgendaAdminController extends AgendaController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -59,11 +50,19 @@ class AgendaAdminController extends AgendaController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id=null)
+    public function edit(Request $request)
     {
        # echo('<pre>');print_r(Carbon::now('Europe/Amsterdam'));echo('</pre>');;die;;
        // when opneining this page
         if($request->isMethod('get')){
+            $type = $_GET==null ? "create" : "edit";
+            if($type == "edit"){
+                try {$event = ($this->getdate($request)->original)['data']; }
+                catch (Exception $e){ }
+            }
+
+            #echo('<pre>');print_r($event);echo('</pre>');
+
             $today=Carbon::today('Europe/Amsterdam')->format("Y-m-d"); //date today
             $nowHour=Carbon::now('Europe/Amsterdam')->addHour(1)->startOfHour(); //next hour rounded down to hour, 7:05->8:00
             $nowHour2=$nowHour->copy()->addHour(2); // copy object + add 2hr
@@ -83,7 +82,8 @@ class AgendaAdminController extends AgendaController
                 'today'=>$today,
                 'nowHour'=>$nowHour->translatedFormat("H:i:s"),
                 'nowHour2'=>$nowHour2->translatedFormat("H:i:s"),
-                'resources'=>$resources
+                'resources'=>$resources,
+                'event'=>$event ?? null
 
                 ));
         }

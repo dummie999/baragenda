@@ -1,5 +1,6 @@
 @section('scripts')
 	<script src="{{ asset('js/agenda.js') }}" defer></script>
+	<script src="{{ asset('js/moment-timezone.js') }}" defer></script>
 @section('styles')
 	<link href="{{ asset('css/agenda.css') }}" rel="stylesheet">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css" />
@@ -61,15 +62,23 @@
 												<div class="form-group">
 													<div class="row">
 														<div class="col-md-12">
-															<div id="datetimepicker13" style="border: 1px solid #0000000d"></div>
+                                                            <div id="datetimepicker13" style="border: 1px solid #0000000d"></div>
+                                                            <form id="dateform" autocomplete="off" action="{{ route('agenda') }}" method='POST' style="display:none;">
+                                                                {{ csrf_field() }}
+                                                                <input type="text" id="date" name="date" />
+                                                                <input type="submit" />
+                                                            </form>
 														</div>
 													</div>
-												</div>
+                                                </div>
+
 												<script type="text/javascript">
 												var data
 													$(function () {
 														$('#datetimepicker13').datetimepicker({
-															locale:'nl',
+                                                            defaultDate: moment("{{$selectedDate->translatedFormat('Y-m-d')}}"),
+                                                            locale:'nl',
+                                                            timeZone: 'Europe/Amsterdam',
 															buttons: {showToday: true},
 															calendarWeeks: true,
 															inline: true,
@@ -77,24 +86,11 @@
 														});
 													});
 													$( document ).ready(function() {
-
 														$("#datetimepicker13").on("change.datetimepicker", function (e) {
 															iso=moment(e.date._d).toISOString();
                                                             console.log(iso)
-                                                           //  window.location.href = "{{ route('agenda.getdate', ['date' => '20200831']) }}" //if we omit JS as primary source
-															try {
-																$.post("{{ route('agenda.getdate') }}", {
-																	date: iso,
-																	"_token": "{{ csrf_token() }}",
-																})
-																.then(function(response){
-																	data=response.data;
-																	parseAgenda(data)
-																})
-															}
-															catch (err){
-																console.log("error "+err)
-															}
+                                                            $("#date").val(iso)
+                                                            $("#dateform").submit()
 														});
 													})
 
@@ -138,14 +134,14 @@
 																	$loopvar = 0;
 																@endphp
 																@foreach($events as $i => $date)
-																	@foreach($date['events'] as $j => $event)
+                                                                    @foreach($date['events'] as $j => $event)
 																		@if($event['shape']['size']>=1)
 																			<div style="
 																					width:{{ $event['shape']['size_day']*100}}%;
 																					top: {{$loopvar}}em;
 																					left: {{ ($event['shape']['pos_day'])*100 }}%;"
 																				class="allday-data-item border-div" >
-																				<div class="allday-data-item-button">
+																				<div onclick="eventModal('{{ $event['id'] }}','{{ $event['calendarNo'] }}')" class="allday-data-item-button">
 																					<span class="allday-data-item-span">
 																						{{$event['summary']}}
 																					</span>
@@ -299,7 +295,7 @@
 																<div id="grid_{{$i}}" class="border-div bottom-tabs-gridcell" style="position:relative">
 																	@foreach($date['events'] as $j => $event)
 																		@if($event['shape']['size']<1)
-																			<div onclick="eventModal({{array_keys($events)[$i]}},{{$j}},data)" class="{{ $event['calendar']==1 ? "event-button" : "event-button2"}}"
+																			<div onclick="eventModal('{{ $event['id'] }}','{{ $event['calendarNo'] }}')" class="{{ $event['calendar']==1 ? 'event-button' : 'event-button2'}}"
 																			style="z-index: {{$j+15}};top:
 																				@if($event['shape']['pos']<=0.5) {{20/720*24*$event['shape']['pos'] *100}}% {{--20=time;720=total--}}
 																				@else {{((40/720)*(24*($event['shape']['pos']-0.5))+(0.5*24*(20/720))) * 100}}% {{--20&40=time;720=total--}}
@@ -320,42 +316,76 @@
 														</div>
 													</div>
 														<!-- Modal -->
-														<div id="myModal" class="modal fade" role="dialog">
+														<div id="myModal" class="modal fade" role="dialog" >
 															<div class="modal-dialog">
 
 															<!-- Modal content-->
 															<div class="modal-content">
-																<div class="modal-header">
-																</div>
-																<div class="modal-body">
-																<div class="row">
-																</div>
-																<div class="row">
-																	<div class="col-1">
-
-																	</div>
-																	<div class="col-11">
-																		<h3 id="md_summary"></h3>
-																	</div>
-																</div>
-																<div class="row">
-																	<div class="col-1">
-																	</div>
-																	<div class="col-11">
-																		<h3 id="md_time"></h3>
-																	</div>
-																</div>
-																<div class="row">
-																	<div class="col-1">
-																		<div id="test"></div>
-																	</div>
-																	<div class="col-11">
-																		<h3 id="md_summary"></h3>
-																	</div>
-																</div>
+																<div class="modal-body" style="min-height:300px;max-width: 448px;width: 448px;">
+                                                                    <div class="row" style="height:136px;">
+                                                                        Top image
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="row">
+                                                                                <div class="col-1">
+                                                                                    <i class="fas fa-circle"></i>
+                                                                                </div>
+                                                                                <div class="col-11">
+                                                                                    <h3 id="md_summary"></h3>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-1">
+                                                                                    <i class="fas fa-city"></i>
+                                                                                </div>
+                                                                                <div class="col-11">
+                                                                                    <p id="md_location"></p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-1">
+                                                                                    <i class="far fa-door-open"></i>
+                                                                                </div>
+                                                                                <div class="col-11">
+                                                                                    <p id="md_room"></p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-1">
+                                                                                    <i class="fas fa-users"></i>
+                                                                                </div>
+                                                                                <div class="col-11">
+                                                                                    <p id="md_guests"></p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-1">
+                                                                                    <i class="fas fa-info-circle"></i>
+                                                                                </div>
+                                                                                <div class="col-11">
+                                                                                    <p id="md_description"></p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="row">
+                                                                                <div class="col-1">
+                                                                                    <i class="fas fa-calendar-day"></i>
+                                                                                </div>
+                                                                                <div class="col-11">
+                                                                                    <p id="md_calendar"></p>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
 																</div>
 																<div class="modal-footer">
-																<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                                    <form id="editEventForm" autocomplete="off" action="{{ route('agenda.edit') }}" method='GET' >
+                                                                        {{ csrf_field() }}
+                                                                        <input type="hidden" id="editEventId" name="eventId" value="" />
+                                                                        <input type="hidden" id="editCalendarId" name="calendarNo" value="" />
+                                                                    <button type="submit" class="btn btn-default" >Aanpassen</button>
+                                                                    </form>
+																    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 																</div>
 															</div>
 
@@ -403,5 +433,39 @@
                 </div>
             </div>
         </div>
-	</div>
+    </div>
+    <script>
+        function eventModal(eventId,calendarNo){
+            //console.log(eventId)
+            //console.log(calendarNo)
+            try {
+
+                $.post("{{ route('agenda.getdate') }}", {
+                    eventId: eventId,
+                    calendarNo: calendarNo,
+                    "_token": "{{ csrf_token() }}",
+                })
+                .then(function(response){
+                    event=response.data;
+                    //console.log(event)
+                    $('#editEventId').val(event.id);
+                    $('#editCalendarId').val(event.calendarNo);
+
+                    $('#md_summary').text(event.summary);
+                    $('#md_location').text(event.location);
+                    $('#md_room').text(event.attendees);
+                    $('#md_guests').text(event.attendees);
+                    $('#md_description').text(event.description);
+                    $('#md_calendar').text(event.calendar);
+
+                    $("#myModal").modal()
+                })
+            }
+            catch (err){
+                console.log("error "+err)
+            }
+
+
+        }
+    </script>
 @endsection
