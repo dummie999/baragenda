@@ -3,19 +3,22 @@
 }
 
 
-/* 
+/*
 Google Div class transfered
 */
 
 .cal_left {
-    position: absolute;
-    top: 15%;
+position:relative;
+min-height:280px;
 }
-
+.ag-create-wrapper {
+    position: relative;
+    min-height:90px;
+}
 .ag-create-container{
     position: absolute;
-    left: 40px;
-    top: 40px;
+    left: 25%;
+    top: 25%;
     transition: left,top 300ms linear;
     z-index: 506;
 }
@@ -112,7 +115,7 @@ Google Div class transfered
     display: flex;
     flex: none;
     flex-direction: column;
-    width: 256px;	
+    width: 256px;
     overflow: hidden;
     position: relative;
 }
@@ -120,7 +123,7 @@ Google Div class transfered
     /*lYYbjc*/
     flex: 1 1 auto;
     overflow: hidden;
-    position: relative;    
+    position: relative;
 }
 .ag-right-main{
     /* Xro3Db-nUpftc ogB5bf j0nwNb */
@@ -175,7 +178,7 @@ Google Div class transfered
     /* kxfKW */
     flex: 1 1 auto;
     display: flex;
-    overflow: hidden;	
+    overflow: hidden;
     overflow-x: hidden;
 }
 .vertDayColumn {
@@ -205,7 +208,7 @@ Google Div class transfered
     margin-top: 8px;
     text-indent: .8px;
     text-transform: uppercase;
- } 
+ }
  .vertDayColumn-dayno {
      /* MmhHI KSxb4d RKLVef N4XV7d */
     cursor: pointer;
@@ -266,7 +269,7 @@ Google Div class transfered
     /* ifwtOb elYzab-cXXICe-Hjleke NlL62b GHWQBd */
     left: 0%;
     width: 100%;
-    
+
 
     border-color: rgb(159, 168, 218);
     font-size: 20px;
@@ -317,11 +320,11 @@ Google Div class transfered
     position: relative;
     flex-direction: column;
     /* overflow: hidden; */
-    overflow: auto; 
+    overflow: auto;
 }
 .grid-bottom-tabs{
     /* qmFsL */
-    overflow:visible; 
+    overflow:visible;
     /* overflow:hidden;  */
     align-items: stretch;
     display:flex;
@@ -329,7 +332,7 @@ Google Div class transfered
 }
 .bottom-tabs-time{
     /* sx5BGe */
-    height:auto; 
+    height:auto;
     overflow-y:hidden;
     flex:none;
     display:flex;
