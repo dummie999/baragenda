@@ -23,6 +23,8 @@ Route::match(['get'], '/agenda', 'AgendaController@index')->name('agenda');
 Route::match(['post'], '/agenda', 'AgendaController@index')->name('agenda');
 Route::match(['get'], '/agenda/edit', 'AgendaAdminController@edit')->name('agenda.edit');
 Route::match(['post'], '/agenda/edit', 'AgendaAdminController@edit')->name('agenda.edit');
+Route::match(['post'], '/agenda/delete', 'AgendaAdminController@destroy')->name('agenda.delete');
+
 Route::post('agenda/getdate', 'AgendaController@getdate')->name('agenda.getdate');
 
 

@@ -14,21 +14,21 @@
     <div class="row">
         <div class="col-md-12 ">
             <div class="card">
-                <form id="createform" name="createEvent" action="" method="post">
-                    {{ csrf_field() }}
-                    <input type="hidden" name="eventId" value="{{$_GET['eventId'] ?? ''}}" >
-                    <input type="hidden" name="calendarNo" value="{{$_GET['calendarNo'] ?? ''}}" >
-                    <div class="card-header">
-                        <h4 class="">Nieuw event</h4>
+                <div class="card-header">
+                    <h4 class="">Nieuw event</h4>
+                </div>
+                <div class="card-block" style="">
+                    @if (session('status'))
+                    <div class="alert alert-success">
+                        {{ session('status') }}
                     </div>
-                    <div class="card-block" style="">
-                        @if (session('status'))
-                        <div class="alert alert-success">
-                            {{ session('status') }}
-                        </div>
-                        @endif
-                        <br>
-                        <div class="container ">
+                    @endif
+                    <br>
+                    <div class="container ">
+                        <form id="createform" name="createEvent" action="" method="post">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="eventId" value="{{$_GET['eventId'] ?? ''}}" >
+                            <input type="hidden" name="calendarNo" value="{{$_GET['calendarNo'] ?? ''}}" >
                             <div class="row">
                                 <div class="col-8">
                                     <div class="input-group mb-3">
@@ -268,23 +268,30 @@
                                     </div>
                                 </div>
                             </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <input type="hidden" name="type" value={{$type}} >
+                            <input type="submit" class="btn btn-warning" name="submit" value={{$type=="create" ? "Toevoegen" : "Aanpassen"}} form="createform" >
+                        </div>
+                        <div class="col-md-2 ">
+                            @if($type == "edit")
+                                <form id="deleteEvent" action={{ route('agenda.delete',['calendarNo' => $_GET['calendarNo'] , 'eventId' => $_GET['eventId']]) }} method="POST">
+                                    @csrf
+                                    <input type="submit" class="btn btn-danger" value="Verwijderen"  form="deleteEvent">
+                                </form>
+                            @endif
+                        </div>
+                        <div class="col-md-2 offset-md-6">
+                            <a href={{ route('agenda') }}>
+                                <button type="button" class="btn btn-secondary">Sluiten</button>
+                            </a>
                         </div>
                     </div>
-                    <div class="card-footer">
-                        <div class="row">
-                            <div class="col-md-2">
-                                <input type="hidden" name="type" value={{$type}} >
-                                <input type="submit" class="btn btn-warning" name="submit" value={{$type=="create" ? "Toevoegen" : "Aanpassen"}} >
-                            </div>
-
-                            <div class="col-md-2 offset-md-8">
-                                <a href={{ route('agenda') }}>
-                                    <button type="button" class="btn btn-secondary">Sluiten</button>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>

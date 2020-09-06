@@ -194,8 +194,18 @@ class AgendaAdminController extends AgendaController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        //
+        switch($request->calendarNo) {
+            case 0:
+                $cal = env('GOOGLE_CALENDAR_ID_PRIVATE');
+            break;
+            case 1:
+                $cal = env('GOOGLE_CALENDAR_ID_PUBLIC');
+            break;
+        }
+        $event = Event::find($request->eventId, $cal); //raw event
+        $event->delete($request->eventId,$cal);
+        return redirect(route('agenda'))->with('info', 'Agenda item verwijderd');
     }
 }

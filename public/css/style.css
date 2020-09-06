@@ -1,13 +1,16 @@
-.link-button { 
+.link-button {
     background: none;
     border: none;
     color: #0066ff;
     text-decoration: none;
-    cursor: pointer; 
+    cursor: pointer;
 }
 .form-control-minwidth {
   min-width: 90px;
 }
+
+
+
 
 * { box-sizing: border-box; }
 body {
@@ -28,10 +31,7 @@ input[type=text] {
   background-color: #f1f1f1;
   width: 100%;
 }
-input[type=submit] {
-  background-color: DodgerBlue;
-  color: #fff;
-}
+
 .autocomplete-items {
   position: absolute;
   border: 1px solid #d4d4d4;
