@@ -83,18 +83,22 @@ class AgendaAdminController extends AgendaController
                 'nowHour'=>$nowHour->translatedFormat("H:i:s"),
                 'nowHour2'=>$nowHour2->translatedFormat("H:i:s"),
                 'resources'=>$resources,
-                'event'=>$event ?? null
+                'event'=>$event ?? null,
+                'type'=>$type
 
                 ));
         }
         //when posting the form
         if($request->isMethod('post')){
-           # echo("<pre>");print_r($request->eventNew);echo("</pre>");die;
-            $eventNew = $request->eventNew;
-            $calendar=$eventNew['agenda'] ==0 ? env('GOOGLE_CALENDAR_ID_PRIVATE') : env('GOOGLE_CALENDAR_ID_PUBLIC'); //which calendar
+
+            $calendar=$request->eventNew['agenda'] ==0 ? env('GOOGLE_CALENDAR_ID_PRIVATE') : env('GOOGLE_CALENDAR_ID_PUBLIC'); //which calendar
             $creator = new Google_Service_Calendar_EventCreator(); //creator object
                 $creator->setDisplayName(env('GSUITE_CREATOR_NAME'));
                 $creator->setEmail(env('GSUITE_CREATOR_EMAIL'));
+
+
+            # echo("<pre>");print_r($request->eventNew);echo("</pre>");die;
+            $eventNew = $request->eventNew;
 
             // fixing empty arrays of guests
             $eventNew['guests'] = array_filter(array_map(null, $eventNew['guests']));
@@ -152,8 +156,16 @@ class AgendaAdminController extends AgendaController
 
             #echo('<pre>');print_r($eventData);echo('</pre>');;
             #echo('<pre>');print_r($eventNew);echo('</pre>');;
-            $event = new Event;
-            $event->create($eventData,$calendarId=$calendar);
+            if($request->type == 'edit'){
+                try {$event = ($this->getdate($request,$raw=true)); }
+                catch (Exception $e){ }
+                $event->update($eventData);
+
+            }
+            if($request->type == 'create'){
+                $event = new Event;
+                $event->create($eventData,$calendarId=$calendar);
+            }
 
             return redirect(route('agenda'))->with('info', 'Agenda item aangemaakt');
         }

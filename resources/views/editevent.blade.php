@@ -16,6 +16,8 @@
             <div class="card">
                 <form id="createform" name="createEvent" action="" method="post">
                     {{ csrf_field() }}
+                    <input type="hidden" name="eventId" value="{{$_GET['eventId'] ?? ''}}" >
+                    <input type="hidden" name="calendarNo" value="{{$_GET['calendarNo'] ?? ''}}" >
                     <div class="card-header">
                         <h4 class="">Nieuw event</h4>
                     </div>
@@ -33,7 +35,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">Titel</span>
                                         </div>
-                                    <input type="text" class="form-control" name="eventNew[summary]" value={{$event['summary'] ?? ""}} required></input>
+                                    <input type="text" class="form-control" name="eventNew[summary]" value="{{$event['summary'] ?? ''}}" required></input>
                                     </div>
                                 </div>
                             </div>
@@ -63,21 +65,21 @@
                                                     <span class="input-group-text" style="min-width:65px">Vanaf</span>
                                                 </div>
                                                 <input id="inputDateStart" class="form-control" type="date"
-                                                    name="eventNew[start][date]" value={{$event['start']['carbon']->translatedFormat("Y-m-d") ?? $today}} required></input>
+                                                    name="eventNew[start][date]" value=@isset($event) {{$event['start']['carbon']->translatedFormat('Y-m-d')}} @else {{$today}} @endisset  required></input>
                                                 <input id="inputTimeStart" class="form-control" type="time"
-                                                    name="eventNew[start][time]" value={{$event['start']['carbon']->translatedFormat("h:i:s") ?? $nowHour}} required></input>
+                                                    name="eventNew[start][time]" value=@isset($event) {{$event['start']['carbon']->translatedFormat('H:i:s')}} @else {{$nowHour}} @endisset required></input>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" style="min-width:65px">Tot</span>
+                                                    <span class="input-group-text" style='min-width:65px'>Tot</span>
                                                 </div>
                                                 <input id="inputDateEnd" class="form-control" type="date"
-                                                    name="eventNew[end][date]" value={{$event['end']['carbon']->translatedFormat("Y-m-d") ?? $today}} required></input>
+                                                    name="eventNew[end][date]" value=@isset($event) {{$event['end']['carbon']->translatedFormat('Y-m-d')}} @else {{$today}} @endisset  required></input>
                                                 <input id="inputTimeEnd" class="form-control" type="time"
-                                                    name="eventNew[end][time]" value={{$event['end']['carbon']->translatedFormat("h:i:s") ?? $nowHour2}} required></input>
+                                                    name="eventNew[end][time]" value=@isset($event) {{$event['end']['carbon']->translatedFormat('H:i:s')}} @else {{$nowHour2}} @endisset  required></input>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -140,7 +142,7 @@
                                                     <div class="form-group" style=" height:200px; ">
                                                         <label for="description">Omschrijving</label>
                                                         <textarea class="form-control" name="eventNew[description]"
-                                                    id="description" style="width:100%; height:100%" required>{{$event['description'] ?? ""}}</textarea>
+                                                    id="description" style="width:100%; height:100%" >{{$event['description'] ?? ""}}</textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -169,7 +171,7 @@
                                                             style="height:200px">
                                                             @foreach($resources as $r)
                                                             <option data-toggle="tooltip"
-                                                                title="Capaciteit: {{$r['capacity']}}" value={{$r['email']}}  @if(in_array($r['email'], array_values($event['attendees']['resource']))) selected @endif>
+                                                                title="Capaciteit: {{$r['capacity']}}" value={{$r['email']}}  @isset($event['attendees']['resource'])@if(in_array($r['email'], array_values($event['attendees']['resource']))) selected @endif @endisset>
                                                                 {{$r['name']}}</option>
                                                             @endforeach
                                                         </select>
@@ -271,7 +273,8 @@
                     <div class="card-footer">
                         <div class="row">
                             <div class="col-md-2">
-                                <input type="submit" class="btn btn-warning" name="submit" value="Toevoegen"></input>
+                                <input type="hidden" name="type" value={{$type}} >
+                                <input type="submit" class="btn btn-warning" name="submit" value={{$type=="create" ? "Toevoegen" : "Aanpassen"}} >
                             </div>
 
                             <div class="col-md-2 offset-md-8">

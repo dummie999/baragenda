@@ -287,7 +287,7 @@ class AgendaController extends Controller
         return $eventsArray;
     }
     //function should send less data (this function is for Ajax Post requests) , might be replaced with PHP version of index
-    public function getdate(Request $request){
+    public function getdate(Request $request,$raw=false){
         $request->validate(['s' => 'regex:/^[a-zA-Z0-9 :()+]+$/']);
         switch($request->calendarNo) {
             case 0:
@@ -303,6 +303,7 @@ class AgendaController extends Controller
         $event = Event::find($request->eventId, $cal); //raw event
         $eventClean = $this->format2view($event, array(),true,true); //clean event
         $eventSimple = reset($eventClean)[0]; //simplified array
+        if($raw) { return $event;}
         return response()->json(array('data'=>$eventSimple));
     }
     /**
