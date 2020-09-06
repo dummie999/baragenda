@@ -33,28 +33,30 @@
 
 						<div class="border-div ag-full" style="">
 							<div class="border-div ag-left" style="">
-                                <div class="ag-create-wrapper">
-                                    <a href={{ route('agenda.edit')}}>
-                                        <div class="ag-create-container">
-                                            <button class="ag-create-button"  >
-                                                <span class="ag-create-span"></span>
-                                                <div class="ag-create-shape"></div>
-                                                <span class="ag-create-shape2">
-                                                    <div class="ag-create-shape3">
-                                                        <svg width="36" height="36" viewBox="0 0 36 36">
-                                                            <path fill="#34A853" d="M16 16v14h4V20z"></path>
-                                                            <path fill="#4285F4" d="M30 16H20l-4 4h14z"></path>
-                                                            <path fill="#FBBC05" d="M6 16v4h10l4-4z"></path>
-                                                            <path fill="#EA4335" d="M20 16V6h-4v14z"></path>
-                                                            <path fill="none" d="M0 0h36v36H0z"></path>
-                                                        </svg>
-                                                    </div>
-                                                    <div class="ag-create-text"  >Nieuw</div>
-                                                </span>
-                                            </button>
-                                        </div>
-                                    </a>
-                                </div>
+                                @admin
+                                    <div class="ag-create-wrapper">
+                                        <a href={{ route('agenda.edit')}}>
+                                            <div class="ag-create-container">
+                                                <button class="ag-create-button"  >
+                                                    <span class="ag-create-span"></span>
+                                                    <div class="ag-create-shape"></div>
+                                                    <span class="ag-create-shape2">
+                                                        <div class="ag-create-shape3">
+                                                            <svg width="36" height="36" viewBox="0 0 36 36">
+                                                                <path fill="#34A853" d="M16 16v14h4V20z"></path>
+                                                                <path fill="#4285F4" d="M30 16H20l-4 4h14z"></path>
+                                                                <path fill="#FBBC05" d="M6 16v4h10l4-4z"></path>
+                                                                <path fill="#EA4335" d="M20 16V6h-4v14z"></path>
+                                                                <path fill="none" d="M0 0h36v36H0z"></path>
+                                                            </svg>
+                                                        </div>
+                                                        <div class="ag-create-text"  >Nieuw</div>
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </a>
+                                    </div>
+                                @endadmin
 								<div class="cal_left">
 									<div class="row">
 										<div class="col-12">
@@ -379,12 +381,14 @@
                                                                     </div>
 																</div>
 																<div class="modal-footer">
-                                                                    <form id="editEventForm" autocomplete="off" action="{{ route('agenda.edit') }}" method='GET' >
-                                                                        {{ csrf_field() }}
-                                                                        <input type="hidden" id="editEventId" name="eventId" value="" />
-                                                                        <input type="hidden" id="editCalendarId" name="calendarNo" value="" />
-                                                                    <button type="submit" class="btn btn-default" >Aanpassen</button>
-                                                                    </form>
+                                                                    @admin
+                                                                        <form id="editEventForm" autocomplete="off" action="{{ route('agenda.edit') }}" method='GET' >
+                                                                            {{ csrf_field() }}
+                                                                            <input type="hidden" id="editEventId" name="eventId" value="" />
+                                                                            <input type="hidden" id="editCalendarId" name="calendarNo" value="" />
+                                                                        <button type="submit" class="btn btn-default" >Aanpassen</button>
+                                                                        </form>
+                                                                    @endadmin
 																    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 																</div>
 															</div>
