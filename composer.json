@@ -10,10 +10,12 @@
     "require": {
         "php": "^7.2",
         "adldap2/adldap2-laravel": "^6.0.8",
+        "barryvdh/laravel-ide-helper": "^2.4",
         "fideloper/proxy": "^4.0",
-        "google/apiclient": "^2.0",
-        "laravel/framework": "^6.2",
+        "google/apiclient": "^2.7",
+        "laravel/framework": "^6.18",
         "laravel/tinker": "^2.0",
+        "nesbot/carbon": "^2.38",
         "laravel/ui": "^1.1",
         "rlanvin/php-rrule": "^1.6"
     },
@@ -22,7 +24,9 @@
         "fzaninotto/faker": "^1.4",
         "mockery/mockery": "^1.0",
         "nunomaduro/collision": "^3.0",
-        "phpunit/phpunit": "^8.0"
+        "phpunit/phpunit": "^8.0",
+        "barryvdh/laravel-debugbar": "^3.4",  
+        "filp/whoops": "^2.7.3" 
     },
     "config": {
         "optimize-autoloader": true,

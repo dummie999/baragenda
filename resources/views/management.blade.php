@@ -18,7 +18,7 @@
                         <form class="form-horizontal col-md-12 col-xs-12" action="" method='POST'>
                             {{ csrf_field() }}
                             <div class="form-group">
-                                <table class="table responsive-table management">
+                                <table class="table table-responsive management">
                                     <thead>
                                         <tr>
                                             <th>Geactiveerd</th>
@@ -44,7 +44,7 @@
                                             </td>
                                             <td>
                                                 <div class="form-group">
-                                                    <select name="committee_id[{{$s->id}}]" class="form-control" >
+                                                    <select name="committee_id[{{$s->id}}]" class="form-control form-control-minwidth" >
                                                         @isset($s->committee_id) @else <option></option>@endisset
                                                         @foreach($committees as $c)
                                                         <option @isset($s->committee->name) @if($c->name==$s->committee->name) selected  @endif @endisset value="{{ $c->id }}" > {{$c->name}}  </option>
@@ -61,10 +61,10 @@
 											<td>
 												 
 												
-														<div class="col-sm-8">
+														<div class="col-sm-12">
 															<input type="text" class="form-control datetimepicker-input" name="default_datetime[{{$s->id}}]" id="datetimepicker5a_{{$s->id}}" data-toggle="datetimepicker" data-target="#datetimepicker5a_{{$s->id}}"/>
 														</div>
-														<div class="col-sm-8">
+														<div class="col-sm-12">
 															<input type="text" class="form-control datetimepicker-input" name="default_datetime_end[{{$s->id}}]" id="datetimepicker5b_{{$s->id}}" data-toggle="datetimepicker" data-target="#datetimepicker5b_{{$s->id}}"/>
 														</div>
 														<script type="text/javascript">
@@ -79,8 +79,8 @@
 														</script>
 												                                          
 											</td>                                            
-                                            <td>{{$s->updated_at}} <br>({{$s->user->info->name}})</td>
-                                            <td>{{$s->created_at}}</td>
+                                            <td>{{Carbon\Carbon::parse($s->updated_at)->format('Y-m-d H:i')}} <br>{{($s->user->info->name)}}</td>
+                                            <td>{{Carbon\Carbon::parse($s->created_at)->format('Y-m-d H:i')}}</td>
                                         <td>
 
                                         <a href="{{ route('management.delRow', ['shifttype' => $s->id]) }}" class="btn btn-danger">Remove</a>

@@ -27,7 +27,7 @@ class CreateReservationsTable extends Migration
             $table->integer('location_id')->unsigned();
             $table->integer('committee_id')->unsigned();
 			$table->json('attendees');
-			$table->set('status',['draft','published','deleted']); //draft published or deleted
+			$table->enum('status',['draft','published','deleted']); //draft published or deleted
             $table->integer('google_calendar_id'); //external calendar
             $table->integer('google_event_id'); //external event
             $table->integer('updated_by')->unsigned();

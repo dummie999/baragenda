@@ -22,6 +22,7 @@ class CreateShiftsTable extends Migration
             $table->string('description')->nullable(); //hippe beschrijving, wat is er te doen.
             $table->integer('updated_by')->unsigned(); //naam barcolid
             $table->timestamps();
+            $table->softDeletes();
 
             #foreign references
             $table->foreign('shift_type_id')->references('id')->on('shift_types');

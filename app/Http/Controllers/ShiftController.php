@@ -4,26 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\Shift;
 use App\Models\ShiftType;
-
-
-
+use App\Models\ShiftUser;
+use App\Models\User;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+
 class ShiftController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware('auth');
+    }
+
 /**
  * Display a listing of the resource.
  *
  * @return \Illuminate\Http\Response
  */
-
+	
     public function index(Request $request,$page = 0)
     {
-        if(!is_numeric($page)) {
+		#print_r(Carbon::today()->format('l d f'));die;
+		if(!is_numeric($page)) {
             return redirect(route('home'));
         }
         $page = intval($page);
@@ -32,9 +38,13 @@ class ShiftController extends Controller
 			//date
 			$now_r=Carbon::today()->addWeeks($page*2);
 			$now_r_start=$this->getDayStartEnd($now_r);
-			$now_r2=Carbon::today()->addWeeks($page*2+2);
+			$now_r2=Carbon::today()->addWeeks($page*2+1);
 			$now_r2_end=$this->getDayStartEnd($now_r2,False);
-			$dates=$this->generateDateRange($now_r,$now_r2,true);
+			#echo("<pre>");print_r($now_r_start);
+			#echo("<pre>");print_r($now_r2_end);
+			
+			//give me al teh dates of view
+			$dates=$this->generateDateRange($now_r_start,$now_r2_end,false);
 			try {
 
                 //shifttypes (only common)
@@ -43,21 +53,25 @@ class ShiftController extends Controller
 
                 //show requested date & events
                 $shifts = Shift::whereBetween('datetime',array($now_r_start,$now_r2_end))->with('shifttype','shiftuser.info')->get();
-                //echo('<pre>');print_r($shifts);
+                 
 				//create array of dates -> arr[2020-02-14][carbon]=CarbonObj
-				$arr=array();
+				$data=array();
 				foreach($dates as $d){
 					$data[$d->format('Ymd')]=array('carbon'=>$d);
 				}
 				//create / fill from object to multidimensional arr
 			    foreach($shifts as $s){
 					$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=$s;
-			    }
 
-				//prepare view
+				}
+				#echo('<pre>');print_r($data);die;
+				//prepare view with data
 				return view('shifts', compact('shifttypes', 'page'),array(
+				'weeknos'=>$now_r->weekOfYear,
 				'shifttypes'=>$shifttypes,
 				'shifts'=>$data,
+				'today'=>Carbon::today(),
+				'user'=>Auth::user(),
 				));
 			}
 			catch(ModelNotFoundException $e){
@@ -66,17 +80,27 @@ class ShiftController extends Controller
 			}
 		}
 	}
+	/**
+	*
+	*
+	*
+	*
+	*
+	 */
+
+	
 	private function getDayStartEnd(Carbon $date, $start=true)
 	{
 		if($start){
 			$day =  new Carbon("last Monday $date");
 		}
 		else{
-			$day =  new Carbon("last Sunday $date");
+			$day =  new Carbon("Sunday $date");
 		}
 		return $day;
 
 	}
+	//same as other ones, generate me a date
 	private function generateDateRange(Carbon $start_date, Carbon $end_date, $firstday=false)
 	{
 		if($firstday){
@@ -86,7 +110,7 @@ class ShiftController extends Controller
 		$dates = [];
 
 		for($date = $start_date->copy(); $date->lte($end_date); $date->addDay()) {
-			$dates[] = new Carbon($date);
+			$dates[] =  new Carbon($date);
 		}
 
 		return $dates;
@@ -102,98 +126,34 @@ class ShiftController extends Controller
 
 	public function openDate(Request $request,$date = 0)
     {
-	if (!$this->validateDate($date)){
-		return redirect(route('shifts'));
+		// default per day view of agenda. 
+		if (!$this->validateDate($date)){
+			return redirect(route('shifts'));
         }
 		//get
-		$cdate = Carbon::parse($date)->startOfDay();
-        $cdateyd = Carbon::parse($date)->startOfDay()->subDay(1);
-		$cdate24=Carbon::parse($date)->addHours(24);
 		if($request->isMethod('get')){
+			$cdate = Carbon::parse($date)->startOfDay();
+			$cdateyd = Carbon::parse($date)->startOfDay()->subDay(1);
+			$cdate24=Carbon::parse($date)->addHours(24);
 			 $shift = Shift::whereBetween('datetime',array($cdate,$cdate24))
              ->orderBy('datetime', 'ASC')
              ->with('shifttype','shiftuser.info')
              ->get();
 			 #echo("<pre>");print_r($shift);die;
 		//prepare view
+
+		//formatting weghalen hier en in view zetten
 			return view('shiftdate', compact('shift'),array(
 			'shift'=>$shift,
-            'prev'=>$cdateyd->format('Ymd'),
-            'today'=>$cdate->format('l d F'),
-            'next'=>$cdate24->format('Ymd')
+            'prev'=>$cdateyd,
+            'today'=>$cdate,
+            'next'=>$cdate24,
 			));
 
 		}
 	}
 
-    public function admin(Request $request,$page = 0)
-    {
-		
-        if(!is_numeric($page)) {
-            return redirect(route('home'));
-        }
-        $page = intval($page);
-		//get
-		if($request->isMethod('get')){
-			//date
-			$now_r=Carbon::today()->addWeeks($page);
-			$now_r_start=$this->getDayStartEnd($now_r);
-			$now_r1=Carbon::today()->addWeeks($page+1);
-			$now_r1_end=$this->getDayStartEnd($now_r1,False);
-			$dates=$this->generateDateRange($now_r,$now_r1,true);
-			try {
-
-                //shifttypes (only common)
-                $whereMatch=['enabled'=> '1'];
-                $shifttypes=ShiftType::Where($whereMatch)->get();
-
-                //show requested date & events
-                $shifts = Shift::whereBetween('datetime',array($now_r_start,$now_r1_end))->with('shifttype','shiftuser.info')->get();
-                //echo('<pre>');print_r($shifts);
-				//create array of dates -> arr[2020-02-14][carbon]=CarbonObj
-				$arr=array();
-				foreach($dates as $d){
-					$data[$d->format('Ymd')]=array('carbon'=>$d);
-				}
-				//create / fill from object to multidimensional arr
-			    foreach($shifts as $s){
-					$data[Carbon::parse($s->datetime)->format('Ymd')][$s->shifttype->title]=$s;
-			    }
-
-				//prepare view
-				return view('shiftmanagement', compact('shifttypes', 'page'),array(
-				'shifttypes'=>$shifttypes,
-				'shifts'=>$data,
-				));
-			}
-			catch(ModelNotFoundException $e){
-				//return home
-				return redirect(route('home'))->with('error', 'Dienst niet gevonden!');
-			}
-		}
-		$shifttypes=ShiftType::all();
-		$user = Auth::user();
-		$range=$this->generateDateRange(Carbon::parse($request->dt1), Carbon::parse($request->dt2),true);
-		foreach($range as $d){
-			$date=$d->format('Y-m-d');
-			foreach($request->input_shifttype as $k=>$v){
-			$st = $shifttypes->find($k);
-			$st_default= Carbon::parse($st->default_datetime)->format('H:m:s');
-			$st_default_end= Carbon::parse($st->default_datetime_end)->format('H:m:s');
-			$obj = new Shift;
-			$obj->shift_type_id=$k;
-			$obj->title=$st->title;
-			$obj->datetime=Carbon::parse("$date $st_default");
-			$obj->datetime_end=Carbon::parse("$date $st_default_end");
-			$obj->updated_by=$user->id;
-			$obj->save();
-			}
-		}
-		return redirect(route('shiftmanagement'))->with('info', 'Shifts aangepast!');
-		
-
-		
-	}
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -202,6 +162,59 @@ class ShiftController extends Controller
     public function create()
     {
         //
+    }
+
+    /**
+     * When user wants to inlist (self/other) to shift 
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function enlist(Request $request)
+    {
+		$date=array_keys($request->shiftDate)[0]; // hier zit error array_keys expects to be array null gvien //shiftUser[20200830]: Netcie Superadmin / shiftDate[20200830]: 1]
+		#print_r(array_keys($request->shiftUser)); die; 
+		#$user = Auth::user(); /* need to fix this -> user in request->shiftuser find in User:: */
+		if (!User::with('info')->get()->contains('info.name', $request->shiftUser[$date])){ //if user not found
+			return redirect(route('shifts'))->with('info', 'Gebruiker niet gevonden!');
+		}
+		else {
+			$user = User::with('info')->get()->where('info.name', $request->shiftUser[$date])->first(); //find user 
+			#echo('<pre>');print_r($user);echo('<pre>');die;
+			foreach($request->shiftDate as $k=>$v){
+				$ds=Carbon::createFromFormat("Ymd", $k)->startOfDay();
+				$de=Carbon::createFromFormat("Ymd", $k)->endOfDay();
+				// need validation of duplicates shiftusers
+				$shift=Shift::where('shift_type_id',$v)->whereDate('datetime',array($ds,$de))->with('shiftuser')->get()->first();
+				#echo("<pre>");print_r($user->id);echo("</pre>");die;
+				if(!$shift->shiftuser->contains('id', $user->id)){
+					#only allow to enlist once for a shift.
+					$su = new ShiftUser;
+					$su->shift_id = $shift->id;
+					$su->user_id = $user->id;
+					$su->save();
+				}
+			}
+			return redirect(route('shifts'))->with('info', 'Aangemeld!');
+		}
+	}
+	
+	/**
+	 * function to remove user (on page ShiftDate) , not yet working due to able to delete in past
+	 */
+    public function removeUser(Request $request)
+    {
+		$shift_id=array_keys($request->del_shift_user)[0]; //get  shift id
+		$user_id=$request->del_shift_user[$shift_id]; //get user
+			#Shift::find($shift_id)->shiftuser()->where('id', $user_id)->detach();
+			$shift=Shift::find($shift_id)->shiftuser()->detach($user_id); //remove pivot
+			
+			#echo("<pre>");print_r($shift);echo("</pre>");die;
+	
+			
+		
+		return redirect(route('shifts'))->with('info', 'Lid van dienst uitgeschreven!');
+
     }
 
     /**
