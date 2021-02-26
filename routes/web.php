@@ -45,6 +45,10 @@ Route::get('/shifts/{date}', 'ShiftController@openDate')->name('shifts.date');
 Route::post('/shifts/{date}', 'ShiftController@removeUser')->name('shifts.removeUser');
 
 //shiftmanagement
+
 Route::match(['get','post'], '/shiftmanagement', 'ShiftAdminController@admin')->name('shifts.admin');
 Route::get('/shiftmanagement/page/{page}', 'ShiftAdminController@admin')->name('shifts.admin.page');
 Route::post('/shiftmanagement/page/{page}', 'ShiftAdminController@admin')->name('shifts.admin.page');
+
+//skills
+Route::get('/skills', 'SkillController@index');
